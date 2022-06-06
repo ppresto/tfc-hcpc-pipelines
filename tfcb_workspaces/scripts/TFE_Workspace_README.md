@@ -52,24 +52,41 @@ vi ./tfcb_workspaces/scripts/addAdmin_workspace.sh
 ```
 Customize the following variables in `./addAdmin_workspace.sh`:
 ```
-# The default is using the TFCB address. Update if using TFE onprem.
+## The default is using the TFCB address. Update if using TFE onprem.
 address="app.terraform.io"
 
-# Update the organization with your TFCB organization name
+## Update the organization with your TFCB organization name
 organization="<my_org>"
 
-# Set this github URL to your forked version of this repo
+## Set this github URL to your forked version of this repo
 git_url="https://github.com/ppresto/hcpc-vpc-ec2-eks.git"
 
-# Admin Workspace Name
+## Admin Workspace Name
 workspace="admin-tfc-workspaces"
 
-# Github repo path to use for managing your workspaces with IaC
+## Github repo path to use for managing your workspaces with IaC
 WORKSPACE_DIR="tfcb_workspaces"
 BRANCH="main"
 
-# Select Terraform Version
+## Select Terraform Version
 TF_VERSION="1.1.4"
+
+## Export your AWS credentials to have them managed by the TFCB admin workspace:
+```
+export AWS_SECRET_ACCESS_KEY=""
+export AWS_ACCESS_KEY_ID=""
+```
+
+## Next update each file ./tfcb_workspaces/<workspace>.tf
+```
+tf_variables_sec = {
+"AWS_ACCESS_KEY_ID" = var.aws_access_key_id
+"AWS_SECRET_ACCESS_KEY" = var.aws_secret_access_key
+}
+```
+# Note: There are many different ways to manage creds in TFCB depending on your security level.
+#       These creds will be encrypted in each child workspace.  They will be clear text in the
+#       admi
 
 ```
 

@@ -14,8 +14,11 @@ PreReqs:
 This tutorial can be ran from the CLI using OSS terraform.  Just update the data.tf files to reference local state files and script the TFCB steps below.  I prefer using Terraform Cloud for Business (TFCB).  Like OSS it uses the same terraform binary.  Unlike OSS it centralizes and automates the admin of all your infra provisioning processes supporting many additional workflows out of the box.  I'll be using the VCS workflow which applies changes when the repo has a new commit.  TFCB supports RBAC across people and teams to enable collaboration and securely store or share sensitive data across pipelines.  We will leverage this capability to securely share tf outputs from different state files when configuring our remote ec2 and eks agents.
 
 ### Setup TFCB
-1. Go to `tfcb_workspaces/scripts`
+Go to `tfcb_workspaces/scripts`
 * read `TFE_Workspace_README.md` and follow all the steps to setup your terminal environment.
-* successfully create the admin-tfc-workspace
+* run `addAdmin_workspace.sh` to successfully create the admin-tfc-workspace
 
-1. 
+Create workspaces for each of the infrastructure components we need to provision in the environment.
+* Go to TFCB -> admin-tfc-workspace -> Actions -> Start new run -> Start run
+
+Now you should have a few more workspaces created.  The `hcp_consul` workspace was set with queue_all_runs=true so it will attempt to run terraform plan/apply immediately.  This workspace must have AWS credentials to run.
