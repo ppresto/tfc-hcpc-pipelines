@@ -15,8 +15,7 @@ This tutorial can be ran from the CLI using OSS terraform.  Just update the data
 
 ### Setup TFCB
 1. Go to `tfcb_workspaces/scripts`
-* read the TFE_Workspace_README.md and follow all the steps to setup your terminal environment.
-* update `addAdmin_workspace.sh` with your TFCB, Github, and Env information
-* successfully create your TFCB workspace
+* read `TFE_Workspace_README.md` and follow all the steps to setup your terminal environment.
+* successfully create the admin-tfc-workspace
 
 1. 
