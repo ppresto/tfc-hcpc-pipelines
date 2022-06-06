@@ -5,9 +5,9 @@ data "template_file" "coredns_configmap_patch" {
   }
 }
 data "kubectl_file_documents" "docs" {
-    content = data.template_file.coredns_configmap_patch.rendered
+  content = data.template_file.coredns_configmap_patch.rendered
 }
 resource "kubectl_manifest" "test" {
-    for_each  = data.kubectl_file_documents.docs.manifests
-    yaml_body = each.value
+  for_each  = data.kubectl_file_documents.docs.manifests
+  yaml_body = each.value
 }

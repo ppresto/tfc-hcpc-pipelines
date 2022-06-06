@@ -14,13 +14,14 @@ ATLAS_TOKEN <Enterprise TF Token>
 organization <your github org name>
 ```
 
-Recommended for this Demo Env.
+Required for this tutorial.
 ```
 AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY
 AWS_DEFAULT_REGION
 HCP_CLIENT_ID
 HCP_CLIENT_SECRET
+SSH_KEY_NAME
 ```
 
 Others
@@ -55,29 +56,29 @@ Customize the following variables in `./addAdmin_workspace.sh`:
 address="app.terraform.io"
 
 # Update the organization with your TFCB organization name
-organization="presto-projects"
+organization="<my_org>"
 
 # Set this github URL to your forked version of this repo
-git_url="https://github.com/ppresto/tfc-agent.git"
+git_url="https://github.com/ppresto/hcpc-vpc-ec2-eks.git"
 
 # Admin Workspace Name
-workspace="ADMIN-TFCB-WS"
+workspace="admin-tfc-workspaces"
 
 # Github repo path to use for managing your workspaces with IaC
-WORKSPACE_DIR="tfc-agent-ecs-multi/files/create_tfcb_workspaces"
+WORKSPACE_DIR="tfcb_workspaces"
 BRANCH="main"
 
 # Select Terraform Version
-TF_VERSION="0.13.6"
+TF_VERSION="1.1.4"
 
 ```
 
 6. Pre-Check
-Verify you have the 3 Required environment variables set (OAUTH_TOKEN_ID, ATLAS_TOKEN, organization)
+Verify you have the Required environment variables set (OAUTH_TOKEN_ID, ATLAS_TOKEN, organization, AWS, HCP, and SSH)
 ```
 env
 ```
-There are many different ways to manage credentials in your TFC workspace. One option can be to use this Admin workspace.  Source your Cloud credentials into your shell env to securely copy them over HTTPS into your admin workspace.  When building child workspaces you can now reference these variables from the admin workspace and have them populated into the child workspace as write only variables.  This design allows only the Admin to see the secrets while all child workspaces inherit them for provisioning access.
+There are many different ways to manage credentials in your TFC workspace. One option can be to use this Admin workspace.  Source your Cloud credentials into your shell env to securely copy them over HTTPS into your admin workspace.  When building child workspaces you can now reference these variables from the admin workspace and have them populated into the child workspace as write only variables.  This design allows only the Admin to see the secrets while all child workspaces inherit them as encrypted variables used for provisioning access.
 
 1. Run the script
 ```

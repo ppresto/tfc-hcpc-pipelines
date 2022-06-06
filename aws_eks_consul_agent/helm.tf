@@ -3,7 +3,7 @@
 #
 
 data "template_file" "agent_config" {
-  template = file("${path.module}/templates/${var.consul_template}/helm/helm-config.yaml")
+  template = file("${path.module}/templates/fake-service/helm/helm-config.yaml")
   vars = {
     DATACENTER            = local.consul_datacenter
     RETRY_JOIN            = jsonencode(local.consul_retry_join)

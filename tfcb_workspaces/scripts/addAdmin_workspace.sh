@@ -1,23 +1,35 @@
 #!/bin/bash
 # This Script creates an ADMIN workspace in TFCB if it does not already exist,
 # and adds standard terraform & env variables to it using your current host environment.
-# This requires Github integration to be setup and a repo to map this admin workspace to.
+# This requires TFCB Github integration to be setup and a github repo to this code.
 
 # WARNING:
 # This workspace can manage all sensitive data within your org.
-# This should be locked down to owners only and may contain sensitive data in clear text.
+# It should be locked down to owners only and will contain sensitive data in clear text.
 
-# Export ATLAS_TOKEN , Use TFE owners team token for proper access
-# Export OAUTH_TOKEN_ID (Github OAuth App Token for VCS integration)
-# Export any needed AWS, Azure, GCP access credentials to your shell environment.
-#   These will be added to the ADMIN ws and can be used to
-#   automatically build future workspaces with encrypted creds.
+# REQUIRED:
+# export ATLAS_TOKEN    #Use TFE owners team token for proper TFCB access
+# export OAUTH_TOKEN_ID #Github OAuth App Token used to setup VCS integration
+# Export your AWS credentials to have them managed by the TFCB admin workspace:
+# export AWS_SECRET_ACCESS_KEY=""
+# export AWS_ACCESS_KEY_ID=""
+#
+# Next update each file ./tfcb_workspaces/<workspace>.tf
+#
+#  tf_variables_sec = {
+#    "AWS_ACCESS_KEY_ID" = var.aws_access_key_id
+#    "AWS_SECRET_ACCESS_KEY" = var.aws_secret_access_key
+#  }
+#
+# Note: There are many different ways to manage creds in TFCB depending on your security level.
+#       These creds will be encrypted in each child workspace.  They will be clear text in the
+#       admin workspace which should be locked down.  Additional workflows are available for stronger security.
 
 # Set TFE Address
-# Set Organization
-# Set Github repo for Admin Workspace vcs
-# Set Workspace Name
-# Set WORKSPACE_DIR to subfolder to manage multiple organizations
+# Set Organization - This is your TFCB Organization name
+# Set Admin Workspace Name
+# Set workspace -  Github repo the Admin Workspace will use (Should point to this code)
+# Set WORKSPACE_DIR - subfolder to manage TFCB workspaces
 
 # Usage:
 # Optional inputs can be used to override your github repo URL and workspace name.
@@ -25,17 +37,17 @@
 # ./addAdmin_workspace.sh
 #
 
-# Provide your TFCB address, TFCB Organization
+# Provide your TFCB, and Github information
 address="app.terraform.io"
-organization="presto-projects"
+organization="Patrick"
 #  Github Repo URL
-git_url="https://github.com/ppresto/hcp_consul.git"
+git_url="https://github.com/ppresto/hcpc-vpc-ec2-eks.git"
 # Admin Workspace Config
-workspace="admin_workspaces"
+workspace="admin_tfc_workspaces"
 # This is the repo dir TFCB will use to run terraform and manage your workspaces with IaC
 WORKSPACE_DIR="tfcb_workspaces"
 BRANCH="main"
-TF_VERSION="1.0.5"
+TF_VERSION="1.1.4"
 
 # AWS SSH Key Name
 SSH_KEY_NAME="ppresto-ptfe-dev-key"

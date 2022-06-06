@@ -7,11 +7,11 @@ module "ws_aws_tgw" {
   tfversion           = "1.1.4"
   queue_all_runs      = false
   auto_apply          = true
-  identifier          = "${var.repo_org}/hcp_consul"
+  identifier          = "${var.repo_org}/hcpc-vpc-ec2-eks"
   oauth_token_id      = var.oauth_token_id
   repo_branch         = "main"
   global_remote_state = false
-  tag_names           = ["auto","vpc","sg","transitGW"]
+  tag_names           = ["auto", "sg", "transitGW", "bastion"]
   env_variables = {
     "CONFIRM_DESTROY" : 1
     "AWS_DEFAULT_REGION" : var.aws_default_region

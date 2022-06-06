@@ -7,11 +7,11 @@ module "aws_eks_consul_agent" {
   tfversion           = "1.1.4"
   queue_all_runs      = false
   auto_apply          = true
-  identifier          = "${var.repo_org}/hcp_consul"
+  identifier          = "${var.repo_org}/hcpc-vpc-ec2-eks"
   oauth_token_id      = var.oauth_token_id
   repo_branch         = "main"
   global_remote_state = false
-  tag_names           = ["auto","agent"]
+  tag_names           = ["auto", "agent"]
   env_variables = {
     "CONFIRM_DESTROY" : 1
     "AWS_DEFAULT_REGION" : var.aws_default_region
@@ -20,7 +20,7 @@ module "aws_eks_consul_agent" {
   tf_variables = {
     "ssh_key_name"    = var.ssh_key_name
     "region"          = var.aws_default_region
-    "consul_template" = "fs-ns-tp"
+    "consul_template" = "fake-service"
     "namespace"       = "consul"
   }
   env_variables_sec = {
