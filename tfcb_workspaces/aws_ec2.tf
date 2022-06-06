@@ -1,4 +1,4 @@
-module "aws-eks" {
+module "aws-ec2" {
   source              = "../modules/workspace-mgr"
   agent_pool_id       = ""
   organization        = var.organization

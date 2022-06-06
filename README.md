@@ -11,7 +11,7 @@ PreReqs:
 * Create AWS IAM Credentials with privilages to build: `vpc, sg, tgw, eks, ec2`
 
 ## Provision the Plumbing - HCP, AWS VPC and Transit GW
-This tutorial can be ran from the CLI using OSS terraform.  Just update the data.tf files to reference local state files and script the TFCB steps below.  I prefer using Terraform Cloud for Business (TFCB).  Like OSS it uses the same terraform binary.  Unlike OSS it centralizes and automates the admin of all your infra provisioning processes supporting many additional workflows out of the box.  I'll be using the VCS workflow which applies changes when the repo has a new commit.  Additionally we can create RBAC across people and teams to enable collaboration and securely store or share sensitive data across teams or pipelines.  We will leverage this capability to securely share tf outputs from different state files when configuring our remote ec2 and eks agents.
+This tutorial can be ran from the CLI using OSS terraform.  Just update the data.tf files to reference local state files and script the TFCB steps below.  I prefer using Terraform Cloud for Business (TFCB).  Like OSS it uses the same terraform binary.  Unlike OSS it centralizes and automates the admin of all your infra provisioning processes supporting many additional workflows out of the box.  I'll be using the VCS workflow which applies changes when the repo has a new commit.  TFCB supports RBAC across people and teams to enable collaboration and securely store or share sensitive data across pipelines.  We will leverage this capability to securely share tf outputs from different state files when configuring our remote ec2 and eks agents.
 
 ### Setup TFCB
 1. Go to `tfcb_workspaces/scripts`
