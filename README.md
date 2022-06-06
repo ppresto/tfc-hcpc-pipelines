@@ -1,20 +1,22 @@
-# AWS
+# hcpc-vpc-ec2-eks
+[HCP Consul](https://cloud.hashicorp.com/products/consul) enables platform operators to quickly deploy a fully managed, secure-by-default service mesh, helping developers discover and securely connect any application on any runtime, including Kubernetes, Nomad, Amazon ECS, EC2, and more.
 
-The repo organizes various resources by directory. Create an HCP consul cluster and connect it to various resources (like ec2, eks, ecs, etc...) running in your own AWS VPC via Transit Gateway.
+To get started with HCP Consul follow this [HCP Consul Getting Started guide](https://learn.hashicorp.com/tutorials/cloud/get-started-consul#prerequisites).  It will walk you through your free account creation and setting up your Consul Cluster.  It will take you step by step through the process for onboarding platforms like Kubernetes or VMs and eventually registering the services on those platforms.
 
-## EKS API was missing requird security group to route to EKS Pod.
-(Worked) Deploy HCP Consul with Terraform
-(Worked, But…) Connect an Amazon Transit GW to your Hashicorp Virtual Network
-Converted this learn guide to use terraform
-I used this guides inbound/outbound security rules: https://learn.hashicorp.com/tutorials/cloud/amazon-transit-gateway?in=consul/cloud-production#authorize-ingress-and-egress
-These rules may only apply to the gateway, and probably not the correct source for all consul rules.  I thought the rules were good because they work with ec2 in the next step, but I think they are missing the ingress needed for EKS.
-(Worked) Connect a Consul Client to HCP Consul
-Converted this learn guide to use terraform
-setup VPC with AWS VPC module
-added 1 ec2 bastion to public subnet for future troubleshooting and to setup an example vm client
-(Almost Worked) Connect an Elastic Kubernetes Service Cluster to HCP Consul
-Converted this learn guide to use terraform
-Setup EKS cluster with AWS EKS module
-Setup consul secrets and helm chart to use terraform.
-Helm deployment failed a lot. Had to work out chart name/version and security group rules to get this working.
-(FAILED) Deployed Hashicups with kubectl following guide and this failed because EKS API didn’t have needed access to EKS pods.
+The purpose of this tutorial is to use Terraform for IaC as we dive a little deeper into each stage of our journey to implement HCP Consul the Hashicorp hosted Service Mesh.
+
+PreReqs:
+* [Create HCP Account](https://portal.cloud.hashicorp.com/?utm_source=learn)
+* Create HCP IAM Service principal and key with role: `Contributor`
+* Create AWS IAM Credentials with privilages to build: `vpc, sg, tgw, eks, ec2`
+
+## Provision the Plumbing - HCP, AWS VPC and Transit GW
+This tutorial can be ran from the CLI using OSS terraform.  Just update the data.tf files to reference local state files and script the TFCB steps below.  I prefer using Terraform Cloud for Business (TFCB).  Like OSS it uses the same terraform binary.  Unlike OSS it centralizes and automates the admin of all your infra provisioning processes supporting many additional workflows out of the box.  I'll be using the VCS workflow which applies changes when the repo has a new commit.  Additionally we can create RBAC across people and teams to enable collaboration and securely store or share sensitive data across teams or pipelines.  We will leverage this capability to securely share tf outputs from different state files when configuring our remote ec2 and eks agents.
+
+### Setup TFCB
+1. Go to `tfcb_workspaces/scripts`
+* read the TFE_Workspace_README.md and follow all the steps to setup your terminal environment.
+* update `addAdmin_workspace.sh` with your TFCB, Github, and Env information
+* successfully create your TFCB workspace
+
+1. 
