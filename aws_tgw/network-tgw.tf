@@ -1,0 +1,37 @@
+# https://registry.terraform.io/modules/terraform-aws-modules/transit-gateway/aws/latest
+module "tgw" {
+  source  = "terraform-aws-modules/transit-gateway/aws"
+  version = "2.5.0"
+
+  name            = "tgw-presto-1"
+  description     = "My TGW shared with several other AWS accounts"
+  amazon_side_asn = 64532
+
+  enable_auto_accept_shared_attachments = true # When "true" there is no need for RAM resources if using multiple AWS accounts
+
+  vpc_attachments = {
+    vpc = {
+      vpc_id     = data.terraform_remote_state.hcp_consul.outputs.vpc_id              #data.aws_vpc.default.id
+      subnet_ids = data.terraform_remote_state.hcp_consul.outputs.vpc_private_subnets #data.aws_subnet_ids.this.ids
+
+      tgw_routes = [
+        {
+          destination_cidr_block = "50.0.0.0/16"
+        },
+        {
+          blackhole              = true
+          destination_cidr_block = "10.10.10.10/32"
+        }
+      ]
+    },
+  }
+
+  ram_allow_external_principals = true
+  #ram_principals                = [711129375688]
+  tgw_default_route_table_tags = {
+    name = "tgw-presto-1-default_rt"
+  }
+  tags = {
+    project = "hcp-tgw-presto-1"
+  }
+}
