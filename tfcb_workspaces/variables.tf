@@ -1,14 +1,10 @@
 variable "tfe_token" {}
 variable "tfe_hostname" { default = "app.terraform.io" }
 variable "oauth_token_id" {}
-variable "organization" { default = "presto-projects" }
-
-variable "slackurl" {
-  default = "https://hooks.slack.com/services/xxxxxxx"
-}
+variable "organization" { default = "" }
+variable "ssh_key_name" { default = "" }
 
 # Workspace names will be used for the repo name when setting up VCS.
-
 variable "repo_org" {}
 
 variable "gcp_region" { default = "" }
