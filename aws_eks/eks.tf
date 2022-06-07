@@ -25,7 +25,7 @@ module "eks" {
   cluster_version                       = local.cluster_version
   cluster_endpoint_private_access       = true
   cluster_endpoint_public_access        = true
-  cluster_additional_security_group_ids = [data.terraform_remote_state.aws-tgw.outputs.consul_server_sg_id]
+  cluster_additional_security_group_ids = [data.terraform_remote_state.aws_usw_dev_tgw.outputs.consul_server_sg_id]
   vpc_id                                = data.terraform_remote_state.hcp_consul.outputs.vpc_id
   subnet_ids                            = data.terraform_remote_state.hcp_consul.outputs.vpc_private_subnets
 
@@ -61,7 +61,7 @@ module "eks" {
       # Remote access cannot be specified with a launch template
       remote_access = {
         ec2_ssh_key               = var.ec2_key_pair_name
-        source_security_group_ids = [data.terraform_remote_state.aws-tgw.outputs.bastion_ssh_sg_id]
+        source_security_group_ids = [data.terraform_remote_state.aws_usw_dev_tgw.outputs.bastion_ssh_sg_id]
       }
     }
   }
