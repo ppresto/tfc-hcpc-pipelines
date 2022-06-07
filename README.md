@@ -6,14 +6,17 @@ To get started with HCP Consul follow this [HCP Consul Getting Started guide](ht
 The purpose of this tutorial is to use Terraform for IaC as we dive a little deeper into each stage of our journey to implement HCP Consul the Hashicorp hosted Service Mesh.
 
 PreReqs:
+* [Create TFC Account](https://app.terraform.io/signup)
 * [Create HCP Account](https://portal.cloud.hashicorp.com/?utm_source=learn)
 * Create HCP IAM Service principal and key with role: `Contributor`
-* Create AWS IAM Credentials with privilages to build: `vpc, sg, tgw, eks, ec2`
+* Obtain AWS IAM Credentials with privilages to build: `vpc, sg, tgw, eks, ec2`
 
 ## Provision the Plumbing - HCP, AWS VPC and Transit GW
-This tutorial can be ran from the CLI using OSS terraform.  Just update the data.tf files to reference local state files and script the TFCB steps below.  I prefer using Terraform Cloud for Business (TFCB).  Like OSS it uses the same terraform binary.  Unlike OSS it centralizes and automates the admin of all your infra provisioning processes supporting many additional workflows out of the box.  I'll be using the VCS workflow which applies changes when the repo has a new commit.  TFCB supports RBAC across people and teams to enable collaboration and securely store or share sensitive data across pipelines.  We will leverage this capability to securely share tf outputs from different state files when configuring our remote ec2 and eks agents.
+This tutorial will use Terraform Cloud (TFC) because its free to individuals and offers better security and centralized administration.  We will be using the VCS workflow which applies changes when the configured github repo:branch has merged a new commit.  This enforces using VCS for all changes.  TFCB has a private module registry with support for SSO, and RBAC to enable collaboration and self service across teams which is great for larger Orgs.  TFC uses Vault's AES 256 bit encryption under the hood to securely store and share sensitive data across any pipeline.  We will leverage these capability to securely share terraform outputs from different state files when configuring things like our transit gateway, ec2, and eks consul agents.
 
 ### Setup TFCB
+This setup can be done manually through the UI, but we are going to use the TFC API to setup our first workspace.  This will be our administrative workspace we use to store sensitive variables and build and manage our other child workspaces using Terraform (TFE provider).
+
 Go to `tfcb_workspaces/scripts`
 * read `TFE_Workspace_README.md` and follow all the steps to setup your terminal environment.
 * run `addAdmin_workspace.sh` to successfully create the admin-tfc-workspace
@@ -21,4 +24,6 @@ Go to `tfcb_workspaces/scripts`
 Create workspaces for each of the infrastructure components we need to provision in the environment.
 * Go to TFCB -> admin-tfc-workspace -> Actions -> Start new run -> Start run
 
-Now you should have a few more workspaces created.  The `hcp_consul` workspace was set with queue_all_runs=true so it will attempt to run terraform plan/apply immediately.  This workspace must have AWS credentials to run.
+Now you should have a few more workspaces created.  The `hcp_consul` workspace was set with queue_all_runs=true so it will attempt to run terraform plan/apply immediately.  This workspace must have AWS credentials to run.  Verify it ran successfully.  If necessary troubleshoot any issues and rerun until you have HCP setup and a working VPC.
+
+### R

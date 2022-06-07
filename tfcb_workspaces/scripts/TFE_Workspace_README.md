@@ -1,16 +1,16 @@
 # TFE Automation Script
-`./scripts/addAdmin_workspace.sh` creates a workspace that is integrated with a GitHub repo.  This script can create your initial ADMIN Workspace which can hold sensitive terraform/env variables and should be locked down to owners only.  This workspace can then be used to securely create child workspaces configured with your sensitive credentials already encrypted.
+`./scripts/addAdmin_workspace.sh` creates a workspace that is integrated with a GitHub repo.  This script creates your initial ADMIN Workspace which holds global vars including sensitive terraform/env variables and should be locked down to owners only.  This workspace can then be used to securely create child workspaces configured with sensitive credentials already encrypted as write only values.  Allow other users access to the child workspaces that are already linked to specifc github repos and branches that they can manage.  Other users and teams can manage their own infra without ever having access to AWS credentials.
 
 ## Introduction
-This script uses curl to interact with Terraform Enterprise via the Terraform Enterprise REST API. The same APIs could be used from Jenkins or other solutions to incorporate Terraform Enterprise into your CI/CD pipeline.
+This script uses curl to interact with Terraform Enterprise via the Terraform Enterprise REST API. The same APIs can be used from Jenkins or other solutions to incorporate a Terraform Enterprise API driven workflow into your CI/CD pipeline.
 
-You can Add your sensitive Cloud credentials by sourcing them into your shell as local environment variables.  The default script will look for the default HCP, AWS, GCP, and Azure ENV variables during runtime. Here are a list of shell environment variables the script will look for.
+Add your sensitive Cloud credentials by sourcing them into your shell as local environment variables.  If using OSS you are probably already doing this.  The default script will look for the default HCP, AWS, GCP, and Azure ENV variables during runtime. Here are a list of shell environment variables the script will look for.
 
 
 Required
 ```
-OAUTH_TOKEN_ID <setup github oauth and use ID here>
-ATLAS_TOKEN <Enterprise TF Token>
+OAUTH_TOKEN_ID <setup github oauth and export ID here>
+ATLAS_TOKEN <Terraform Enterprise Team Token>
 organization <your github org name>
 ```
 
@@ -70,27 +70,23 @@ BRANCH="main"
 
 ## Select Terraform Version
 TF_VERSION="1.1.4"
-
-## Export your AWS credentials to have them managed by the TFCB admin workspace:
+```
+### Export your AWS credentials to have them managed by the TFCB admin workspace:
 ```
 export AWS_SECRET_ACCESS_KEY=""
 export AWS_ACCESS_KEY_ID=""
 ```
 
-## Next update each file ./tfcb_workspaces/<workspace>.tf
+Next update the tf_variables_sec var in each workspace file (./tfcb_workspaces/<workspace-name>.tf).  This will tell the child workspace to inherit the AWS credentials from the Admin workspace.  TFCB now supports inheritance so this process could be rewritten. 
 ```
 tf_variables_sec = {
 "AWS_ACCESS_KEY_ID" = var.aws_access_key_id
 "AWS_SECRET_ACCESS_KEY" = var.aws_secret_access_key
 }
 ```
-# Note: There are many different ways to manage creds in TFCB depending on your security level.
-#       These creds will be encrypted in each child workspace.  They will be clear text in the
-#       admi
+Note: There are many different ways to manage creds in TFCB depending on your security requirements.  These creds will be encrypted in each child workspace.  They will be clear text in the
 
-```
-
-6. Pre-Check
+1. Pre-Check
 Verify you have the Required environment variables set (OAUTH_TOKEN_ID, ATLAS_TOKEN, organization, AWS, HCP, and SSH)
 ```
 env
@@ -102,9 +98,3 @@ There are many different ways to manage credentials in your TFC workspace. One o
 ./addAdmin_workspace.sh
 ```
 You should now have your ADMIN workspace created in TFCB and be ready to provision child workspaces with standard configurations and securely add encrypted sensitive variables too.
-
-### Note: Using with Private Terraform Enterprise Server using private CA
-If you use this script with a Private Terraform Enterprise (PTFE) server that uses a private CA instead of a public CA, you will need to ensure that the curl commands run by the script will trust the private CA.  There are several ways to do this.  The first is easiest for enabling the automation script to run, but it only affects curl. The second and third are useful for using the Terraform and TFE CLIs against your PTFE server. The third is a permanent solution.
-1. `export  CURL_CA_BUNDLE=<path_to_ca_bundle>`
-1. Export the Golang SSL_CERT_FILE and/or SSL_CERT_DIR environment variables. For instance, you could set the first of these to the same CA bundle used in option 1.
-1. Copy your certificate bundle to /etc/pki/ca-trust/source/anchors and then run `update-ca-trust extract`.

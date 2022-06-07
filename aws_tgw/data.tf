@@ -32,7 +32,7 @@ data "aws_caller_identity" "current" {}
 data "terraform_remote_state" "hcp_consul" {
   backend = "remote"
   config = {
-    organization = "presto-projects"
+    organization = var.organization
     workspaces = {
       name = "hcp_consul"
     }
