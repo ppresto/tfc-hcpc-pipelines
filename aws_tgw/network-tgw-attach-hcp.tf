@@ -22,7 +22,7 @@ resource "hcp_aws_transit_gateway_attachment" "example" {
   ]
 
   hvn_id                        = data.terraform_remote_state.hcp_consul.outputs.hvn_id
-  transit_gateway_attachment_id = "hcp-tgw-attachment"
+  transit_gateway_attachment_id = "hcpc-tgw-${var.region}-attachment"
   transit_gateway_id            = module.tgw.ec2_transit_gateway_id
   resource_share_arn            = aws_ram_resource_share.hcpc.arn
 }
@@ -30,7 +30,7 @@ resource "hcp_aws_transit_gateway_attachment" "example" {
 #Finally define the HCP Route to the VPC CIDR
 resource "hcp_hvn_route" "route" {
   hvn_link         = data.terraform_remote_state.hcp_consul.outputs.hvn_self_link
-  hvn_route_id     = "hvn-to-tgw-attachment"
+  hvn_route_id     = "hvn-to-tgw-${var.region}-attachment"
   destination_cidr = data.terraform_remote_state.hcp_consul.outputs.vpc_cidr_block
   target_link      = hcp_aws_transit_gateway_attachment.example.self_link
 }
