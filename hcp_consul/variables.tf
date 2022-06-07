@@ -39,5 +39,5 @@ variable "cloud_provider" {
 variable "vpc_cidr_block" {
   description = "VPC CIDR Block Range"
   type        = string
-  default     = "10.20.0.0/16"
+  default     = "10.21.0.0/16"
 }
