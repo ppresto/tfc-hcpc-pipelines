@@ -9,6 +9,7 @@ variable "region" {
   type        = string
   default     = "us-west-2"
 }
+variable "organization" { default = "my_org_name" }
 
 variable "ec2_key_pair_name" {
   description = "An existing EC2 key pair used to access the bastion server."
