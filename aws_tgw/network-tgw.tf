@@ -3,7 +3,7 @@ module "tgw" {
   source  = "terraform-aws-modules/transit-gateway/aws"
   version = "2.5.0"
 
-  name            = "tgw-presto-1"
+  name            = "${var.region}-hcpc-tgw"
   description     = "My TGW shared with several other AWS accounts"
   amazon_side_asn = 64532
 
@@ -29,9 +29,9 @@ module "tgw" {
   ram_allow_external_principals = true
   #ram_principals                = [711129375688]
   tgw_default_route_table_tags = {
-    name = "tgw-presto-1-default_rt"
+    name = "${var.region}-tgw-default_rt"
   }
   tags = {
-    project = "hcp-tgw-presto-1"
+    project = "${var.region}-hcpc-tgw"
   }
 }
