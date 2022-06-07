@@ -19,6 +19,7 @@ module "aws-ec2" {
   tf_variables = {
     "ssh_key_name" = var.ssh_key_name
     "region"       = var.aws_default_region
+    "organization" = var.organization
   }
   env_variables_sec = {
     "HCP_CLIENT_SECRET" = var.HCP_CLIENT_SECRET

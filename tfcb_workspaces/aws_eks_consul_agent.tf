@@ -20,6 +20,7 @@ module "aws_eks_consul_agent" {
   tf_variables = {
     "ssh_key_name"    = var.ssh_key_name
     "region"          = var.aws_default_region
+    "organization" = var.organization
     "consul_template" = "fake-service"
     "namespace"       = "consul"
   }

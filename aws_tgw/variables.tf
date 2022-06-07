@@ -4,7 +4,7 @@ variable "region" {
   default     = "us-west-1"
 }
 
-variable "organization" { default = "Patrick" }
+variable "organization" { default = "my_org_name" }
 
 # VPC
 variable "vpc_cidr_block" {

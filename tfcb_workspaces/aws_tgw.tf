@@ -19,6 +19,7 @@ module "ws_aws_tgw" {
   }
   tf_variables = {
     "region" = var.aws_default_region
+    "organization" = var.organization
   }
   env_variables_sec = {
     "HCP_CLIENT_SECRET" = var.HCP_CLIENT_SECRET

@@ -1,7 +1,7 @@
 # HVN belongs to an AWS organization managed by HashiCorp, first define an AWS resource share
 # that allows the two organizations to share resources.
 resource "aws_ram_resource_share" "hcpc" {
-  name                      = "hcpc-resource-share"
+  name                      = "hcpc-${var.region}-share"
   allow_external_principals = true
 }
 resource "aws_ram_principal_association" "example" {
