@@ -2,7 +2,7 @@
 data "aws_region" "current" {}
 
 
-data "terraform_remote_state" "aws_tgw" {
+data "terraform_remote_state" "aws_usw_dev_tgw" {
   backend = "remote"
   config = {
     organization = var.organization

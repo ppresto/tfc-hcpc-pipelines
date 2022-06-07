@@ -9,7 +9,7 @@ variable "region" {
   type        = string
   default     = "us-west-2"
 }
-
+variable "organization" { default = "my_org_name" }
 variable "namespace" {
   description = "K8s Namespace"
   type        = string
