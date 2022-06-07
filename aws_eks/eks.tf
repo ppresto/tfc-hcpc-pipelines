@@ -8,8 +8,8 @@ locals {
 
   tags = {
     Example    = local.name
-    GithubRepo = "hcp_consul"
-    GithubOrg  = "ppresto"
+    GithubRepo = basename("${path.cwd}/..")
+    Owner  = local.name
   }
 }
 
