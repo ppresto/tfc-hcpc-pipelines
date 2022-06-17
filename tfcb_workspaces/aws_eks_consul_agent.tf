@@ -18,7 +18,6 @@ module "aws_eks_consul_agent" {
     "HCP_CLIENT_ID" = var.HCP_CLIENT_ID
   }
   tf_variables = {
-    "ssh_key_name"    = var.ssh_key_name
     "region"          = var.aws_default_region
     "organization" = var.organization
     "consul_template" = "fake-service"

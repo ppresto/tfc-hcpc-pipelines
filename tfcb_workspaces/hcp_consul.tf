@@ -18,7 +18,6 @@ module "ws_hcp_consul" {
     "HCP_CLIENT_ID" = var.HCP_CLIENT_ID
   }
   tf_variables = {
-    "ssh_key_name"   = var.ssh_key_name
     "hvn_id"         = "uswest-hvn-id"
     "cluster_id"     = "uswest"
     "region"         = var.aws_default_region
