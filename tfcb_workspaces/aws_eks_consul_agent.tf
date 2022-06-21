@@ -16,6 +16,7 @@ module "aws_eks_consul_agent" {
     "CONFIRM_DESTROY" : 1
     "AWS_DEFAULT_REGION" : var.aws_default_region
     "HCP_CLIENT_ID" = var.HCP_CLIENT_ID
+    "AWS_ACCESS_KEY_ID" = var.aws_access_key_id
   }
   tf_variables = {
     "region"          = var.aws_default_region
@@ -25,7 +26,6 @@ module "aws_eks_consul_agent" {
   }
   env_variables_sec = {
     "HCP_CLIENT_SECRET" = var.HCP_CLIENT_SECRET
-    "AWS_ACCESS_KEY_ID" = var.aws_access_key_id
     "AWS_SECRET_ACCESS_KEY" = var.aws_secret_access_key
   }
   tf_variables_sec = {}

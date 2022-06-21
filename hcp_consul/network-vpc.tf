@@ -4,16 +4,6 @@ provider "aws" {
 # data source for current (working) aws region
 data "aws_region" "current" {}
 
-# data source for VPC id for the VPC being used
-data "aws_vpc" "vpc" {
-  default = true
-}
-
-# data source for subnet ids in VPC
-data "aws_subnet_ids" "default" {
-  vpc_id = data.aws_vpc.vpc.id
-}
-
 # data source for availability zones
 data "aws_availability_zones" "available" {
   state = "available"
