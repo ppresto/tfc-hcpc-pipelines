@@ -1,5 +1,5 @@
 # TFE Automation Script
-`./scripts/addAdmin_workspace.sh` creates a workspace that is integrated with a GitHub repo.  This script creates your initial ADMIN Workspace which holds global vars including sensitive terraform/env variables and should be locked down to owners only.  This workspace can then be used to securely create child workspaces configured with sensitive credentials already encrypted as write only values.  Allow other users access to the child workspaces that are already linked to specifc github repos and branches that they can manage.  Other users and teams can manage their own infra without ever having access to AWS credentials.
+`./scripts/addAdmin_workspace.sh` creates a workspace that is integrated with a GitHub repo.  This script creates your initial ADMIN Workspace which holds global vars including sensitive terraform/env variables and should be locked down to owners only.  This workspace will be used to securely create child workspaces configured with sensitive credentials already encrypted as write only values.  This model can allow other teams/users access to a specific child workspace that has a webhook to a specifc github repo/branch and will automatically run plans for PR's, and apply any commits.  This enables other users and teams to get up and running quickly, and manage day 2 ops for their own infra without ever having access to the AWS credentials used to provision.
 
 ## Introduction
 This script uses curl to interact with Terraform Enterprise via the Terraform Enterprise REST API. The same APIs can be used from Jenkins or other solutions to incorporate a Terraform Enterprise API driven workflow into your CI/CD pipeline.
@@ -73,15 +73,22 @@ TF_VERSION="1.1.4"
 ```
 ### Export your AWS credentials to have them managed by the TFCB admin workspace:
 ```
-export AWS_SECRET_ACCESS_KEY=""
-export AWS_ACCESS_KEY_ID=""
+export AWS_SECRET_ACCESS_KEY="key_value_here"
+export AWS_ACCESS_KEY_ID="key_id_here"
 ```
 
-Next update the tf_variables_sec var in each workspace file (./tfcb_workspaces/<workspace-name>.tf).  This will tell the child workspace to inherit the AWS credentials from the Admin workspace.  TFCB now supports inheritance so this process could be rewritten. 
+### Hashicorp SE's use instruqt for short lived AWS Credentials.
+Hashicorp SE's can use this instruqt sandbox terminal to quickly source short lived AWS Credentials into their environment.  This can help prevent running into vpc/tgw limits.  Click here to start the [Instruqt sandbox workshop](https://play.instruqt.com/hashicorp/tracks/fra-ssn-enablement)
 ```
-tf_variables_sec = {
-"AWS_ACCESS_KEY_ID" = var.aws_access_key_id
-"AWS_SECRET_ACCESS_KEY" = var.aws_secret_access_key
+echo "export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}\nexport AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
+```
+Cut and paste the output into your local terminal for AWS Credentials.
+
+If you want to inject credentials into TFC with doormat, vault, or another workflow you can easily disable this by commenting out the env_variables_sec var in each workspace file (./tfcb_workspaces/<workspace-name>.tf).
+```
+env_variables_sec = {
+#"AWS_ACCESS_KEY_ID" = var.aws_access_key_id
+#"AWS_SECRET_ACCESS_KEY" = var.aws_secret_access_key
 }
 ```
 Note: There are many different ways to manage creds in TFCB depending on your security requirements.  These creds will be encrypted in each child workspace.  They will be clear text in the

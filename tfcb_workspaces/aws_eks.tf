@@ -23,6 +23,8 @@ module "aws-eks" {
   }
   env_variables_sec = {
     "HCP_CLIENT_SECRET" = var.HCP_CLIENT_SECRET
+    "AWS_ACCESS_KEY_ID" = var.aws_access_key_id
+    "AWS_SECRET_ACCESS_KEY" = var.aws_secret_access_key
   }
   tf_variables_sec = {}
 }
