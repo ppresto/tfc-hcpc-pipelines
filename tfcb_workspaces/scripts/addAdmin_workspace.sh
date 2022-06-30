@@ -93,6 +93,10 @@ if [ -z ${HCP_CLIENT_SECRET} ]; then
   echo "See how to create your Client ID and Secret here: https://www.youtube.com/watch?v=0CgqO1WzyPU"
   exit 1
 fi
+if [ -z ${AWS_DEFAULT_REGION} ]; then
+  echo "ERROR:  Set your AWS_DEFAULT_REGION variable to your default region (ex: us-west-2)."
+  exit 1
+fi
 if [ -z ${SSH_KEY_NAME} ]; then
   echo "ERROR:  Set your SSH_KEY_NAME variable to your AWS ssh key pair name.  This is needed to ssh to your ec2 and eks nodes."
   echo "If you dont have an ssh key in the region you want to provision in, you can create one following these instructions here: https://docs.aws.amazon.com/ground-station/latest/ug/create-ec2-ssh-key-pair.html"
@@ -220,7 +224,7 @@ upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" -
 if [[ ! -z ${SSH_KEY_NAME} ]]; then
   # AWS_DEFAULT_REGION
   sed -e "s/my-organization/TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/ssh_key_name/" -e "s/my-value/${SSH_KEY_NAME}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
-  echo "Adding Personal AWS SSH_KEY_NAME:  $SSH_KEY_NAME"
+  echo "Adding AWS SSH_KEY_NAME:  $SSH_KEY_NAME"
   upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 fi
 
@@ -241,7 +245,7 @@ fi
 if [ ! -z ${TFC_ORGANIZATION} ]; then
   # organization
   sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/organization/" -e "s/my-value/${TFC_ORGANIZATION}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
-  echo "Adding organization"
+  echo "Adding TFC_ORGANIZATION: ${TFC_ORGANIZATION}"
   upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 fi
 

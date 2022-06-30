@@ -25,5 +25,3 @@ Create workspaces for each of the infrastructure components we need to provision
 * Go to TFCB -> admin-tfc-workspace -> Actions -> Start new run -> Start run
 
 Now you should have a few more workspaces created.  The `hcp_consul` workspace was set with queue_all_runs=true so it will attempt to run terraform plan/apply immediately.  This workspace must have AWS credentials to run.  Verify it ran successfully.  If necessary troubleshoot any issues and rerun until you have HCP setup and a working VPC.
-
-### R
