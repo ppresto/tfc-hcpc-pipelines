@@ -32,6 +32,6 @@ resource "hcp_hvn_route" "route" {
   hvn_link         = data.terraform_remote_state.hcp_consul.outputs.hvn_self_link
   hvn_route_id     = "hvn-to-tgw-${var.region}-attachment"
   #destination_cidr = data.terraform_remote_state.hcp_consul.outputs.vpc_cidr_block
-  destination_cidr = "10.0.0.0/12"
+  destination_cidr = "10.0.0.0/10"  # 10.0-10.63
   target_link      = hcp_aws_transit_gateway_attachment.example.self_link
 }
