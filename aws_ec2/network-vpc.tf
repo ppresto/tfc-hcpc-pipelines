@@ -36,7 +36,7 @@ module "vpc" {
 }
 
 resource "aws_ec2_transit_gateway_vpc_attachment" "example" {
-  subnet_ids         = [module.vpc.private_subnets]
+  subnet_ids         = module.vpc.private_subnets
   transit_gateway_id = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
   vpc_id             = module.vpc.vpc_id
 }
