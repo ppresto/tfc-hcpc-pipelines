@@ -11,7 +11,7 @@ module "aws-eks" {
   oauth_token_id      = var.oauth_token_id
   repo_branch         = "main"
   global_remote_state = false
-  tag_names           = ["aws", "eks", "${var.aws_default_region}","${var.env}"]
+  tag_names           = ["aws", "eks", "${var.aws_default_region}", "${var.env}"]
   env_variables = {
     "CONFIRM_DESTROY" : 1
     "AWS_DEFAULT_REGION" : var.aws_default_region
@@ -19,9 +19,9 @@ module "aws-eks" {
   }
   tf_variables = {
     "ec2_key_pair_name" = var.ssh_key_name
-    "region"       = var.aws_default_region
-    "organization" = var.organization
-    "env"          = var.env
+    "region"            = var.aws_default_region
+    "organization"      = var.organization
+    "env"               = var.env
   }
   env_variables_sec = {
     "HCP_CLIENT_SECRET" = var.HCP_CLIENT_SECRET

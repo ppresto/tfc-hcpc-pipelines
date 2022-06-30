@@ -9,7 +9,7 @@ locals {
   tags = {
     Example    = local.name
     GithubRepo = basename("${path.cwd}/..")
-    Owner  = local.name
+    Owner      = local.name
   }
 }
 

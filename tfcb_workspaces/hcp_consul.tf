@@ -17,9 +17,10 @@ module "ws_hcp_consul" {
     "AWS_DEFAULT_REGION" : var.aws_default_region
     "HCP_CLIENT_ID" = var.HCP_CLIENT_ID
   }
+  # local.region_shortname ex: "usw2"
   tf_variables = {
-    "hvn_id"         = "uswest-hvn-id"
-    "cluster_id"     = "uswest"
+    "hvn_id"         = "${local.region_shortname}-hvn-id"
+    "cluster_id"     = local.region_shortname
     "region"         = var.aws_default_region
     "cloud_provider" = "aws"
     "vpc_id"         = null
