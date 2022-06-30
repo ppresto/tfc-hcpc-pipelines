@@ -11,7 +11,7 @@ module "aws-ec2" {
   oauth_token_id      = var.oauth_token_id
   repo_branch         = "main"
   global_remote_state = false
-  tag_names           = ["auto", "ec2", "${var.aws_default_region}", "${var.env}"]
+  tag_names           = ["aws", "ec2", "${var.aws_default_region}", "${var.env}"]
   env_variables = {
     "CONFIRM_DESTROY" : 1
     "AWS_DEFAULT_REGION" : var.aws_default_region

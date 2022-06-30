@@ -11,12 +11,11 @@ module "ws_hcp_consul" {
   oauth_token_id      = var.oauth_token_id
   repo_branch         = "main"
   global_remote_state = false
-  tag_names           = ["auto", "consul", "vpc", "${var.aws_default_region}"]
+  tag_names           = ["aws", "consul", "vpc", "${var.aws_default_region}"]
   env_variables = {
     "CONFIRM_DESTROY" : 1
     "AWS_DEFAULT_REGION" : var.aws_default_region
     "HCP_CLIENT_ID" = var.HCP_CLIENT_ID
-    "AWS_ACCESS_KEY_ID" = var.aws_access_key_id
   }
   tf_variables = {
     "hvn_id"         = "uswest-hvn-id"
@@ -27,7 +26,6 @@ module "ws_hcp_consul" {
   }
   env_variables_sec = {
     "HCP_CLIENT_SECRET" = var.HCP_CLIENT_SECRET
-    "AWS_SECRET_ACCESS_KEY" = var.aws_secret_access_key
   }
   tf_variables_sec = {}
 }

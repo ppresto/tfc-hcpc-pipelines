@@ -1,7 +1,8 @@
 data "tfe_workspace_ids" "uswest2" {
-  tag_names    = [var.aws_default_region]
+  tag_names    = ["aws", var.aws_default_region]
   organization = var.organization
-  depends_on   = [module.ws_hcp_consul]
+  # Wait for workspaces to be created before looking up by tag name
+  depends_on   = [module.ws_hcp_consul, module.aws-ec2, module.aws_eks_consul_agent, module.aws-eks, module.ws_aws_tgw]
 }
 
 resource "tfe_variable_set" "cloud_creds" {
