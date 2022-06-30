@@ -40,14 +40,16 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "example" {
   transit_gateway_id = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
   vpc_id             = module.vpc.vpc_id
 }
-resource "aws_route_table" "example" {
-  vpc_id = module.vpc.vpc_id
-
-  route {
-    cidr_block = var.vpc_cidr_block
-    transit_gateway_id = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
-  }
-  tags = {
-    Name = "${var.prefix}-vpc2-rt"
-  }
+resource "aws_route" "private" {
+  for_each               = toset(module.vpc.private_route_table_ids)
+  route_table_id         = each.key
+  destination_cidr_block = data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block
+  transit_gateway_id     = module.tgw.ec2_transit_gateway_id
+}
+# VPC public subnet route to HCP CIDR Block
+resource "aws_route" "public" {
+  for_each               = toset(module.vpc.public_route_table_ids)
+  route_table_id         = each.key
+  destination_cidr_block = data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block
+  transit_gateway_id     = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
 }
