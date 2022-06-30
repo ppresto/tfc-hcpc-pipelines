@@ -7,10 +7,3 @@ output "a_ssh_bastion_to_svcNode" {
   value       = "ssh -J ubuntu@${data.terraform_remote_state.aws_usw_dev_tgw.outputs.bastion_ip} ubuntu@${aws_instance.node.private_ip}"
   description = "ssh to bastion and then to private network ec2 svc node"
 }
-
-output "private_route_table_ids" {
-  value = module.vpc.private_route_table_ids
-}
-output "public_route_table_ids" {
-  value = module.vpc.public_route_table_ids
-}
