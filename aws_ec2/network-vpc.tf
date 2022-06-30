@@ -44,7 +44,7 @@ resource "aws_route" "private" {
   for_each               = toset(module.vpc.private_route_table_ids)
   route_table_id         = each.key
   destination_cidr_block = data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block
-  transit_gateway_id     = module.tgw.ec2_transit_gateway_id
+  transit_gateway_id     = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
 }
 # VPC public subnet route to HCP CIDR Block
 resource "aws_route" "public" {
