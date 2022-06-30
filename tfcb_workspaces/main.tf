@@ -7,7 +7,7 @@ resource "tfe_variable_set" "cloud_creds" {
   name          = "AWS_Cloud_Credentials"
   description   = "AWS Creds for child workspaces in ${var.aws_default_region} to inherit"
   organization  = var.organization
-  workspace_ids = [data.tfe_workspace_ids.uswest2.ids]
+  workspace_ids = [keys(data.tfe_workspace_ids.uswest2.ids)]
 }
 
 resource "tfe_variable" "aws_access_key_id" {
