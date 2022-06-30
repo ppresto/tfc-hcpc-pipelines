@@ -5,7 +5,7 @@ module "ws_hcp_consul" {
   workspacename       = "aws_${var.aws_default_region}_shared_hcp-consul"
   workingdir          = "hcp_consul"
   tfversion           = "1.1.4"
-  queue_all_runs      = true
+  queue_all_runs      = false
   auto_apply          = true
   identifier          = "${var.repo_org}/hcpc-vpc-ec2-eks"
   oauth_token_id      = var.oauth_token_id
