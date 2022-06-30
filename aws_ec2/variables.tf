@@ -3,7 +3,7 @@ variable "prefix" {
   type        = string
   default     = "presto"
 }
-
+variable "env" { default = "dev" }
 variable "region" {
   description = "AWS region."
   type        = string
