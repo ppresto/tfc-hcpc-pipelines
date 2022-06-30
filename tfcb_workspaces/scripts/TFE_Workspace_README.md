@@ -11,7 +11,7 @@ Required
 ```
 OAUTH_TOKEN_ID <setup github oauth and export ID here>
 ATLAS_TOKEN <Terraform Enterprise Team Token>
-organization <your github org name>
+TFC_ORGANIZATION <your github org name>
 ```
 
 Required for this tutorial.
@@ -77,12 +77,19 @@ export AWS_SECRET_ACCESS_KEY="key_value_here"
 export AWS_ACCESS_KEY_ID="key_id_here"
 ```
 
-### Hashicorp SE's use instruqt for short lived AWS Credentials.
+#### Hashicorp SE's use instruqt for short lived AWS Credentials.
 Hashicorp SE's can use this instruqt sandbox terminal to quickly source short lived AWS Credentials into their environment.  This can help prevent running into vpc/tgw limits.  Click here to start the [Instruqt sandbox workshop](https://play.instruqt.com/hashicorp/tracks/fra-ssn-enablement)
 ```
 echo "export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}\nexport AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
 ```
-Cut and paste the output into your local terminal for AWS Credentials.
+
+* Cut and paste the output into your local terminal session. 
+* Set your AWS_DEFAULT_REGION.
+```
+#cut/paste output from instruqt environment into your terminal session
+
+export AWS_DEFAULT_REGION="us-west-2"
+```
 
 If you want to inject credentials into TFC with doormat, vault, or another workflow you can easily disable this by commenting out the env_variables_sec var in each workspace file (./tfcb_workspaces/<workspace-name>.tf).
 ```
@@ -93,6 +100,25 @@ env_variables_sec = {
 ```
 Note: There are many different ways to manage creds in TFCB depending on your security requirements.  These creds will be encrypted in each child workspace.  They will be clear text in the
 
+### Create AWS keypair
+EC2 and EKS nodes are provisioned to use your ssh key to allow direct access.  You may already have an existing ssh key you can use in AWS.  Check for an existing default named key in your home directory
+```
+ls -al $HOME/.ssh/id_rsa*
+```
+If you see 2 files (id_rsa_pub, id_rsa) then there is no need to create a new key.
+
+If you have no key, create one with ssh-keygen
+```
+ssh-keygen -t rsa
+```
+
+Copy your local key into AWS with the following script and set the SSH_KEY_NAME environment variable used by ./addAdmin_workspace.sh.
+```
+source ./push-local-sshkeypair-to-aws.sh
+```
+Edit the script to define your key location, keypair name, and target region.  By default this script will copy $HOME/.ssh/id_rsa.pub, to `my-aws-keypair-###`, across all available AWS regions.
+
+Verify 
 1. Pre-Check
 Verify you have the Required environment variables set (OAUTH_TOKEN_ID, ATLAS_TOKEN, organization, AWS, HCP, and SSH)
 ```
@@ -100,7 +126,7 @@ env
 ```
 There are many different ways to manage credentials in your TFC workspace. One option can be to use this Admin workspace.  Source your Cloud credentials into your shell env to securely copy them over HTTPS into your admin workspace.  When building child workspaces you can now reference these variables from the admin workspace and have them populated into the child workspace as write only variables.  This design allows only the Admin to see the secrets while all child workspaces inherit them as encrypted variables used for provisioning access.
 
-1. Run the script
+2. Run the script
 ```
 ./addAdmin_workspace.sh
 ```

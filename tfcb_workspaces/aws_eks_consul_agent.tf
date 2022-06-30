@@ -2,7 +2,7 @@ module "aws_eks_consul_agent" {
   source              = "../modules/workspace-mgr"
   agent_pool_id       = ""
   organization        = var.organization
-  workspacename       = "aws_usw_dev_eks_consul_agent"
+  workspacename       = "aws_${var.aws_default_region}_dev_eks_consul_agent"
   workingdir          = "aws_eks_consul_agent"
   tfversion           = "1.1.4"
   queue_all_runs      = false

@@ -52,7 +52,7 @@ BRANCH="main"
 TF_VERSION="1.1.4"
 
 # set sensitive TFC, HCP environment variables/tokens
-TFC_ORGANIZATION="Patrick"
+#TFC_ORGANIZATION="Patrick"
 #source $HOME/tfeSetEnv.sh "${TFC_ORGANIZATION}"
 #source $HOME/hcpSetEnv.sh
 
@@ -78,7 +78,7 @@ if [ -z ${ATLAS_TOKEN} ]; then
   exit 1
 fi
 if [ -z ${TFC_ORGANIZATION} ]; then
-  echo "ERROR:  Set your Github Organization variable ORGANIZATION to enable VCS integration"
+  echo "ERROR:  Set your Github Organization variable TFC_ORGANIZATION to enable VCS integration"
   exit 1
 fi
 if [ -z ${HCP_CLIENT_ID} ]; then
@@ -96,6 +96,7 @@ fi
 if [ -z ${SSH_KEY_NAME} ]; then
   echo "ERROR:  Set your SSH_KEY_NAME variable to your AWS ssh key pair name.  This is needed to ssh to your ec2 and eks nodes."
   echo "If you dont have an ssh key in the region you want to provision in, you can create one following these instructions here: https://docs.aws.amazon.com/ground-station/latest/ug/create-ec2-ssh-key-pair.html"
+  echo "If you want to copy your local key to AWS run ./push-local-sshkeypair-to-aws.sh"
   exit 1
 fi
 

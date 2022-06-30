@@ -2,7 +2,7 @@ module "aws-eks" {
   source              = "../modules/workspace-mgr"
   agent_pool_id       = ""
   organization        = var.organization
-  workspacename       = "aws_usw_dev_eks"
+  workspacename       = "aws_${var.aws_default_region}_dev_eks"
   workingdir          = "aws_eks"
   tfversion           = "1.1.4"
   queue_all_runs      = false

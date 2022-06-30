@@ -2,7 +2,7 @@ module "ws_aws_tgw" {
   source              = "../modules/workspace-mgr"
   agent_pool_id       = ""
   organization        = var.organization
-  workspacename       = "aws_usw_dev_tgw"
+  workspacename       = "aws_${var.aws_default_region}_dev_tgw"
   workingdir          = "aws_tgw"
   tfversion           = "1.1.4"
   queue_all_runs      = false

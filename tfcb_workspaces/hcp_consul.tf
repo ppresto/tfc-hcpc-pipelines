@@ -2,7 +2,7 @@ module "ws_hcp_consul" {
   source              = "../modules/workspace-mgr"
   agent_pool_id       = ""
   organization        = var.organization
-  workspacename       = "hcp_consul"
+  workspacename       = "aws_${var.aws_default_region}_hcp_consul"
   workingdir          = "hcp_consul"
   tfversion           = "1.1.4"
   queue_all_runs      = true

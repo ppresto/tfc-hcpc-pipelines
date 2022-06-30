@@ -3,7 +3,7 @@ data "terraform_remote_state" "hcp_consul" {
   config = {
     organization = var.organization
     workspaces = {
-      name = "hcp_consul"
+      name = "aws_${region}_hcp_consul"
     }
   }
 }
@@ -13,7 +13,7 @@ data "terraform_remote_state" "aws-eks" {
   config = {
     organization = var.organization
     workspaces = {
-      name = "aws_usw_dev_eks"
+      name = "aws_${region}_dev_eks"
     }
   }
 }
