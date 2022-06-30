@@ -1,9 +1,9 @@
 resource "aws_security_group" "consul_server" {
-  name_prefix = "${var.region}-consul-server-sg"
+  name_prefix = "${var.region}-vpc2-consul"
   description = "Firewall for the consul server."
   vpc_id      = module.vpc.vpc_id
   tags = merge(
-    { "Name" = "vpc2-${var.region}-consul-server-sg" },
+    { "Name" = "${var.region}-vpc2-consul" },
     { "Project" = var.region },
     { "Owner" = "presto" }
   )
