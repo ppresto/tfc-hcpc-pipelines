@@ -2,7 +2,7 @@ module "ws_aws_tgw" {
   source              = "../modules/workspace-mgr"
   agent_pool_id       = ""
   organization        = var.organization
-  workspacename       = "aws_${var.aws_default_region}_${var.env}_tgw"
+  workspacename       = "aws_${var.env}_tgw"
   workingdir          = "aws_tgw"
   tfversion           = "1.1.4"
   queue_all_runs      = false
@@ -21,6 +21,7 @@ module "ws_aws_tgw" {
     "region" = var.aws_default_region
     "organization" = var.organization
     "ec2_key_pair_name" = var.ssh_key_name
+    "env"          = var.env
   }
   env_variables_sec = {
     "HCP_CLIENT_SECRET" = var.HCP_CLIENT_SECRET

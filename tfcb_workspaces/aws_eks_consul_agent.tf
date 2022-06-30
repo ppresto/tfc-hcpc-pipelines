@@ -2,7 +2,7 @@ module "aws_eks_consul_agent" {
   source              = "../modules/workspace-mgr"
   agent_pool_id       = ""
   organization        = var.organization
-  workspacename       = "aws_${var.aws_default_region}_${var.env}_eks_consul-agent"
+  workspacename       = "aws_${var.env}_eks_consul-agent"
   workingdir          = "aws_eks_consul_agent"
   tfversion           = "1.1.4"
   queue_all_runs      = false
@@ -22,6 +22,7 @@ module "aws_eks_consul_agent" {
     "organization" = var.organization
     "consul_template" = "fake-service"
     "namespace"       = "consul"
+    "env"          = var.env
   }
   env_variables_sec = {
     "HCP_CLIENT_SECRET" = var.HCP_CLIENT_SECRET

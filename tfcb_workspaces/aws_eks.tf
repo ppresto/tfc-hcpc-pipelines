@@ -2,7 +2,7 @@ module "aws-eks" {
   source              = "../modules/workspace-mgr"
   agent_pool_id       = ""
   organization        = var.organization
-  workspacename       = "aws_${var.aws_default_region}_${var.env}_eks"
+  workspacename       = "aws_${var.env}_eks"
   workingdir          = "aws_eks"
   tfversion           = "1.1.4"
   queue_all_runs      = false
@@ -21,6 +21,7 @@ module "aws-eks" {
     "ec2_key_pair_name" = var.ssh_key_name
     "region"       = var.aws_default_region
     "organization" = var.organization
+    "env"          = var.env
   }
   env_variables_sec = {
     "HCP_CLIENT_SECRET" = var.HCP_CLIENT_SECRET
