@@ -40,3 +40,14 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "example" {
   transit_gateway_id = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
   vpc_id             = module.vpc.vpc_id
 }
+resource "aws_route_table" "example" {
+  vpc_id = aws_vpc.example.id
+
+  route {
+    cidr_block = var.vpc_cidr_block
+    transit_gateway_id = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
+  }
+  tags = {
+    Name = "${var.prefix}-vpc2-rt"
+  }
+}
