@@ -2,7 +2,7 @@ module "aws-eks" {
   source              = "../modules/workspace-mgr"
   agent_pool_id       = ""
   organization        = var.organization
-  workspacename       = "aws_${var.aws_default_region}_dev_eks"
+  workspacename       = "aws_${var.aws_default_region}_${var.env}_eks"
   workingdir          = "aws_eks"
   tfversion           = "1.1.4"
   queue_all_runs      = false
@@ -11,6 +11,7 @@ module "aws-eks" {
   oauth_token_id      = var.oauth_token_id
   repo_branch         = "main"
   global_remote_state = false
+  tag_names           = ["auto", "eks", "${var.aws_default_region}","${var.env}"]
   env_variables = {
     "CONFIRM_DESTROY" : 1
     "AWS_DEFAULT_REGION" : var.aws_default_region

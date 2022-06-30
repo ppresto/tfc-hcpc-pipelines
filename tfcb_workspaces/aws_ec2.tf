@@ -2,7 +2,7 @@ module "aws-ec2" {
   source              = "../modules/workspace-mgr"
   agent_pool_id       = ""
   organization        = var.organization
-  workspacename       = "aws_${var.aws_default_region}_dev_ec2"
+  workspacename       = "aws_${var.aws_default_region}_${var.env}_ec2"
   workingdir          = "aws_ec2"
   tfversion           = "1.1.4"
   queue_all_runs      = false
@@ -11,11 +11,11 @@ module "aws-ec2" {
   oauth_token_id      = var.oauth_token_id
   repo_branch         = "main"
   global_remote_state = false
+  tag_names           = ["auto", "ec2", "${var.aws_default_region}", "${var.env}"]
   env_variables = {
     "CONFIRM_DESTROY" : 1
     "AWS_DEFAULT_REGION" : var.aws_default_region
     "HCP_CLIENT_ID" = var.HCP_CLIENT_ID
-    "AWS_ACCESS_KEY_ID" = var.aws_access_key_id
   }
   tf_variables = {
     "ec2_key_pair_name" = var.ssh_key_name
@@ -24,7 +24,6 @@ module "aws-ec2" {
   }
   env_variables_sec = {
     "HCP_CLIENT_SECRET" = var.HCP_CLIENT_SECRET
-    "AWS_SECRET_ACCESS_KEY" = var.aws_secret_access_key
   }
   tf_variables_sec = {}
 }
