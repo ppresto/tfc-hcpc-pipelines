@@ -1,5 +1,5 @@
 data "tfe_workspace_ids" "uswest2" {
-  tag_names    = [${var.aws_default_region}]
+  tag_names    = [var.aws_default_region]
   organization = var.organization
 }
 
