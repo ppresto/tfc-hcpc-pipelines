@@ -45,7 +45,7 @@ resource "aws_security_group_rule" "ec2-svc-node_envoy" {
   protocol          = "tcp"
   from_port         = 20000
   to_port           = 21255
-  cidr_blocks       = ["10.0.0.0/8"]
+  cidr_blocks       = ["0.0.0.0/0"]
   description       = "Allow SSH traffic."
 }
 
@@ -55,7 +55,7 @@ resource "aws_security_group_rule" "ec2-svc-node_9090-9099" {
   protocol          = "tcp"
   from_port         = 9090
   to_port           = 9099
-  cidr_blocks       = ["10.0.0.0/8"]
+  cidr_blocks       = ["0.0.0.0/0"]
   description       = "Allow SSH traffic."
 }
 resource "aws_security_group_rule" "node_allow_22" {
@@ -64,7 +64,7 @@ resource "aws_security_group_rule" "node_allow_22" {
   protocol          = "tcp"
   from_port         = 22
   to_port           = 22
-  cidr_blocks       = ["10.0.0.0/8"]
+  cidr_blocks       = ["0.0.0.0/0"]
   description       = "Allow SSH traffic."
 }
 
