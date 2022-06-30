@@ -33,7 +33,7 @@ resource "aws_instance" "node" {
 resource "aws_security_group" "ec2-svc-node" {
   name_prefix = "${var.region}-ec2-svc-node-sg"
   description = "Security Group for ec2-svc-nodes"
-  vpc_id      = data.terraform_remote_state.hcp_consul.outputs.vpc_id
+  vpc_id      = module.vpc.vpc_id
   tags = merge(
     { "Name" = "presto-${var.region}-ec2-svc-node-sg" },
     { "Project" = var.region }

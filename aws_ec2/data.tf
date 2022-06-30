@@ -12,7 +12,7 @@ data "terraform_remote_state" "aws_usw_dev_tgw" {
   config = {
     organization = var.organization
     workspaces = {
-      name = "aws_dev_tgw"
+      name = "aws_${var.env}_tgw"
     }
   }
 }

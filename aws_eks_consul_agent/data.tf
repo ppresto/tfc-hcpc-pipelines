@@ -13,7 +13,7 @@ data "terraform_remote_state" "aws-eks" {
   config = {
     organization = var.organization
     workspaces = {
-      name = "aws_${env}_eks"
+      name = "aws_${var.env}_eks"
     }
   }
 }
