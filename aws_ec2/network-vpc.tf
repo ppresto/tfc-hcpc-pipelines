@@ -53,3 +53,9 @@ resource "aws_route" "publicToHcp" {
   destination_cidr_block = data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block
   transit_gateway_id     = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
 }
+resource "aws_route" "allVPC" {
+  for_each               = toset(module.vpc.public_route_table_ids)
+  route_table_id         = each.key
+  destination_cidr_block = "10.0.0.0/8"
+  transit_gateway_id     = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
+}
