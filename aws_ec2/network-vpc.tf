@@ -61,12 +61,12 @@ resource "aws_route" "publicToHcp" {
 resource "aws_route" "allVpcPublic" {
   for_each               = toset(module.vpc.public_route_table_ids)
   route_table_id         = each.key
-  destination_cidr_block = "10.0.0.0/8"
+  destination_cidr_block = "10.21.0.0/16"
   transit_gateway_id     = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
 }
 resource "aws_route" "allVpcPrivate" {
   for_each               = toset(module.vpc.private_route_table_ids)
   route_table_id         = each.key
-  destination_cidr_block = "10.0.0.0/8"
+  destination_cidr_block = "10.21.0.0/16"
   transit_gateway_id     = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
 }

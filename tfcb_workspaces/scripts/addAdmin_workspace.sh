@@ -8,9 +8,9 @@
 # It should be locked down to owners only and will contain sensitive data in clear text.
 
 # REQUIRED ENV VARIABLES:
-# export ATLAS_TOKEN    #Use TFE owners team token for proper TFC access
+# export TFC_TOKEN    #Use TFE owners team token for proper TFC access
 # export TFC_ORGANIZATION  # Use your TFC organization name to connect to TFC
-# export OAUTH_TOKEN_ID #Github OAuth App Token used to setup VCS integration
+# export TFC_GIT_OAUTH_TOKEN_ID #Github OAuth App Token used to setup VCS integration
 # export HCP_CLIENT_ID
 # export HCP_CLIENT_SECRET
 # Export your AWS credentials to have them managed by the TFCB admin workspace:
@@ -68,13 +68,13 @@ if [ ! -z "$2" ]; then
 fi
 echo "Using workspace name: " $workspace
 
-if [ -z ${OAUTH_TOKEN_ID} ]; then
-  echo "ERROR:  Set your Github Env variable OAUTH_TOKEN_ID to your oauth token to allow TFC to connect to github"
+if [ -z ${TFC_GIT_OAUTH_TOKEN_ID} ]; then
+  echo "ERROR:  Set your Github Env variable TFC_GIT_OAUTH_TOKEN_ID to your oauth token to allow TFC to connect to github"
   exit 1
 fi
 
-if [ -z ${ATLAS_TOKEN} ]; then
-  echo "ERROR:  Set your TFE Env variable ATLAS_TOKEN to connect to TFC"
+if [ -z ${TFC_TOKEN} ]; then
+  echo "ERROR:  Set your TFE Env variable TFC_TOKEN to connect to TFC"
   exit 1
 fi
 if [ -z ${TFC_ORGANIZATION} ]; then
@@ -97,8 +97,8 @@ if [ -z ${AWS_DEFAULT_REGION} ]; then
   echo "ERROR:  Set your AWS_DEFAULT_REGION variable to your default region (ex: us-west-2)."
   exit 1
 fi
-if [ -z ${SSH_KEY_NAME} ]; then
-  echo "ERROR:  Set your SSH_KEY_NAME variable to your AWS ssh key pair name.  This is needed to ssh to your ec2 and eks nodes."
+if [ -z ${AWS_SSH_KEY_NAME} ]; then
+  echo "ERROR:  Set your AWS_SSH_KEY_NAME variable to your AWS ssh key pair name.  This is needed to ssh to your ec2 and eks nodes."
   echo "If you dont have an ssh key in the region you want to provision in, you can create one following these instructions here: https://docs.aws.amazon.com/ground-station/latest/ug/create-ec2-ssh-key-pair.html"
   echo "If you want to copy your local key to AWS run ./push-local-sshkeypair-to-aws.sh"
   exit 1
@@ -163,13 +163,13 @@ sed -i.backup "s/org\/workspace_repo/${repository/\//\\/}/g" ./workspace.json
 sed -i.backup "s/main/${BRANCH}/g" ./workspace.json
 
 #Set my github org oauth token
-sed -i.backup "s/oauth_token_id/${OAUTH_TOKEN_ID}/g" ./workspace.json
+sed -i.backup "s/oauth_token_id/${TFC_GIT_OAUTH_TOKEN_ID}/g" ./workspace.json
 sed -i.backup "s/workspace_dir/${WORKSPACE_DIR//\//\\/}/g" ./workspace.json
 sed -i.backup "s/VERSION/${TF_VERSION}/g" ./workspace.json
 
 # Check to see if the workspace already exists
 echo "Checking to see if workspace exists"
-check_workspace_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" "https://${address}/api/v2/organizations/${TFC_ORGANIZATION}/workspaces/${workspace}")
+check_workspace_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" "https://${address}/api/v2/organizations/${TFC_ORGANIZATION}/workspaces/${workspace}")
 
 echo $check_workspace_result
 # Parse workspace_id from check_workspace_result
@@ -179,12 +179,12 @@ echo "Workspace ID: " $workspace_id
 # Create workspace if it does not already exist
 if [ -z "$workspace_id" ]; then
   echo "Workspace did not already exist; will create it."
-  workspace_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --request POST --data @workspace.json "https://${address}/api/v2/organizations/${TFC_ORGANIZATION}/workspaces")
+  workspace_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --request POST --data @workspace.json "https://${address}/api/v2/organizations/${TFC_ORGANIZATION}/workspaces")
   if [[ ! $? ]]; then
     echo ""
-    echo "Error creating TFC workspace at ${address} using current ATLAS_TOKEN, or TFC_ORGANIZATION"
+    echo "Error creating TFC workspace at ${address} using current TFC_TOKEN, or TFC_ORGANIZATION"
     echo "Test API connectivity by querying for workspace name"
-    echo "curl -s --header \"Authorization: Bearer $ATLAS_TOKEN\" --header \"Content-Type: application/vnd.api+json\" \"https://${address}/api/v2/organizations/${TFC_ORGANIZATION}/workspaces/${workspace}\""
+    echo "curl -s --header \"Authorization: Bearer $TFC_TOKEN\" --header \"Content-Type: application/vnd.api+json\" \"https://${address}/api/v2/organizations/${TFC_ORGANIZATION}/workspaces/${workspace}\""
     exit
   fi
   echo "Checking Workspace Result: $workspace_result"
@@ -212,48 +212,48 @@ fi
 #do
 #  sed -e "s/my-organization/TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/$key/" -e "s/my-value/$value/" -e "s/my-category/$category/" -e "s/my-hcl/$hcl/" -e "s/my-sensitive/$sensitive/" < variable.template.json  > variable.json
 #  echo "Adding variable $key with value $value in category $category with hcl $hcl and sensitive $sensitive"
-#  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+#  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 #done < ${variables_file}
 
 # Set CONFIRM_DESTROY as a default Environment variable
 sed -e "s/my-organization/TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/CONFIRM_DESTROY/" -e "s/my-value/1/" -e "s/my-category/env/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
 echo "Adding CONFIRM_DESTROY"
-upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 
 # Add Personal - AWS SSH Key Pair
-if [[ ! -z ${SSH_KEY_NAME} ]]; then
+if [[ ! -z ${AWS_SSH_KEY_NAME} ]]; then
   # AWS_DEFAULT_REGION
-  sed -e "s/my-organization/TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/ssh_key_name/" -e "s/my-value/${SSH_KEY_NAME}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
-  echo "Adding AWS SSH_KEY_NAME:  $SSH_KEY_NAME"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  sed -e "s/my-organization/TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/ssh_key_name/" -e "s/my-value/${AWS_SSH_KEY_NAME}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
+  echo "Adding AWS_SSH_KEY_NAME:  $AWS_SSH_KEY_NAME"
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 fi
 
-if [ ! -z ${OAUTH_TOKEN_ID} ]; then
-  # OAUTH_TOKEN_ID
-  sed -e "s/my-organization/TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/oauth_token_id/" -e "s/my-value/${OAUTH_TOKEN_ID}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
+if [ ! -z ${TFC_GIT_OAUTH_TOKEN_ID} ]; then
+  # TFC_GIT_OAUTH_TOKEN_ID
+  sed -e "s/my-organization/TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/oauth_token_id/" -e "s/my-value/${TFC_GIT_OAUTH_TOKEN_ID}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
   echo "Adding OAUTH_TOKEN_ID"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 fi
 
-if [ ! -z ${ATLAS_TOKEN} ]; then
-  # ATLAS_TOKEN
-  sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/tfe_token/" -e "s/my-value/${ATLAS_TOKEN}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
-  echo "Adding ATLAS_TOKEN"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+if [ ! -z ${TFC_TOKEN} ]; then
+  # TFC_TOKEN
+  sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/tfe_token/" -e "s/my-value/${TFC_TOKEN}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
+  echo "Adding TFC_TOKEN"
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 fi
 
 if [ ! -z ${TFC_ORGANIZATION} ]; then
   # organization
   sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/organization/" -e "s/my-value/${TFC_ORGANIZATION}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
   echo "Adding TFC_ORGANIZATION: ${TFC_ORGANIZATION}"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 fi
 
 if [ ! -z ${repository} ]; then
   # repository
   sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/repo_org/" -e "s/my-value/${repository%/*}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
   echo "Adding Github org ${repository%/*}"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 fi
 
 # Build Azure Credentials
@@ -264,22 +264,22 @@ if [[ ! -z ${ARM_CLIENT_ID} && ! -z ${ARM_SUBSCRIPTION_ID} && ! -z ${ARM_CLIENT_
   # ARM_CLIENT_ID
   sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/arm_client_id/" -e "s/my-value/${ARM_CLIENT_ID}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
   echo "Adding ARM_CLIENT_ID"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 
   # ARM_SUBSCRIPTION_ID
   sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/arm_subscription_id/" -e "s/my-value/${ARM_SUBSCRIPTION_ID}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
   echo "Adding ARM_SUBSCRIPTION_ID"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 
   # ARM_CLIENT_SECRET
   sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/arm_client_secret/" -e "s/my-value/${ARM_CLIENT_SECRET}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
   echo "Adding ARM_CLIENT_SECRET"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 
   # ARM_TENANT_ID
   sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/arm_tenant_id/" -e "s/my-value/${ARM_TENANT_ID}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
   echo "Adding ARM_TENANT_ID"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 
 fi
 
@@ -290,24 +290,24 @@ if [[ ! -z ${GOOGLE_CREDENTIALS} && ! -z ${GOOGLE_PROJECT} ]]; then
 
   gcp_creds=$(echo ${GOOGLE_CREDENTIALS} | awk '{printf "%s\\n", $0}' | sed "s/\"/\\\\\"/g")
   addKeyVars "gcp_credentials" "${gcp_creds}" true
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 
   # GOOGLE_PROJECT
   sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/gcp_project/" -e "s/my-value/${GOOGLE_PROJECT}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
   echo "Adding GOOGLE_PROJECT"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 fi
 # Set Default Region for GCP if Available
 if [[ ! -z ${GOOGLE_REGION} && ! -z ${GOOGLE_ZONE} ]]; then
   # GOOGLE_REGION
   sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/gcp_region/" -e "s/my-value/${GOOGLE_REGION}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
   echo "Adding GOOGLE_REGION"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 
   # GOOGLE_ZONE
   sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/gcp_zone/" -e "s/my-value/${GOOGLE_ZONE}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
   echo "Adding GOOGLE_ZONE"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 fi
 
 # Build AWS Credentials
@@ -315,12 +315,12 @@ if [[ ! -z ${AWS_ACCESS_KEY_ID} && ! -z ${AWS_SECRET_ACCESS_KEY} ]]; then
   # AWS_ACCESS_KEY_ID
   sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/aws_access_key_id/" -e "s/my-value/${AWS_ACCESS_KEY_ID}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
   echo "Adding AWS_ACCESS_KEY_ID"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 
   # AWS_SECRET_ACCESS_KEY
-  sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/aws_secret_access_key/" -e "s/my-value/${AWS_SECRET_ACCESS_KEY}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
+  sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/aws_secret_access_key/" -e "s|my-value|${AWS_SECRET_ACCESS_KEY}|" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
   echo "Adding AWS_SECRET_ACCESS_KEY"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 fi
 
 # Set Default AWS Region if Available
@@ -328,7 +328,7 @@ if [[ ! -z ${AWS_DEFAULT_REGION} ]]; then
   # AWS_DEFAULT_REGION
   sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/aws_default_region/" -e "s/my-value/${AWS_DEFAULT_REGION}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
   echo "Adding AWS_DEFAULT_REGION"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 fi
 
 # Build HCP Credentials
@@ -336,16 +336,16 @@ if [[ ! -z ${HCP_CLIENT_ID} && ! -z ${HCP_CLIENT_SECRET} ]]; then
   # HCP_CLIENT_ID
   sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/HCP_CLIENT_ID/" -e "s/my-value/${HCP_CLIENT_ID}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
   echo "Adding HCP_CLIENT_ID"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 
   # HCP_CLIENT_SECRET
   sed -e "s/my-organization/$TFC_ORGANIZATION/" -e "s/my-workspace/${workspace}/" -e "s/my-key/HCP_CLIENT_SECRET/" -e "s/my-value/${HCP_CLIENT_SECRET}/" -e "s/my-category/terraform/" -e "s/my-hcl/false/" -e "s/my-sensitive/false/" < variable.template.json  > variable.json
   echo "Adding HCP_CLIENT_SECRET"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 fi
 
 # List Sentinel Policies
-sentinel_list_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" "https://${address}/api/v2/organizations/${TFC_ORGANIZATION}/policies")
+sentinel_list_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" "https://${address}/api/v2/organizations/${TFC_ORGANIZATION}/policies")
 sentinel_policy_count=$(echo $sentinel_list_result | python -c "import sys, json; print(json.load(sys.stdin)['meta']['pagination']['total-count'])")
 echo "Number of Sentinel policies: " $sentinel_policy_count
 
