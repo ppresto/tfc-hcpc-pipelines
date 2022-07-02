@@ -32,6 +32,6 @@ module "tgw" {
     name = "${var.region}-tgw-default_rt"
   }
   tags = {
-    project = "${var.region}-hcpc-tgw"
+    project = "${var.region}-vpc-ss-tgw"
   }
 }
