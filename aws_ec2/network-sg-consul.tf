@@ -18,7 +18,7 @@ resource "aws_security_group_rule" "consul_server_allow_server_8301" {
   protocol          = "tcp"
   from_port         = 8301
   to_port           = 8301
-  cidr_blocks       = [data.terraform_remote_state.aws_usw_dev_tgw.outputs.hvn_cidr_block]
+  cidr_blocks       = [data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block]
   description       = "Used to handle gossip from server"
 }
 resource "aws_security_group_rule" "consul_server_allow_server_8301_udp" {
@@ -27,7 +27,7 @@ resource "aws_security_group_rule" "consul_server_allow_server_8301_udp" {
   protocol          = "udp"
   from_port         = 8301
   to_port           = 8301
-  cidr_blocks       = [data.terraform_remote_state.aws_usw_dev_tgw.outputs.hvn_cidr_block]
+  cidr_blocks       = [data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block]
   description       = "Used to handle gossip from server"
 }
 
@@ -60,7 +60,7 @@ resource "aws_security_group_rule" "hcp_tcp_RPC_from_clients" {
   protocol          = "tcp"
   from_port         = 8300
   to_port           = 8300
-  cidr_blocks       = [data.terraform_remote_state.aws_usw_dev_tgw.outputs.hvn_cidr_block]
+  cidr_blocks       = [data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block]
   description       = "For RPC communication between clients and servers"
 }
 resource "aws_security_group_rule" "hcp_tcp_server_gossip" {
@@ -69,7 +69,7 @@ resource "aws_security_group_rule" "hcp_tcp_server_gossip" {
   protocol          = "tcp"
   from_port         = 8301
   to_port           = 8301
-  cidr_blocks       = [data.terraform_remote_state.aws_usw_dev_tgw.outputs.hvn_cidr_block]
+  cidr_blocks       = [data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block]
   description       = "Server to server gossip communication"
 }
 resource "aws_security_group_rule" "hcp_udp_server_gossip" {
@@ -78,7 +78,7 @@ resource "aws_security_group_rule" "hcp_udp_server_gossip" {
   protocol          = "udp"
   from_port         = 8301
   to_port           = 8301
-  cidr_blocks       = [data.terraform_remote_state.aws_usw_dev_tgw.outputs.hvn_cidr_block]
+  cidr_blocks       = [data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block]
   description       = "Server to server gossip communication"
 }
 resource "aws_security_group_rule" "consul_server_allow_client_egress_8301" {
@@ -105,7 +105,7 @@ resource "aws_security_group_rule" "hcp_tcp_https" {
   protocol          = "tcp"
   from_port         = 443
   to_port           = 443
-  cidr_blocks       = [data.terraform_remote_state.aws_usw_dev_tgw.outputs.hvn_cidr_block]
+  cidr_blocks       = [data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block]
   description       = "The HTTPS API"
 }
 #resource "aws_security_group_rule" "consul_server_allow_outbound" {
