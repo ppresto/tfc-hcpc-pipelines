@@ -60,9 +60,6 @@ output "vpc_id" {
 output "vpc_cidr_block" {
   value = var.vpc_cidr_block
 }
-output "hvn_cidr_block" {
-  value = var.hvn_cidr_block
-}
 output "private_route_table_ids" {
   value = module.vpc.private_route_table_ids
 }
