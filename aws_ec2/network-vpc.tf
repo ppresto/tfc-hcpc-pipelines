@@ -39,7 +39,6 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "private" {
   subnet_ids         = module.vpc.private_subnets
   transit_gateway_id = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
   vpc_id             = module.vpc.vpc_id
-  depends_on = [module.vpc]
 }
 resource "aws_ec2_transit_gateway_vpc_attachment" "public" {
   subnet_ids         = module.vpc.public_subnets
@@ -51,6 +50,7 @@ resource "aws_route" "privateToHcp" {
   route_table_id         = each.key
   destination_cidr_block = data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block
   transit_gateway_id     = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
+  depends_on = [module.vpc]
 }
 # VPC public subnet route to HCP CIDR Block
 resource "aws_route" "publicToHcp" {
