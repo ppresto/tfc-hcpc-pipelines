@@ -3,7 +3,7 @@ module "tgw" {
   source  = "terraform-aws-modules/transit-gateway/aws"
   version = "2.5.0"
 
-  name            = "${var.region}-hcpc-tgw"
+  name            = "${var.region}-vpcss-tgw"
   description     = "My TGW shared with several other AWS accounts"
   amazon_side_asn = 64532
 
@@ -32,6 +32,6 @@ module "tgw" {
     name = "${var.region}-tgw-default_rt"
   }
   tags = {
-    project = "${var.region}-vpc-ss-tgw"
+    project = "${var.region}-vpcss-tgw"
   }
 }
