@@ -2,12 +2,7 @@
 #
 # Note:  The "for_each" value depends on resource attributes that cannot be determined until apply,
 #        so Terraform cannot predict how many instances will be created.
-#        To work around this, use the -target argument, or put these routes into a new TFCB workspace.
-#
-# Workaround:
-#   Rename this file, or Comment out these aws_route resources for the first run.
-#   Once the VPC is provisioned rename/uncomment and apply.
-
+#        To work around this we put these routes into a new TFCB workspace.
 
 # VPC private subnet route to HCP CIDR Block
 resource "aws_route" "private" {
