@@ -46,12 +46,12 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "vpc2" {
 
 # vpc_main_route_table_id
 resource "aws_route" "defaultToHcp" {
-  route_table_id         = module.vpc.default_route_table_id
+  route_table_id         = module.vpc.public_route_table_ids[0]
   destination_cidr_block = data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block
   transit_gateway_id     = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
 }
 resource "aws_route" "defaultToAll" {
-  route_table_id         = module.vpc.default_route_table_id
+  route_table_id         = module.vpc.public_route_table_ids[0]
   destination_cidr_block = "10.0.0.0/10"
   transit_gateway_id     = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
 }
