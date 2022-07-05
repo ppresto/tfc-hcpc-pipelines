@@ -192,11 +192,11 @@ export CONSUL_HTTP_TOKEN="${CONSUL_ACL_TOKEN}"
 #consul config write ./api-service-resolver.hcl
 #consul config write ./api-service-splitter.hcl
 retry=12
-while [ $$retry -gt 0 ]
+while [ $${retry} -gt 0 ]
 do
-	status_code=$(curl --write-out %{http_code} --silent --output /dev/null http://localhost:8500/v1/status/leader)
+	status_code=$(curl --write-out %%{http_code} --silent --output /dev/null http://localhost:8500/v1/status/leader)
   if [[ "$${status_code}" != "200" ]]; then
-    retry=$(($$retry - 1))
+    retry=$(($${retry} - 1))
     sleep 5
   fi
 done
