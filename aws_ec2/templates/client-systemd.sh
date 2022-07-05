@@ -191,12 +191,17 @@ export CONSUL_HTTP_TOKEN="${CONSUL_ACL_TOKEN}"
 #consul config write ./central_config/service_intentions_api.hcl
 #consul config write ./api-service-resolver.hcl
 #consul config write ./api-service-splitter.hcl
-
+retry=12
+while [ $retry -gt 0 ]
+do
+	status_code=$(curl --write-out %{http_code} --silent --output /dev/null http://localhost:8500/v1/status/leader)
+  if [[ "${status_code}" != "200" ]]; then
+    retry=$(($retry - 1))
+    sleep 5
+  fi
+done
 # Start API Service
-export MESSAGE="API RESPONSE"
-export NAME="api-v1"
-export SERVER_TYPE="http"
-export LISTEN_ADDR="127.0.0.1:9091"
+export MESSAGE="API RESPONSE" NAME="api-v1" SERVER_TYPE="http" LISTEN_ADDR="127.0.0.1:9091"
 nohup ./bin/fake-service > logs/fake-service.out 2>&1 &
 sleep 1
 consul services register ./api-service.hcl
