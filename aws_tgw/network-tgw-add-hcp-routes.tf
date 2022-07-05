@@ -18,3 +18,11 @@ resource "aws_route" "public" {
   destination_cidr_block = data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block
   transit_gateway_id     = module.tgw.ec2_transit_gateway_id
 }
+
+# Shared VPC private network routes to other VPC's
+resource "aws_route" "allVpcPrivate" {
+  for_each               = toset(data.terraform_remote_state.hcp_consul.outputs.public_route_table_ids)
+  route_table_id         = each.key
+  destination_cidr_block = "10.0.0.0/10"
+  transit_gateway_id     = module.tgw.ec2_transit_gateway_id
+}

@@ -43,3 +43,16 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "vpc2" {
     project = "${var.region}-vpc2-tgw"
   }
 }
+
+resource "aws_route" "defaultToHcp" {
+  for_each               = toset(module.vpc.default_route_table_id)
+  route_table_id         = each.key
+  destination_cidr_block = data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block
+  transit_gateway_id     = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
+}
+resource "aws_route" "defaultToAll" {
+  for_each               = toset(module.vpc.default_route_table_id)
+  route_table_id         = each.key
+  destination_cidr_block = "10.0.0.0/10"
+  transit_gateway_id     = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
+}
