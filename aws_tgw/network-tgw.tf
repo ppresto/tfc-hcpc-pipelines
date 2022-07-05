@@ -16,7 +16,7 @@ module "tgw" {
 
       tgw_routes = [
         {
-          destination_cidr_block = "50.0.0.0/16"
+          destination_cidr_block = "10.0.0.0/8"
         },
         {
           blackhole              = true
