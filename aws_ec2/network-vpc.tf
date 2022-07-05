@@ -44,6 +44,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "vpc2" {
   }
 }
 
+# vpc_main_route_table_id
 resource "aws_route" "defaultToHcp" {
   for_each               = toset(module.vpc.default_route_table_id)
   route_table_id         = each.key
