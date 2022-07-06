@@ -28,6 +28,7 @@ variable "vpc_cidr_block" {
   #default     = "0.0.0.0/0"
 }
 locals {
+  region_shortname = join("", regex("([a-z]{2}).*-([a-z]).*-(\\d+)", var.region))
   vpc_id             = data.terraform_remote_state.hcp_consul.outputs.vpc_id
   private_subnet_ids = data.terraform_remote_state.hcp_consul.outputs.vpc_private_subnets
   public_subnet_ids  = data.terraform_remote_state.hcp_consul.outputs.vpc_public_subnets

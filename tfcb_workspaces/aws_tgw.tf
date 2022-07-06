@@ -2,7 +2,7 @@ module "ws_aws_tgw" {
   source              = "../modules/workspace-mgr"
   agent_pool_id       = ""
   organization        = var.organization
-  workspacename       = "aws_${var.env}_tgw"
+  workspacename       = "aws_${local.region_shortname}_${var.env}_network-tgw"
   workingdir          = "aws_tgw"
   tfversion           = "1.1.4"
   queue_all_runs      = false
@@ -11,7 +11,7 @@ module "ws_aws_tgw" {
   oauth_token_id      = var.oauth_token_id
   repo_branch         = "main"
   global_remote_state = false
-  tag_names           = ["aws", "sg", "tgw", "bastion", "${var.aws_default_region}", "${var.env}"]
+  tag_names           = ["team-net", "sg", "tgw", "bastion", "${var.aws_default_region}", "${var.env}"]
   env_variables = {
     "CONFIRM_DESTROY" : 1
     "AWS_DEFAULT_REGION" : var.aws_default_region

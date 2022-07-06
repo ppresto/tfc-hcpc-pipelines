@@ -41,3 +41,7 @@ variable "vpc_cidr_block" {
   type        = string
   default     = "10.21.0.0/16"
 }
+
+locals {
+  region_shortname = join("", regex("([a-z]{2}).*-([a-z]).*-(\\d+)", var.region))
+}

@@ -44,3 +44,7 @@ variable "allowed_bastion_cidr_blocks_ipv6" {
   type        = list(string)
   default     = []
 }
+
+locals {
+  region_shortname = join("", regex("([a-z]{2}).*-([a-z]).*-(\\d+)", var.region))
+}
