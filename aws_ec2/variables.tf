@@ -36,4 +36,4 @@ locals {
   consul_datacenter       = data.terraform_remote_state.hcp_consul.outputs.datacenter
   consul_acl_token        = data.terraform_remote_state.hcp_consul.outputs.consul_root_token_secret_id
   consul_client_ca_path   = data.terraform_remote_state.hcp_consul.outputs.consul_ca_file
-
+}
