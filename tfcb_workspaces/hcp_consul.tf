@@ -11,7 +11,7 @@ module "ws_hcp_consul" {
   oauth_token_id      = var.oauth_token_id
   repo_branch         = "main"
   global_remote_state = false
-  tag_names           = ["team-ss", "hcp", "shared", "consul", "${var.aws_default_region}"]
+  tag_names           = ["team-ss", "hcp", "shared-vpc", "consul", "${var.aws_default_region}"]
   env_variables = {
     "CONFIRM_DESTROY" : 1
     "AWS_DEFAULT_REGION" : var.aws_default_region
