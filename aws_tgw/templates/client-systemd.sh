@@ -233,7 +233,7 @@ systemctl restart systemd-resolved
 # Start fake-service container using docker-compose
 cd /opt/consul/fake-service
 chmod 755 *.sh
-./start.sh
+#./start.sh
 
 echo "export CONSUL_HTTP_TOKEN=${CONSUL_ACL_TOKEN}" >> /root/.profile
 echo "export CONSUL_HTTP_TOKEN=${CONSUL_ACL_TOKEN}" >> /home/ubuntu/.profile

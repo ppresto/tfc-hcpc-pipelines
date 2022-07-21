@@ -43,7 +43,7 @@ else
 fi
 
 for region in $regions; do
-  echo "INFO: $region - $aws_keypair_name"
+  echo "Importing keypair: $aws_keypair_name to $region"
   aws ec2 import-key-pair \
     --region "$region" \
     --key-name "$aws_keypair_name" \
