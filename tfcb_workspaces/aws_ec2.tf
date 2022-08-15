@@ -2,7 +2,7 @@ module "aws-ec2" {
   source              = "../modules/workspace-mgr"
   agent_pool_id       = ""
   organization        = var.organization
-  workspacename       = "aws_${local.region_shortname}_${var.env}_ec2"
+  workspacename       = "aws_${local.region_shortname}_${var.env}_api_ec2"
   workingdir          = "aws_ec2"
   tfversion           = "1.1.4"
   queue_all_runs      = false
