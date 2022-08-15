@@ -34,12 +34,18 @@ fi
 export AWS_SSH_KEY_NAME=${aws_keypair_name}
 
 # set target region or by default all available regions will be used.
-if [[ ! -z "${2}" ]]; then
+
+if [[ ! -z ${AWS_DEFAULT_REGION} && -z "${2}" ]]; then
+  regions="${AWS_DEFAULT_REGION}"
+  echo $regions
+elif [[ ! -z "${2}" ]]; then
   regions="${2}"
+  echo $regions
 else
   regions=$(aws ec2 describe-regions \
   --output text \
   --query 'Regions[*].RegionName')
+  echo $regions
 fi
 
 for region in $regions; do
