@@ -178,7 +178,7 @@ workspace_id=$(echo $check_workspace_result | jq -r '.data.id')
 echo "Workspace ID: " $workspace_id
 
 # Create workspace if it does not already exist
-if [ -z "$workspace_id" ]; then
+if [ "$workspace_id" == 'null' ]; then
   echo "Workspace did not already exist; will create it."
   workspace_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --request POST --data @workspace.json "https://${address}/api/v2/organizations/${TFC_ORGANIZATION}/workspaces")
   if [[ ! $? ]]; then
@@ -345,13 +345,6 @@ if [[ ! -z ${HCP_CLIENT_ID} && ! -z ${HCP_CLIENT_SECRET} ]]; then
   echo "Adding HCP_CLIENT_SECRET"
   upload_variable_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 fi
-
-# List Sentinel Policies
-sentinel_list_result=$(curl -s --header "Authorization: Bearer $TFC_TOKEN" --header "Content-Type: application/vnd.api+json" "https://${address}/api/v2/organizations/${TFC_ORGANIZATION}/policies")
-#sentinel_policy_count=$(echo $sentinel_list_result | python -c "import sys, json; print(json.load(sys.stdin)['meta']['pagination']['total-count'])")
-sentinel_policy_count=$(echo $sentinel_list_result |jq -r '.meta.pagination.total-count')
-echo "Number of Sentinel policies: " $sentinel_policy_count
-
 
 #DEBUG=true
 # cleanup
