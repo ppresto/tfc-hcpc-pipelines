@@ -230,7 +230,7 @@ iptables --table nat --append OUTPUT --destination localhost --protocol udp --ma
 iptables --table nat --append OUTPUT --destination localhost --protocol tcp --match tcp --dport 53 --jump REDIRECT --to-ports 8600
 systemctl restart systemd-resolved
 
-# Start fake-service container using docker-compose
+# Start fake-service
 cd /opt/consul/fake-service
 chmod 755 *.sh
 #./start.sh

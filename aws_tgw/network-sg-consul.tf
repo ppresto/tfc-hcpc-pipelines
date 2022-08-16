@@ -30,7 +30,24 @@ resource "aws_security_group_rule" "consul_server_allow_server_8301_udp" {
   cidr_blocks       = [data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block]
   description       = "Used to handle gossip from server"
 }
-
+resource "aws_security_group_rule" "consul_server_allow_server_8600" {
+  security_group_id = aws_security_group.consul_server.id
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 8600
+  to_port           = 8600
+  cidr_blocks       = [data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block]
+  description       = "Used to handle DNS from server"
+}
+resource "aws_security_group_rule" "consul_server_allow_server_8600_udp" {
+  security_group_id = aws_security_group.consul_server.id
+  type              = "ingress"
+  protocol          = "udp"
+  from_port         = 8600
+  to_port           = 8600
+  cidr_blocks       = [data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block]
+  description       = "Used to handle DNS from server"
+}
 
 resource "aws_security_group_rule" "consul_server_allow_client_8301" {
   security_group_id        = aws_security_group.consul_server.id
