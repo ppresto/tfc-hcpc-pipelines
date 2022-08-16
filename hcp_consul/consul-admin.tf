@@ -45,6 +45,28 @@ resource "consul_acl_policy" "api-service" {
   RULE
 }
 
+# Create Default DNS Lookup policy and attach to anonymous.
+resource "consul_acl_policy" "dns-request" {
+  name  = "dns-request-policy"
+  rules = <<-RULE
+    node_prefix "" {
+      policy = "read"
+    }
+    service_prefix "" {
+      policy = "read"
+    }
+    # only needed if using prepared queries
+    query_prefix "" {
+      policy = "read"
+    }
+    RULE
+}
+
+resource "consul_acl_token_policy_attachment" "attachment" {
+    token_id = "00000000-0000-0000-0000-000000000002"
+    policy   = "${consul_acl_policy.dns-request.name}"
+}
+
 resource "consul_acl_token" "api-service" {
   description = "my api service token"
   policies    = ["${consul_acl_policy.api-service.name}"]
