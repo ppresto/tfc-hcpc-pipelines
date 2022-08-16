@@ -8,7 +8,7 @@ CONSUL_CA=$(echo ${CONSUL_CA_FILE}| base64 -d)
 ### Install Consul
 curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
 apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-apt update && apt install -y consul-enterprise=1.11.6+ent unzip jq
+apt update && apt install -y consul-enterprise=1.11.6-1+ent unzip jq
 
 ### Install Envoy
 curl https://func-e.io/install.sh | bash -s -- -b /usr/local/bin/
