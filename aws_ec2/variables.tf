@@ -22,7 +22,11 @@ variable "vpc_cidr_block" {
   default     = "10.20.0.0/16"
   #default     = "0.0.0.0/0"
 }
-
+variable "private_subnets" {
+  description = "VPC subnets"
+  type        = list
+  default     = ["10.20.1.0/24", "10.20.2.0/24", "10.20.3.0/24"]
+}
 locals {
   region_shortname = join("", regex("([a-z]{2}).*-([a-z]).*-(\\d+)", var.region))
   vpc_id             = data.terraform_remote_state.hcp_consul.outputs.vpc_id
