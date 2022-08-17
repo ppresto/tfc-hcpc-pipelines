@@ -87,12 +87,23 @@ Additional DNS Queries
 dig @127.0.0.1 -p 8600 api.service.consul SRV  # lookup api service IP and Port
 ```
 References:
+https://learn.hashicorp.com/tutorials/consul/get-started-service-discover
 https://www.consul.io/docs/discovery/dns#dns-with-acls
 
 ### DNS Forwarding
 Once DNS lookups are working through the local consul client,  setup DNS forwarding to port 53 to work for all requests by default.
 https://learn.hashicorp.com/tutorials/consul/dns-forwarding
 
+### EC2 fake-service
+The start.sh should start the fake-service, register it to consul as 'api', and start the envoy sidecar.  If this happens before the consul client registers the EC2 node to consul then you may need to restart the service, or look at the logs.
+```
+cd /opt/consul/fake-service
+sudo ./stop.sh
+sudo ./start.sh
+cat api-service.hcl   # review service registration config
+ls ./logs             # review service and envoy logs
+```
+There are some additional example configurations that use the CLI to configure L7 traffic management.
 ## EKS Kubernetes
 
 ### Deregister Node to remove consul-sync k8s services from HCP.
