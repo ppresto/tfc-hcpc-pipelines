@@ -230,9 +230,9 @@ iptables --table nat --append OUTPUT --destination localhost --protocol udp --ma
 iptables --table nat --append OUTPUT --destination localhost --protocol tcp --match tcp --dport 53 --jump REDIRECT --to-ports 8600
 systemctl restart systemd-resolved
 
-# Start fake-service container using docker-compose
 cd /opt/consul/fake-service
 chmod 755 *.sh
+sleep 30
 ./start.sh
 
 echo "export CONSUL_HTTP_TOKEN=${CONSUL_ACL_TOKEN}" >> /root/.profile
