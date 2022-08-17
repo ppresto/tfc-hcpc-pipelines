@@ -46,7 +46,8 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "vpc2" {
 
 # vpc_main_route_table_id
 resource "aws_route" "privateToHcp" {
-  route_table_id         = module.vpc.private_route_table_ids[0]
+  count = 3
+  route_table_id         = module.vpc.private_route_table_ids[count.index]
   destination_cidr_block = data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block
   transit_gateway_id     = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
 }
