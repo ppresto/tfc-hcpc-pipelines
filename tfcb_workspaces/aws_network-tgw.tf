@@ -7,7 +7,7 @@ module "ws_aws_tgw" {
   tfversion           = "1.1.4"
   queue_all_runs      = false
   auto_apply          = true
-  identifier          = "${var.repo_org}/hcpc-vpc-ec2-eks"
+  identifier          = "${var.repo_org}/tfc-hcpc-pipelines"
   oauth_token_id      = var.oauth_token_id
   repo_branch         = "main"
   global_remote_state = false

@@ -43,7 +43,7 @@
 # Provide your TFCB, and Github information
 address="app.terraform.io"
 #  Github Repo URL
-git_url="https://github.com/ppresto/hcpc-vpc-ec2-eks.git"
+git_url="https://github.com/ppresto/tfc-hcpc-pipelines.git"
 # Admin Workspace Name
 workspace="admin_tfc_workspaces"
 # This is the repo dir TFCB will use to run terraform and manage your workspaces with IaC
