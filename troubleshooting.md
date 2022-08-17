@@ -5,7 +5,8 @@
 * Review VPC Route Table and ensure the TGW is set as a target to all Destinations that need access to HCP
 * [AWS TGW Troubleshooting Guide](https://aws.amazon.com/premiumsupport/knowledge-center/transit-gateway-fix-vpc-connection/)
 * [Hashicorp TGW UI Setup Video](https://youtu.be/tw7FK_uUwqI?t=527
-https://learn.hashicorp.com/tutorials/cloud/amazon-transit-gateway?in=consul/)cloud-production
+https://learn.hashicorp.com/tutorials/cloud/amazon-transit-gateway?in=consul/)
+* [Visual Subnet Calculator](https://www.davidc.net/sites/default/subnets/subnets.html?network=10.0.0.0&mask=20&division=23.f42331) to help find the correct CIDR block ranges.
 
 
 ## SSH
@@ -40,22 +41,59 @@ sudo systemctl start consul.service
 sudo systemctl status consul.service
 ```
 
-To investigate systemd errors starting consul use `journalctl`
+### logs
+To investigate systemd errors starting consul use `journalctl`.  
 ```
 journalctl -u consul.service
+```
+### Monitor the Server
+Using the consul client with the root token get a live stream of logs from the server.
+```
+consul monitor -log-level debug
 ```
 
 ## Consul
 
 ### DNS lookups
+Use the local consul clients DNS interface that runs on port 8600 for testing.  This client will service local DNS requests to the HCP Consul service over port 8301 so there is no need to add additional security rules for port 8600.
 ```
-web.service.consul
-web.ingress.consul
-api.virtual.consul
-api.virtual.api-ns.ns.default.ap.hcpc-cluster-presto.dc.consul
+dig @127.0.0.1 -p 8600 consul.service.consul
+
+; <<>> DiG 9.11.3-1ubuntu1.17-Ubuntu <<>> @127.0.0.1 -p 8600 consul.service.consul
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 47609
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;consul.service.consul.		IN	A
+
+;; ANSWER SECTION:
+consul.service.consul.	0	IN	A	172.25.20.205
+
+;; Query time: 2 msec
+;; SERVER: 127.0.0.1#8600(127.0.0.1)
+;; WHEN: Tue Aug 16 21:00:13 UTC 2022
+;; MSG SIZE  rcvd: 66
 ```
+The response should contain *ANSWER: 1* for a single node HCP development cluster.  If you receive a response with *ANSWER: 0 and status: NXDOMAIN* then most likely you need to [review the DNS policies associated with your consul client](https://learn.hashicorp.com/tutorials/consul/access-control-setup-production?in=consul/security#token-for-dns). In this guide the terraform (./hcp_consul/consul-admin.tf) is creating this policy and assigning it to the anonymous token to allow DNS lookups to work by default for everyone.
+
+Additional DNS Queries
+```
+dig @127.0.0.1 -p 8600 api.service.consul SRV  # lookup api service IP and Port
+```
+References:
+https://www.consul.io/docs/discovery/dns#dns-with-acls
+
+### DNS Forwarding
 Once DNS lookups are working through the local consul client,  setup DNS forwarding to port 53 to work for all requests by default.
 https://learn.hashicorp.com/tutorials/consul/dns-forwarding
+
+## EKS Kubernetes
 
 ### Deregister Node to remove consul-sync k8s services from HCP.
 ```
@@ -65,9 +103,6 @@ curl \
     --data '{"Datacenter": "hcpc-cluster-presto","Node": "k8s-sync"}' \
     https://hcpc-cluster-presto.consul.328306de-41b8-43a7-9c38-ca8d89d06b07.aws.hashicorp.cloud//v1/catalog/deregister
 ```
-
-## EKS Kubernetes
-
 ### Helm - Install manually to debug
 Manually install consul using Helm.  The test.yaml below can be created from existing Terraform Output.  Make sure you are using a [compatable consul-k8s helm chart version](https://www.consul.io/docs/k8s/compatibility).
 ```
@@ -98,6 +133,13 @@ kubectl exec busybox -- nslookup web
 kubectl exec busybox -- nslookup api.service.consul
 ```
 
+Additional DNS Queries
+```
+web.service.consul
+web.ingress.consul
+api.virtual.consul
+api.virtual.api-ns.ns.default.ap.hcpc-cluster-presto.dc.consul
+```
 References:
 https://aws.amazon.com/premiumsupport/knowledge-center/eks-dns-failure/
 
