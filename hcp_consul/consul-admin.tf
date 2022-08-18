@@ -24,7 +24,7 @@ resource "consul_namespace" "default-app-api" {
 # Service Policies and Tokens (api)
 resource "consul_acl_policy" "api-service" {
   name        = "api-service"
-  datacenters = ["dc1"]
+  datacenters = [hcp_consul_cluster.example_hcp.datacenter]
   rules       = <<-RULE
     service "api*" {
       policy = "write"
