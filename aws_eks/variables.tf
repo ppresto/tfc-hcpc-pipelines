@@ -25,8 +25,7 @@ variable "ec2_key_pair_name" {
 variable "vpc_cidr_block" {
   description = "VPC CIDR Block Range"
   type        = string
-  default     = "10.20.0.0/16"
-  #default     = "0.0.0.0/0"
+  default     = "10.15.0.0/16"
 }
 locals {
   region_shortname = join("", regex("([a-z]{2}).*-([a-z]).*-(\\d+)", var.region))

@@ -3,7 +3,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 3.0"
   name    = "${var.prefix}-${var.region}-vpc3"
-  cidr    = var.vpc_cidr_block
+  cidr    = "10.15.0.0/16"
   #azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
   azs                      = data.aws_availability_zones.available.names
   private_subnets          = ["10.15.1.0/24", "10.15.2.0/24", "10.15.3.0/24"]
@@ -36,7 +36,7 @@ module "vpc" {
 }
 
 resource "aws_ec2_transit_gateway_vpc_attachment" "vpc3" {
-  subnet_ids         = module.vpc.public_subnets
+  subnet_ids         = module.vpc.private_subnets
   transit_gateway_id = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
   vpc_id             = module.vpc.vpc_id
   tags = {
