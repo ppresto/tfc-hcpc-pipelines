@@ -6,8 +6,8 @@ module "vpc" {
   cidr    = var.vpc_cidr_block
   #azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
   azs                      = data.aws_availability_zones.available.names
-  private_subnets          = ["10.19.1.0/24", "10.19.2.0/24", "10.19.3.0/24"]
-  public_subnets           = ["10.19.11.0/24", "10.19.12.0/24", "10.19.13.0/24"]
+  private_subnets          = ["10.15.1.0/24", "10.15.2.0/24", "10.15.3.0/24"]
+  public_subnets           = ["10.15.11.0/24", "10.15.12.0/24", "10.15.13.0/24"]
   enable_nat_gateway       = true
   single_nat_gateway       = true
   enable_dns_hostnames     = true
@@ -36,7 +36,7 @@ module "vpc" {
 }
 
 resource "aws_ec2_transit_gateway_vpc_attachment" "vpc3" {
-  subnet_ids         = module.vpc.private_subnets
+  subnet_ids         = module.vpc.public_subnets
   transit_gateway_id = data.terraform_remote_state.aws_usw_dev_tgw.outputs.ec2_transit_gateway_id
   vpc_id             = module.vpc.vpc_id
   tags = {
