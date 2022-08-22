@@ -1,7 +1,7 @@
 
-# This name will be used in your EKS cluster name.
+# This prefix will be used in your EKS cluster name.
 # Update the ./aws_eks/awscli_eks_connect.sh with your EKS cluster name to connect.
-variable "name" {
+variable "prefix" {
   description = "Unique name to identify all resources. Try using your name."
   type        = string
   default     = "presto"
