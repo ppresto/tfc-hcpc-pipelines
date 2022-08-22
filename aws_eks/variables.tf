@@ -7,6 +7,7 @@ variable "prefix" {
   default     = "presto"
 }
 
+variable "env" { default = "dev" }
 # The EKS cluster will be created in this region.
 # Update ./aws_eks/awscli_eks_connect.sh with your region value to connect.
 variable "region" {
@@ -29,10 +30,6 @@ variable "vpc_cidr_block" {
 }
 locals {
   region_shortname = join("", regex("([a-z]{2}).*-([a-z]).*-(\\d+)", var.region))
-  vpc_id             = data.terraform_remote_state.hcp_consul.outputs.vpc_id
-  private_subnet_ids = data.terraform_remote_state.hcp_consul.outputs.vpc_private_subnets
-  public_subnet_ids  = data.terraform_remote_state.hcp_consul.outputs.vpc_public_subnets
-
   consul_config_file      = jsondecode(base64decode(data.terraform_remote_state.hcp_consul.outputs.consul_config_file))
   consul_gossip_key       = local.consul_config_file.encrypt
   consul_retry_join       = local.consul_config_file.retry_join

@@ -98,3 +98,7 @@ output "consul_server_sg_id" {
 output "bastion_ssh_sg_id" {
   value = aws_security_group.bastion.id
 }
+
+output "env" {
+  value = var.env
+}

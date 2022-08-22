@@ -5,7 +5,7 @@ variable "region" {
 }
 
 variable "organization" { default = "my_org_name" }
-
+variable "env" { default = "dev" }
 # VPC
 variable "vpc_cidr_block" {
   description = "VPC CIDR Block Range"
