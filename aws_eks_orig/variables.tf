@@ -1,9 +1,14 @@
+
+# This name will be used in your EKS cluster name.
+# Update the ./aws_eks/awscli_eks_connect.sh with your EKS cluster name to connect.
 variable "name" {
-  description = "Name to be used on all the resources as identifier."
+  description = "Unique name to identify all resources. Try using your name."
   type        = string
   default     = "presto"
 }
 
+# The EKS cluster will be created in this region.
+# Update ./aws_eks/awscli_eks_connect.sh with your region value to connect.
 variable "region" {
   description = "AWS region."
   type        = string
@@ -14,7 +19,7 @@ variable "organization" { default = "my_org_name" }
 variable "ec2_key_pair_name" {
   description = "An existing EC2 key pair used to access the bastion server."
   type        = string
-  default     = "ppresto-ptfe-dev-key"
+  default     = "my-aws-ssh-key-pair"
 }
 variable "vpc_cidr_block" {
   description = "VPC CIDR Block Range"
@@ -23,6 +28,7 @@ variable "vpc_cidr_block" {
   #default     = "0.0.0.0/0"
 }
 locals {
+  region_shortname = join("", regex("([a-z]{2}).*-([a-z]).*-(\\d+)", var.region))
   vpc_id             = data.terraform_remote_state.hcp_consul.outputs.vpc_id
   private_subnet_ids = data.terraform_remote_state.hcp_consul.outputs.vpc_private_subnets
   public_subnet_ids  = data.terraform_remote_state.hcp_consul.outputs.vpc_public_subnets
