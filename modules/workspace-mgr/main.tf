@@ -1,12 +1,3 @@
-terraform {
-  required_version = ">= 1.0.5"
-  required_providers {
-    tfe = {
-      version = "~> 0.31.0"
-    }
-  }
-}
-
 resource "tfe_workspace" "ws-vcs" {
   name                = var.workspacename
   organization        = var.organization
@@ -59,4 +50,10 @@ resource "tfe_variable" "env_variables_sec" {
   category     = "env"
   sensitive    = true
   workspace_id = tfe_workspace.ws-vcs.id
+}
+
+resource "tfe_workspace_variable_set" "test" {
+  count = var.variable_set != "" ? 1 : 0
+  variable_set_id = var.variable_set
+  workspace_id    = tfe_workspace.ws-vcs.id
 }
