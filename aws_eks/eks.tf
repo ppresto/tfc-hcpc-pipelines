@@ -25,7 +25,7 @@ module "eks" {
   cluster_version                       = local.cluster_version
   cluster_endpoint_private_access       = true
   cluster_endpoint_public_access        = true
-  cluster_additional_security_group_ids = [data.terraform_remote_state.aws_usw_dev_tgw.outputs.consul_server_sg_id]
+  cluster_additional_security_group_ids = aws_security_group.consul_server.id
   vpc_id                                = module.vpc.vpc_id
   subnet_ids                            = module.vpc.private_subnets
 
