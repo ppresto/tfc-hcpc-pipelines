@@ -12,6 +12,8 @@ module "aws_eks_consul_agent" {
   repo_branch         = "main"
   global_remote_state = false
   tag_names           = ["team-app2", "consul", "agent", "${var.aws_default_region}", "${var.env}"]
+  variable_set        = tfe_variable_set.cloud_creds.id
+  
   env_variables = {
     "CONFIRM_DESTROY" : 1
     "AWS_DEFAULT_REGION" : var.aws_default_region

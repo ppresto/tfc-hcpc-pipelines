@@ -13,7 +13,6 @@ resource "tfe_variable_set" "cloud_creds" {
   name          = "AWS_Cloud_Credentials"
   description   = "AWS Creds for child workspaces to inherit"
   organization  = var.organization
-  workspace_ids = [module.ws_hcp_consul.ws-id, module.aws-ec2.ws-id, module.ws_aws_tgw.ws-id]
 }
 resource "tfe_variable" "aws_access_key_id" {
   key             = "AWS_ACCESS_KEY_ID"
