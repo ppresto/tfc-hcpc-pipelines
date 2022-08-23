@@ -12,7 +12,7 @@ module "ws_hcp_consul" {
   repo_branch         = "main"
   global_remote_state = false
   tag_names           = ["team-ss", "hcp", "shared-vpc", "consul", "${var.aws_default_region}"]
-  variable_set        = var.variable_set != null ? tfe_variable_set.cloud_creds.id : null
+  variable_set        = tfe_variable_set.cloud_creds.id != null ? tfe_variable_set.cloud_creds.id : null
   
   env_variables = {
     "CONFIRM_DESTROY" : 1
