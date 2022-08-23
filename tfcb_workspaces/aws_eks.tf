@@ -12,7 +12,7 @@ module "aws-eks" {
   repo_branch         = "main"
   global_remote_state = false
   tag_names           = ["team-app2", "eks", "${var.aws_default_region}", "${var.env}"]
-  variable_set        = var.variable_set != null ? tfe_variable_set.cloud_creds.id : null
+  variable_set        = tfe_variable_set.cloud_creds.id
   
   env_variables = {
     "CONFIRM_DESTROY" : 1
