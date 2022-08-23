@@ -1,9 +1,9 @@
 resource "aws_security_group" "consul_server" {
-  name_prefix = "${var.region}-vpc2-consul"
+  name_prefix = "${var.region}-vpc3-consul"
   description = "Firewall for the consul server."
   vpc_id      = module.vpc.vpc_id
   tags = merge(
-    { "Name" = "${var.region}-vpc2-consul" },
+    { "Name" = "${var.region}-vpc3-consul" },
     { "Project" = var.region },
     { "Owner" = "presto" }
   )
@@ -109,6 +109,9 @@ resource "aws_security_group_rule" "hcp_tcp_https" {
   description       = "The HTTPS API"
 }
 
+#
+### EKS Security Group
+#
 resource "aws_security_group" "eks" {
   name_prefix = "${var.region}-eks-sg"
   description = "Security Group for eks"

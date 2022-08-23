@@ -1,4 +1,4 @@
-# hcpc-vpc-ec2-eks
+# TFC + HCP Consul Pipelines
 [HCP Consul](https://cloud.hashicorp.com/products/consul) enables platform operators to quickly deploy a fully managed, secure-by-default service mesh, helping developers discover and securely connect any application on any runtime, including Kubernetes, Nomad, Amazon ECS, EC2, and more.
 
 To get started with HCP Consul follow this [HCP Consul Getting Started guide](https://learn.hashicorp.com/tutorials/cloud/get-started-consul#prerequisites).  It will walk you through your free account creation and setting up your Consul Cluster.  It will take you step by step through the process for onboarding platforms like Kubernetes or VMs and eventually registering the services on those platforms.
