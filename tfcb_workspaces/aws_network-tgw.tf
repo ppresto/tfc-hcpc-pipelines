@@ -12,7 +12,7 @@ module "ws_aws_tgw" {
   repo_branch         = "main"
   global_remote_state = false
   tag_names           = ["team-net", "sg", "tgw", "bastion", "${var.aws_default_region}", "${var.env}"]
-  variable_set        = tfe_variable_set.cloud_creds.id
+  variable_set        = var.variable_set != null ? tfe_variable_set.cloud_creds.id : null
   
   env_variables = {
     "CONFIRM_DESTROY" : 1
