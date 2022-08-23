@@ -32,7 +32,6 @@ module "ws_hcp_consul" {
     "HCP_CLIENT_SECRET" = var.HCP_CLIENT_SECRET
   }
   tf_variables_sec = {}
-  depends_on = [tfe_variable_set.cloud_creds]
 }
 
 output "hcp_consul_ws_name" {
