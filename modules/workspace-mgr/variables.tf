@@ -11,7 +11,7 @@ variable "oauth_token_id" {}
 variable "repo_branch" { default = "main" }
 variable "identifier" {}
 variable "agent_pool_id" { default = "" }
-variable "variable_set" {default = ""}
+variable "variable_set" {default = null}
 
 # Terraform Variables
 variable "tf_variables" {

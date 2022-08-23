@@ -53,7 +53,7 @@ resource "tfe_variable" "env_variables_sec" {
 }
 
 resource "tfe_workspace_variable_set" "test" {
-  count = var.variable_set != "" ? 1 : 0
+  count = var.variable_set != null ? 1 : 0
   variable_set_id = var.variable_set
   workspace_id    = tfe_workspace.ws-vcs.id
 }
