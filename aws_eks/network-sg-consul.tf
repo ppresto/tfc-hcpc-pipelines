@@ -129,7 +129,7 @@ resource "aws_security_group_rule" "eks-ingress" {
   from_port         = 9090
   to_port           = 9090
   cidr_blocks       = ["0.0.0.0/0"]
-  description       = "Allow all traffic."
+  description       = "Allow app traffic."
 }
 resource "aws_security_group_rule" "eks_envoy" {
   security_group_id = aws_security_group.eks.id
@@ -137,6 +137,15 @@ resource "aws_security_group_rule" "eks_envoy" {
   protocol          = "tcp"
   from_port         = 20000
   to_port           = 21255
+  cidr_blocks       = ["10.0.0.0/10"]
+  description       = "Allow envoy traffic."
+}
+resource "aws_security_group_rule" "eks_ssh" {
+  security_group_id = aws_security_group.eks.id
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 22
+  to_port           = 22
   cidr_blocks       = ["10.0.0.0/10"]
   description       = "Allow SSH traffic."
 }
