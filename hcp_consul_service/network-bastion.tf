@@ -10,7 +10,7 @@ data "template_file" "userdata" {
     CONSUL_CA_FILE     = hcp_consul_cluster.example_hcp.consul_ca_file
     CONSUL_CONFIG_FILE = hcp_consul_cluster.example_hcp.consul_config_file
     CONSUL_ACL_TOKEN   = hcp_consul_cluster.example_hcp.consul_root_token_secret_id
-    SERVICE_ACL_TOKEN  = hcp_consul_cluster.example_hcp.consul_service_api_token
+    SERVICE_ACL_TOKEN  = nonsensitive(data.consul_acl_token_secret_id.api-service.secret_id)
   }
 }
 resource "aws_instance" "bastion" {

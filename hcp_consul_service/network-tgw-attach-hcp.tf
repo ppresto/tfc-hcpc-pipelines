@@ -6,7 +6,7 @@ resource "aws_ram_resource_share" "hcpc" {
 }
 resource "aws_ram_principal_association" "example" {
   resource_share_arn = aws_ram_resource_share.hcpc.arn
-  principal          = hcp_consul_cluster.example_hcp.provider_account_id
+  principal          = hcp_hvn.example_hvn.provider_account_id
 }
 
 resource "aws_ram_resource_association" "example" {
