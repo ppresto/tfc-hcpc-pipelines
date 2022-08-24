@@ -27,6 +27,7 @@ module "ws_hcp_consul" {
     "cloud_provider" = "aws"
     "vpc_id"         = null
     "env"            = "shared"
+    "ec2_key_pair_name" = var.ssh_key_name
   }
   env_variables_sec = {
     "HCP_CLIENT_SECRET" = var.HCP_CLIENT_SECRET
