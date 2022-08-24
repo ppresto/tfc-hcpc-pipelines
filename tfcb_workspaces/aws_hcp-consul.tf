@@ -3,7 +3,7 @@ module "ws_hcp_consul" {
   agent_pool_id       = ""
   organization        = var.organization
   workspacename       = "aws_${local.region_shortname}_shared_hcp-consul"
-  workingdir          = "hcp_consul"
+  workingdir          = "hcp_consul_service"
   tfversion           = "1.1.4"
   queue_all_runs      = false
   auto_apply          = true
