@@ -1,14 +1,3 @@
-provider "aws" {
-  region = var.region
-}
-# data source for current (working) aws region
-data "aws_region" "current" {}
-
-# data source for availability zones
-data "aws_availability_zones" "available" {
-  state = "available"
-}
-
 # https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
