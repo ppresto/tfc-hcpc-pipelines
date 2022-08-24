@@ -18,7 +18,7 @@ resource "aws_instance" "bastion" {
   instance_type               = "t3.micro"
   key_name                    = var.ec2_key_pair_name
   vpc_security_group_ids      = [aws_security_group.bastion.id, aws_security_group.service.id, aws_security_group.consul_server.id]
-  subnet_id                   = hcp_consul_cluster.example_hcp.vpc_public_subnets[0]
+  subnet_id                   = module.vpc.public_subnets[0]
   associate_public_ip_address = true
   user_data                   = data.template_file.userdata.rendered
   tags = merge(
