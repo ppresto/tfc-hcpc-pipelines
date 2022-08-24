@@ -12,7 +12,7 @@ module "tgw" {
   vpc_attachments = {
     vpc = {
       vpc_id     = module.vpc.vpc_id              #data.aws_vpc.default.id
-      subnet_ids = module.vpc.vpc_private_subnets #data.aws_subnet_ids.this.ids
+      subnet_ids = module.vpc.private_subnets #data.aws_subnet_ids.this.ids
 
       tgw_routes = [
         {
