@@ -149,3 +149,22 @@ resource "aws_security_group_rule" "eks_ssh" {
   cidr_blocks       = ["10.0.0.0/10"]
   description       = "Allow SSH traffic."
 }
+
+resource "aws_security_group_rule" "consul_server_allow_server_8301_tcp2" {
+  security_group_id = aws_security_group.consul_server.id
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 8301
+  to_port           = 8301
+  cidr_blocks       = ["10.0.0.0/10"]
+  description       = "Used to handle gossip from server"
+}
+resource "aws_security_group_rule" "consul_server_allow_server_8301_udp2" {
+  security_group_id = aws_security_group.consul_server.id
+  type              = "ingress"
+  protocol          = "udp"
+  from_port         = 8301
+  to_port           = 8301
+  cidr_blocks       = ["10.0.0.0/10"]
+  description       = "Used to handle gossip from server"
+}
