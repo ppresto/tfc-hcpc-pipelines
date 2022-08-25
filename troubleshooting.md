@@ -139,8 +139,8 @@ There are some additional example configurations that use the CLI to configure L
 curl \
     --header "X-Consul-Token: ${CONSUL_HTTP_TOKEN}" \
     --request PUT \
-    --data '{"Datacenter": "hcpc-cluster-presto","Node": "k8s-sync"}' \
-    https://hcpc-cluster-presto.consul.328306de-41b8-43a7-9c38-ca8d89d06b07.aws.hashicorp.cloud//v1/catalog/deregister
+    --data '{"Datacenter": "usw2","Node": "ip-10-15-3-83.us-west-2.compute.internal"}' \
+    https://usw2.private.consul.328306de-41b8-43a7-9c38-ca8d89d06b07.aws.hashicorp.cloud/v1/catalog/deregister
 ```
 ### Helm - Install manually to debug
 Manually install consul using Helm.  The test.yaml below can be created from existing Terraform Output.  Make sure you are using a [compatable consul-k8s helm chart version](https://www.consul.io/docs/k8s/compatibility).
