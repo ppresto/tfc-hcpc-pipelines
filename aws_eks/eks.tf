@@ -93,7 +93,7 @@ resource "aws_security_group_rule" "consul_server_allow_client_8301" {
   from_port                = 8301
   to_port                  = 8301
   cidr_blocks              = ["10.0.0.0/10"]
-  description              = "Used to handle gossip between client agents"
+  description              = "Gossip between client agents"
 }
 resource "aws_security_group_rule" "consul_server_allow_client_8301_udp" {
   security_group_id        = module.eks.cluster_security_group_id
