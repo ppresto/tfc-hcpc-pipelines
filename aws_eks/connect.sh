@@ -2,11 +2,6 @@
 
 # Setup local AWS Env variables
 
-# Example: Using doormat with se_demos_dev
-if [[ $(which doormat) ]]; then
-    doormat login && eval $(doormat aws export -a se_demos_dev)
-fi
-
 # AWS Target Region needed by CLI.
 if [[ ! -z $AWS_REGION ]]; then
     AWS_DEFAULT_REGION="${AWS_REGION}"

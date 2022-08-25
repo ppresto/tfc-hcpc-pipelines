@@ -18,8 +18,13 @@ resource "aws_route" "public" {
 }
 
 # Shared VPC private network routes to other VPC's
-resource "aws_route" "allVpcPrivate" {
+resource "aws_route" "allVpcPublic" {
   route_table_id         = module.vpc.public_route_table_ids[0]
+  destination_cidr_block = "10.0.0.0/10"
+  transit_gateway_id     = module.tgw.ec2_transit_gateway_id
+}
+resource "aws_route" "allVpcPrivate" {
+  route_table_id         = module.vpc.private_route_table_ids[0]
   destination_cidr_block = "10.0.0.0/10"
   transit_gateway_id     = module.tgw.ec2_transit_gateway_id
 }
