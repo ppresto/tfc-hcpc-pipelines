@@ -12,6 +12,14 @@ data "template_file" "agent_config" {
   }
 }
 
+resource "kubernetes_namespace" "create" {
+  metadata {
+    labels = {
+      service = var.namespace
+    }
+    name = var.namespace
+  }
+}
 resource "helm_release" "consul" {
   name             = "consul"
   namespace        = var.namespace
@@ -26,6 +34,7 @@ resource "helm_release" "consul" {
     value = "hashicorp/consul-enterprise:1.11.0-ent"
     #value = "hashicorp/consul:1.10.1"
   }
+  depends_on = [kubernetes_namespace.create]
 }
 
 #
@@ -39,6 +48,7 @@ resource "kubernetes_secret" "consul-ca-cert" {
   data = {
     "tls.crt" = base64decode(data.terraform_remote_state.hcp_consul.outputs.consul_ca_file)
   }
+  depends_on = [kubernetes_namespace.create]
 }
 
 resource "kubernetes_secret" "consul-gossip-key" {
@@ -49,6 +59,7 @@ resource "kubernetes_secret" "consul-gossip-key" {
   data = {
     "key" = local.consul_config_file.encrypt
   }
+  depends_on = [kubernetes_namespace.create]
 }
 
 resource "kubernetes_secret" "consul-bootstrap-token" {
@@ -59,4 +70,5 @@ resource "kubernetes_secret" "consul-bootstrap-token" {
   data = {
     "token" = local.consul_acl_token
   }
+  depends_on = [kubernetes_namespace.create]
 }
