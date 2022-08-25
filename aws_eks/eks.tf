@@ -37,10 +37,8 @@ module "eks" {
       from_port                = 8301
       to_port                  = 8301
       cidr_blocks              = ["10.0.0.0/10"]
-      source_cluster_security_group = true
     }
     consul_client_udp = {
-      source_cluster_security_group = true
       type                     = "ingress"
       protocol                 = "udp"
       from_port                = 8301
