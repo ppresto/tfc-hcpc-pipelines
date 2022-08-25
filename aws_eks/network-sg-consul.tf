@@ -34,7 +34,7 @@ resource "aws_security_group_rule" "consul_server_allow_server_8301_udp" {
 
 resource "aws_security_group_rule" "consul_server_allow_client_8301" {
   security_group_id        = aws_security_group.consul_server.id
-  #source_cluster_security_group = true
+  source_cluster_security_group = true
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = 8301
