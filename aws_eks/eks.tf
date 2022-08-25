@@ -87,7 +87,7 @@ module "eks" {
 }
 
 resource "aws_security_group_rule" "consul_server_allow_client_8301" {
-  security_group_id        = module.eks.cluster_security_group_id
+  security_group_id        = module.eks.node_security_group_id
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = 8301
@@ -96,7 +96,7 @@ resource "aws_security_group_rule" "consul_server_allow_client_8301" {
   description              = "Gossip between client agents"
 }
 resource "aws_security_group_rule" "consul_server_allow_client_8301_udp" {
-  security_group_id        = module.eks.cluster_security_group_id
+  security_group_id        = module.eks.node_security_group_id
   type                     = "ingress"
   protocol                 = "udp"
   from_port                = 8301
