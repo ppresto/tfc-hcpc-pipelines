@@ -81,7 +81,7 @@ module "eks" {
       # Remote access cannot be specified with a launch template
       remote_access = {
         ec2_ssh_key               = var.ec2_key_pair_name
-        source_security_group_ids = [aws_security_group.consul_server.ids]
+        source_security_group_ids = [aws_security_group.consul_server.id]
       }
     }
   }
