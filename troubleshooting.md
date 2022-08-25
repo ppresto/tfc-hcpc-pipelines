@@ -8,15 +8,6 @@
 https://learn.hashicorp.com/tutorials/cloud/amazon-transit-gateway?in=consul/)
 * [Visual Subnet Calculator](https://www.davidc.net/sites/default/subnets/subnets.html?network=10.0.0.0&mask=20&division=23.f42331) to help find the correct CIDR block ranges.
 
-### Test shared vpc public subnet to HVN
-ssh ubuntu@**bastion_ip**   #terraform output variable
-consul_url=**consul_private_endpoint_url**   #terraform output variable
-curl ${consul_url}/v1/status/leader
-ip=$(dig +short ${consul_url//https:\/\/})
-ping $ip
-nc -zv $ip 8301   #TCP
-nc -zvu $ip 8301  # UDP
-nc -zv $ip 8300
 ## SSH
 The TF is leveraging your AWS Key Pair for the Bastion/EC2 and EKS nodes.  Use `Agent Forwarding` to ssh to your nodes.  Locally in your terminal find your key and setup ssh.
 ```
@@ -54,6 +45,35 @@ To investigate systemd errors starting consul use `journalctl`.
 ```
 journalctl -u consul.service
 ```
+### Test client connectivity to HCP Consul
+First check consul logs above to verify the local client successfully connected.  You should see the IP of the node and `agent: Synced`
+```
+[INFO]  agent: Synced node info
+```
+If the client can't connect verify it has a route to HCP Consul's internal address and the required ports.
+```
+ssh ubuntu@**bastion_ip**   #terraform output variable
+consul_url=**consul_private_endpoint_url**   #terraform output variable
+
+curl ${consul_url}/v1/status/leader  #verify consul internal url is accessible and service healthy
+ip=$(dig +short ${consul_url//https:\/\/}) # get internal consul IP
+ping $ip
+nc -zv $ip 8301   # TCP Test to remote HCP Consul agent port
+nc -zvu $ip 8301  # UDP 8301
+nc -zv $ip 8300   # TCP 8300
+```
+
+Look at the logs to identify other unhealthy clients in remote VPC's.
+```
+[INFO]  agent.client.serf.lan: serf: EventMemberFailed: ip-10-15-2-242.us-west-2.compute.internal 10.15.2.79
+[INFO]  agent.client.memberlist.lan: memberlist: Suspect ip-10-15-2-242.us-west-2.compute.internal has failed, no acks received
+```
+These are examples of a client that can connect to HCP Consul, but not all other agents in other VPC's that are using the shared service.  Unless they are in their own Admin Partition they need to be able to route to all other agents participating in HCP Consul. This is how Consul agents monitor each other through Gossip.  In this case, verify both source and destinations can reach eachother over TCP and UDP on port 8301.
+```
+nc -zv 10.15.2.79 8301
+nc -zvu 10.15.2.79 8301
+```
+
 ### Monitor the Server
 Using the consul client with the root token get a live stream of logs from the server.
 ```

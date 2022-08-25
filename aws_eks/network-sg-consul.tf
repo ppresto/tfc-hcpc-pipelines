@@ -34,11 +34,12 @@ resource "aws_security_group_rule" "consul_server_allow_server_8301_udp" {
 
 resource "aws_security_group_rule" "consul_server_allow_client_8301" {
   security_group_id        = aws_security_group.consul_server.id
+  #source_cluster_security_group = true
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = 8301
   to_port                  = 8301
-  source_security_group_id = aws_security_group.consul_server.id
+  cidr_blocks              = ["10.0.0.0/10"]
   description              = "Used to handle gossip between client agents"
 }
 resource "aws_security_group_rule" "consul_server_allow_client_8301_udp" {
@@ -47,7 +48,7 @@ resource "aws_security_group_rule" "consul_server_allow_client_8301_udp" {
   protocol                 = "udp"
   from_port                = 8301
   to_port                  = 8301
-  source_security_group_id = aws_security_group.consul_server.id
+  cidr_blocks              = ["10.0.0.0/10"]
   description              = "Used to handle gossip between client agents"
 }
 
@@ -87,7 +88,7 @@ resource "aws_security_group_rule" "consul_server_allow_client_egress_8301" {
   protocol                 = "tcp"
   from_port                = 8301
   to_port                  = 8301
-  source_security_group_id = aws_security_group.consul_server.id
+  cidr_blocks              = ["10.0.0.0/10"]
   description              = "Used to handle gossip between client agents"
 }
 resource "aws_security_group_rule" "consul_server_allow_client_egress_8301_udp" {
@@ -96,7 +97,7 @@ resource "aws_security_group_rule" "consul_server_allow_client_egress_8301_udp" 
   protocol                 = "udp"
   from_port                = 8301
   to_port                  = 8301
-  source_security_group_id = aws_security_group.consul_server.id
+  cidr_blocks              = ["10.0.0.0/10"]
   description              = "Used to handle gossip between client agents"
 }
 resource "aws_security_group_rule" "hcp_tcp_https" {
@@ -112,18 +113,9 @@ resource "aws_security_group_rule" "hcp_tcp_https" {
 #
 ### EKS Security Group
 #
-resource "aws_security_group" "eks" {
-  name_prefix = "${var.region}-eks-sg"
-  description = "Security Group for eks"
-  vpc_id      = module.vpc.vpc_id
-  tags = merge(
-    { "Name" = "presto-${var.region}-eks-sg" },
-    { "Project" = var.region }
-  )
-}
 
 resource "aws_security_group_rule" "eks-ingress" {
-  security_group_id = aws_security_group.eks.id
+  security_group_id = aws_security_group.consul_server.id
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 9090
@@ -132,7 +124,7 @@ resource "aws_security_group_rule" "eks-ingress" {
   description       = "Allow app traffic."
 }
 resource "aws_security_group_rule" "eks_envoy" {
-  security_group_id = aws_security_group.eks.id
+  security_group_id = aws_security_group.consul_server.id
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 20000
@@ -141,32 +133,13 @@ resource "aws_security_group_rule" "eks_envoy" {
   description       = "Allow envoy traffic."
 }
 resource "aws_security_group_rule" "eks_ssh" {
-  security_group_id = aws_security_group.eks.id
+  security_group_id = aws_security_group.consul_server.id
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 22
   to_port           = 22
   cidr_blocks       = ["10.0.0.0/10"]
   description       = "Allow SSH traffic."
-}
-
-resource "aws_security_group_rule" "consul_server_allow_server_8301_tcp2" {
-  security_group_id = aws_security_group.consul_server.id
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 8301
-  to_port           = 8301
-  cidr_blocks       = ["10.0.0.0/10"]
-  description       = "Used to handle gossip from server"
-}
-resource "aws_security_group_rule" "consul_server_allow_server_8301_udp2" {
-  security_group_id = aws_security_group.consul_server.id
-  type              = "ingress"
-  protocol          = "udp"
-  from_port         = 8301
-  to_port           = 8301
-  cidr_blocks       = ["10.0.0.0/10"]
-  description       = "Used to handle gossip from server"
 }
 
 resource "aws_security_group_rule" "service_allow_outbound" {
