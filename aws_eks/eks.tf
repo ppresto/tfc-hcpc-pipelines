@@ -20,7 +20,8 @@ locals {
 
 module "eks" {
   source                                = "terraform-aws-modules/eks/aws"
-  version                               = "18.4.1"
+  #version                               = "18.4.1"
+  version                               = "18.28.0"
   cluster_name                          = local.name
   cluster_version                       = local.cluster_version
   cluster_endpoint_private_access       = true
@@ -29,24 +30,24 @@ module "eks" {
   vpc_id                                = module.vpc.vpc_id
   subnet_ids                            = module.vpc.private_subnets
 
-  cluster_security_group_additional_rules = {
-    consul_client_tcp = {
-      description              = "gossip between client agents"
-      type                     = "ingress"
-      protocol                 = "tcp"
-      from_port                = 8301
-      to_port                  = 8301
-      cidr_blocks              = ["10.0.0.0/10"]
-    }
-    consul_client_udp = {
-      type                     = "ingress"
-      protocol                 = "udp"
-      from_port                = 8301
-      to_port                  = 8301
-      cidr_blocks              = ["10.0.0.0/10"]
-      description              = "gossip between client agents"
-    }
-  }
+  #cluster_security_group_additional_rules = {
+  #  consul_client_tcp = {
+  #    description              = "gossip between client agents"
+  #    type                     = "ingress"
+  #    protocol                 = "tcp"
+  #    from_port                = 8301
+  #    to_port                  = 8301
+  #    cidr_blocks              = ["10.0.0.0/10"]
+  #  }
+  #  consul_client_udp = {
+  #    type                     = "ingress"
+  #    protocol                 = "udp"
+  #    from_port                = 8301
+  #    to_port                  = 8301
+  #    cidr_blocks              = ["10.0.0.0/10"]
+  #    description              = "gossip between client agents"
+  #  }
+  #}
   cluster_addons = {
     #coredns = {
     #  resolve_conflicts = "OVERWRITE"
