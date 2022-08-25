@@ -8,7 +8,15 @@
 https://learn.hashicorp.com/tutorials/cloud/amazon-transit-gateway?in=consul/)
 * [Visual Subnet Calculator](https://www.davidc.net/sites/default/subnets/subnets.html?network=10.0.0.0&mask=20&division=23.f42331) to help find the correct CIDR block ranges.
 
-
+### Test shared vpc public subnet to HVN
+ssh ubuntu@**bastion_ip**   #terraform output variable
+consul_url=**consul_private_endpoint_url**   #terraform output variable
+curl ${consul_url}/v1/status/leader
+ip=$(dig +short ${consul_url//https:\/\/})
+ping $ip
+nc -zv $ip 8301   #TCP
+nc -zvu $ip 8301  # UDP
+nc -zv $ip 8300
 ## SSH
 The TF is leveraging your AWS Key Pair for the Bastion/EC2 and EKS nodes.  Use `Agent Forwarding` to ssh to your nodes.  Locally in your terminal find your key and setup ssh.
 ```

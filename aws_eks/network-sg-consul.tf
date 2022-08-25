@@ -168,3 +168,13 @@ resource "aws_security_group_rule" "consul_server_allow_server_8301_udp2" {
   cidr_blocks       = ["10.0.0.0/10"]
   description       = "Used to handle gossip from server"
 }
+
+resource "aws_security_group_rule" "service_allow_outbound" {
+  security_group_id = aws_security_group.consul_server.id
+  type              = "egress"
+  protocol          = "-1"
+  from_port         = 0
+  to_port           = 0
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "Allow any outbound traffic."
+}
