@@ -30,25 +30,6 @@ resource "aws_security_group_rule" "consul_server_allow_server_8301_udp" {
   cidr_blocks       = [var.hvn_cidr_block]
   description       = "Used to handle gossip from server"
 }
-
-resource "aws_security_group_rule" "consul_server_allow_client_8301" {
-  security_group_id        = aws_security_group.consul_server.id
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 8301
-  to_port                  = 8301
-  source_security_group_id = aws_security_group.consul_server.id
-  description              = "Used to handle gossip between local client agents"
-}
-resource "aws_security_group_rule" "consul_server_allow_client_8301_udp" {
-  security_group_id        = aws_security_group.consul_server.id
-  type                     = "ingress"
-  protocol                 = "udp"
-  from_port                = 8301
-  to_port                  = 8301
-  source_security_group_id = aws_security_group.consul_server.id
-  description              = "Used to handle gossip between local client agents"
-}
 resource "aws_security_group_rule" "consul_server_allow_client_8301" {
   security_group_id        = aws_security_group.consul_server.id
   type                     = "ingress"

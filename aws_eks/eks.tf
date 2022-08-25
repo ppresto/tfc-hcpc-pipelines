@@ -29,6 +29,26 @@ module "eks" {
   vpc_id                                = module.vpc.vpc_id
   subnet_ids                            = module.vpc.private_subnets
 
+  node_security_group_additional_rules = {
+    consul_client_tcp = {
+      description              = "Used to handle gossip between client agents"
+      type                     = "ingress"
+      protocol                 = "tcp"
+      from_port                = 8301
+      to_port                  = 8301
+      cidr_blocks              = ["10.0.0.0/10"]
+      source_cluster_security_group = true
+    }
+    consul_client_udp = {
+      source_cluster_security_group = true
+      type                     = "ingress"
+      protocol                 = "udp"
+      from_port                = 8301
+      to_port                  = 8301
+      cidr_blocks              = ["10.0.0.0/10"]
+      description              = "Used to handle gossip between client agents"
+    }
+  }
   cluster_addons = {
     #coredns = {
     #  resolve_conflicts = "OVERWRITE"
@@ -61,7 +81,7 @@ module "eks" {
       # Remote access cannot be specified with a launch template
       remote_access = {
         ec2_ssh_key               = var.ec2_key_pair_name
-        source_security_group_ids = [aws_security_group.eks.id]
+        source_security_group_ids = [aws_security_group.consul_server.ids]
       }
     }
   }
