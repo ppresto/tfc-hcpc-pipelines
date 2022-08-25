@@ -29,7 +29,7 @@ module "eks" {
   vpc_id                                = module.vpc.vpc_id
   subnet_ids                            = module.vpc.private_subnets
 
-  node_security_group_additional_rules = {
+  cluster_security_group_additional_rules = {
     consul_client_tcp = {
       description              = "Used to handle gossip between client agents"
       type                     = "ingress"
