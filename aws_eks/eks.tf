@@ -31,7 +31,7 @@ module "eks" {
 
   cluster_security_group_additional_rules = {
     consul_client_tcp = {
-      description              = "Used to handle gossip between client agents"
+      description              = "gossip between client agents"
       type                     = "ingress"
       protocol                 = "tcp"
       from_port                = 8301
@@ -44,7 +44,7 @@ module "eks" {
       from_port                = 8301
       to_port                  = 8301
       cidr_blocks              = ["10.0.0.0/10"]
-      description              = "Used to handle gossip between client agents"
+      description              = "gossip between client agents"
     }
   }
   cluster_addons = {
