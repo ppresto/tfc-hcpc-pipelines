@@ -17,10 +17,29 @@ variable "hvn_id" {
   type        = string
   default     = "learn-hvn"
 }
+# HCP Consul Virtual Network CIDR
 variable "hvn_cidr_block" {
   description = "VPC CIDR Block Range"
   type        = string
   default     = "172.25.16.0/20"
+}
+# AWS Shared VPC CIDR
+variable "vpc_cidr_block" {
+  description = "VPC CIDR Block Range"
+  type        = string
+  default     = "10.21.0.0/16"
+}
+# Shared bastion host allowed ingress CIDR
+variable "allowed_bastion_cidr_blocks" {
+  description = "List of CIDR blocks allowed to access your Bastion.  Defaults to Everywhere."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+# Private Network Trusted CIDR blocks
+variable "private_cidr_blocks" {
+  description = "List of CIDR blocks participating in HCP Consul Shared service"
+  type        = list(string)
+  default     = ["10.0.0.0/10"]
 }
 variable "cluster_id" {
   description = "The ID of the HCP Consul cluster."
@@ -37,14 +56,6 @@ variable "cloud_provider" {
   type        = string
   default     = "aws"
 }
-
-# VPC
-variable "vpc_cidr_block" {
-  description = "VPC CIDR Block Range"
-  type        = string
-  default     = "10.21.0.0/16"
-}
-
 # EC2 Variables
 variable "ami_id" {
   description = "AMI ID to be used on all AWS EC2 Instances."
@@ -63,14 +74,6 @@ variable "ec2_key_pair_name" {
   type        = string
   default     = "ppresto-ptfe-dev-key"
 }
-
-# Allowed Traffic into the Bastion
-variable "allowed_bastion_cidr_blocks" {
-  description = "List of CIDR blocks allowed to access your Bastion.  Defaults to Everywhere."
-  type        = list(string)
-  default     = ["0.0.0.0/0"]
-}
-
 variable "allowed_bastion_cidr_blocks_ipv6" {
   description = "List of CIDR blocks allowed to access your Bastion.  Defaults to none."
   type        = list(string)
