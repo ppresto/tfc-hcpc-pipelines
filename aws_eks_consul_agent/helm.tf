@@ -7,7 +7,7 @@ data "template_file" "agent_config" {
   vars = {
     DATACENTER            = local.consul_datacenter
     RETRY_JOIN            = jsonencode(local.consul_retry_join)
-    KUBE_API_URL          = data.terraform_remote_state.aws-eks.outputs.cluster_endpoint
+    KUBE_API_URL          = local.eks_cluster_endpoint
     CONSUL_DNS_CLUSTER_IP = var.consul_dns_cluster_ip
   }
 }
@@ -46,7 +46,7 @@ resource "kubernetes_secret" "consul-ca-cert" {
     namespace = var.namespace
   }
   data = {
-    "tls.crt" = base64decode(data.terraform_remote_state.hcp_consul.outputs.consul_ca_file)
+    "tls.crt" = base64decode(local.consul_config_file)
   }
   depends_on = [kubernetes_namespace.create]
 }
@@ -68,7 +68,7 @@ resource "kubernetes_secret" "consul-bootstrap-token" {
     namespace = var.namespace
   }
   data = {
-    "token" = local.consul_acl_token
+    "token" = local.consul_root_token
   }
   depends_on = [kubernetes_namespace.create]
 }

@@ -50,8 +50,14 @@ resource "aws_route" "privateToHcp" {
   destination_cidr_block = local.hvn_cidr_block
   transit_gateway_id     = local.transit_gateway_id
 }
+#resource "aws_route" "privateToAllInt" {
+#  route_table_id         = module.vpc.private_route_table_ids[0]
+#  destination_cidr_block = "10.0.0.0/10"
+#  transit_gateway_id     = local.transit_gateway_id
+#}
 resource "aws_route" "privateToAllInt" {
+  for_each               = toset(local.private_cidr_blocks)
   route_table_id         = module.vpc.private_route_table_ids[0]
-  destination_cidr_block = "10.0.0.0/10"
+  destination_cidr_block = each.key
   transit_gateway_id     = local.transit_gateway_id
 }
