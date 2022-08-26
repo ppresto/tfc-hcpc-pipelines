@@ -4,7 +4,7 @@ resource "aws_security_group_rule" "consul_server_allow_client_egress_8301" {
   protocol                 = "tcp"
   from_port                = 8301
   to_port                  = 8301
-  source_security_group_id = aws_security_group.consul_server.id
+  cidr_blocks       = ["10.0.0.0/10"]
   description              = "Used to handle gossip between client agents"
 }
 resource "aws_security_group_rule" "consul_server_allow_client_egress_8301_udp" {
@@ -13,7 +13,7 @@ resource "aws_security_group_rule" "consul_server_allow_client_egress_8301_udp" 
   protocol                 = "udp"
   from_port                = 8301
   to_port                  = 8301
-  source_security_group_id = aws_security_group.consul_server.id
+  cidr_blocks       = ["10.0.0.0/10"]
   description              = "Used to handle gossip between client agents"
 }
 
@@ -23,7 +23,7 @@ resource "aws_security_group_rule" "consul_server_allow_client_ingress_8301" {
   protocol                 = "tcp"
   from_port                = 8301
   to_port                  = 8301
-  source_security_group_id = aws_security_group.consul_server.id
+  cidr_blocks       = ["10.0.0.0/10"]
   description              = "Used to handle gossip between client agents"
 }
 resource "aws_security_group_rule" "consul_server_allow_client_ingress_8301_udp" {
@@ -32,6 +32,6 @@ resource "aws_security_group_rule" "consul_server_allow_client_ingress_8301_udp"
   protocol                 = "udp"
   from_port                = 8301
   to_port                  = 8301
-  source_security_group_id = aws_security_group.consul_server.id
+  cidr_blocks       = ["10.0.0.0/10"]
   description              = "Used to handle gossip between client agents"
 }
