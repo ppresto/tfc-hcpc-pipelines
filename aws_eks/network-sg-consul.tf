@@ -12,6 +12,7 @@ resource "aws_security_group" "consul_server" {
 #
 ###  Ingress Rules 
 #
+
 resource "aws_security_group_rule" "consul_server_allow_server_8301" {
   security_group_id = aws_security_group.consul_server.id
   type              = "ingress"
@@ -72,7 +73,7 @@ resource "aws_security_group_rule" "hcp_tcp_https" {
 }
 
 #
-### EKS Security Group
+### App Security Rules
 #
 
 resource "aws_security_group_rule" "eks-ingress" {
