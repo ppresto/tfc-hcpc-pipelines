@@ -6,7 +6,7 @@ data "template_file" "agent_config" {
   template = file("${path.module}/templates/fake-service/helm/helm-config.yaml")
   vars = {
     DATACENTER            = local.consul_datacenter
-    RETRY_JOIN            = jsonencode(local.consul_retry_join)
+    RETRY_JOIN            = local.consul_retry_join
     KUBE_API_URL          = local.eks_cluster_endpoint
     CONSUL_DNS_CLUSTER_IP = var.consul_dns_cluster_ip
   }
