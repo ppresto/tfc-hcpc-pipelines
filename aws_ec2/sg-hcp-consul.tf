@@ -108,3 +108,13 @@ resource "aws_security_group_rule" "hcp_tcp_https" {
   cidr_blocks       = [local.hvn_cidr_block]
   description       = "The HTTPS API"
 }
+
+resource "aws_security_group_rule" "ec2-svc-node_envoy" {
+  security_group_id = aws_security_group.ec2-svc-node.id
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 20000
+  to_port           = 20000
+  cidr_blocks       = local.private_cidr_blocks
+  description       = "Allow SSH traffic."
+}

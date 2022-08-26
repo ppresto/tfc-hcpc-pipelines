@@ -39,41 +39,12 @@ resource "aws_security_group" "ec2-svc-node" {
     { "Project" = var.region }
   )
 }
-resource "aws_security_group_rule" "ec2-svc-node_envoy" {
-  security_group_id = aws_security_group.ec2-svc-node.id
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 20000
-  to_port           = 21255
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "Allow SSH traffic."
-}
-
-resource "aws_security_group_rule" "ec2-svc-node_9090-9099" {
-  security_group_id = aws_security_group.ec2-svc-node.id
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 9090
-  to_port           = 9099
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "Allow SSH traffic."
-}
 resource "aws_security_group_rule" "node_allow_22" {
   security_group_id = aws_security_group.ec2-svc-node.id
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 22
   to_port           = 22
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = local.private_cidr_blocks
   description       = "Allow SSH traffic."
-}
-
-resource "aws_security_group_rule" "node_allow_outbound" {
-  security_group_id = aws_security_group.ec2-svc-node.id
-  type              = "egress"
-  protocol          = "-1"
-  from_port         = 0
-  to_port           = 0
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "Allow any outbound traffic."
 }
