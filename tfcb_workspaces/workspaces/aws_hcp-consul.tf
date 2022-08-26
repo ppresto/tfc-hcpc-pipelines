@@ -13,7 +13,7 @@ module "ws_hcp_consul" {
   global_remote_state = false
   tag_names           = ["team-ss", "hcp", "shared-vpc", "consul", "${var.aws_default_region}"]
   variable_set        = tfe_variable_set.cloud_creds.id
-  
+
   env_variables = {
     "CONFIRM_DESTROY" : 1
     "AWS_DEFAULT_REGION" : var.aws_default_region
@@ -21,12 +21,12 @@ module "ws_hcp_consul" {
   }
   # local.region_shortname ex: "usw2"
   tf_variables = {
-    "hvn_id"         = "${local.region_shortname}-hvn-id"
-    "cluster_id"     = local.region_shortname
-    "region"         = var.aws_default_region
-    "cloud_provider" = "aws"
-    "vpc_id"         = null
-    "env"            = "shared"
+    "hvn_id"            = "${local.region_shortname}-hvn-id"
+    "cluster_id"        = local.region_shortname
+    "region"            = var.aws_default_region
+    "cloud_provider"    = "aws"
+    "vpc_id"            = null
+    "env"               = "shared"
     "ec2_key_pair_name" = var.ssh_key_name
   }
   env_variables_sec = {

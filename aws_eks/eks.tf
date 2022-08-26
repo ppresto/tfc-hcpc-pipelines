@@ -19,8 +19,8 @@ locals {
 # https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest
 
 module "eks" {
-  source                                = "terraform-aws-modules/eks/aws"
-  version                               = "18.4.1"
+  source  = "terraform-aws-modules/eks/aws"
+  version = "18.4.1"
   #version                               = "18.28.0"
   cluster_name                          = local.name
   cluster_version                       = local.cluster_version
@@ -35,18 +35,18 @@ module "eks" {
   #    description              = "gossip between client agents"
   #    type                     = "ingress"
   #    protocol                 = "tcp"
-   #   from_port                = 8301
-   #   to_port                  = 8301
-   #   cidr_blocks              = ["10.0.0.0/10"]
-   # }
-   # consul_client_udp = {
-   #   type                     = "ingress"
-   #   protocol                 = "udp"
-   #   from_port                = 8301
-   #   to_port                  = 8301
-   #   cidr_blocks              = ["10.0.0.0/10"]
-   #   description              = "gossip between client agents"
-   # }
+  #   from_port                = 8301
+  #   to_port                  = 8301
+  #   cidr_blocks              = ["10.0.0.0/10"]
+  # }
+  # consul_client_udp = {
+  #   type                     = "ingress"
+  #   protocol                 = "udp"
+  #   from_port                = 8301
+  #   to_port                  = 8301
+  #   cidr_blocks              = ["10.0.0.0/10"]
+  #   description              = "gossip between client agents"
+  # }
   #}
   cluster_addons = {
     #coredns = {

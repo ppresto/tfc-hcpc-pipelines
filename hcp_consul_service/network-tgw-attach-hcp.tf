@@ -29,9 +29,9 @@ resource "hcp_aws_transit_gateway_attachment" "example" {
 
 #Finally define the HCP Route to the VPC CIDR
 resource "hcp_hvn_route" "route" {
-  hvn_link         = hcp_hvn.example_hvn.self_link
-  hvn_route_id     = "hvn-to-tgw-${var.region}-attachment"
+  hvn_link     = hcp_hvn.example_hvn.self_link
+  hvn_route_id = "hvn-to-tgw-${var.region}-attachment"
   #destination_cidr = data.terraform_remote_state.hcp_consul.outputs.vpc_cidr_block
-  destination_cidr = "10.0.0.0/10"  # 10.0-10.63
+  destination_cidr = "10.0.0.0/10" # 10.0-10.63
   target_link      = hcp_aws_transit_gateway_attachment.example.self_link
 }

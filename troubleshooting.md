@@ -74,6 +74,8 @@ nc -zv 10.15.2.79 8301
 nc -zvu 10.15.2.79 8301
 ```
 
+Check Security group rules to ensure TCP/UDP bidirectional traffic is openned to all networks using HCP.  
+Warning:  EKS managed nodes are mapped to specific security groups that need to allow this traffic.  Refer to `aws_eks/sg-hcp-consul.tf`
 ### Monitor the Server
 Using the consul client with the root token get a live stream of logs from the server.
 ```

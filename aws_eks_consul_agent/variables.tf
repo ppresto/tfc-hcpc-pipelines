@@ -23,7 +23,7 @@ variable "consul_dns_cluster_ip" {
 }
 
 locals {
-  region_shortname = join("", regex("([a-z]{2}).*-([a-z]).*-(\\d+)", var.region))
+  region_shortname   = join("", regex("([a-z]{2}).*-([a-z]).*-(\\d+)", var.region))
   vpc_id             = data.terraform_remote_state.hcp_consul.outputs.vpc_id
   private_subnet_ids = data.terraform_remote_state.hcp_consul.outputs.vpc_private_subnets
   public_subnet_ids  = data.terraform_remote_state.hcp_consul.outputs.vpc_public_subnets

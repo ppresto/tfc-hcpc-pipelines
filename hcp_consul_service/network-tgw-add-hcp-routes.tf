@@ -7,7 +7,7 @@
 # VPC private subnet route to HCP CIDR Block
 resource "aws_route" "private" {
   route_table_id         = module.vpc.private_route_table_ids[0]
-  destination_cidr_block =var.hvn_cidr_block
+  destination_cidr_block = var.hvn_cidr_block
   transit_gateway_id     = module.tgw.ec2_transit_gateway_id
 }
 # VPC public subnet route to HCP CIDR Block

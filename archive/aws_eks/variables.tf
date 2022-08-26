@@ -28,7 +28,7 @@ variable "vpc_cidr_block" {
   default     = "10.15.0.0/16"
 }
 locals {
-  region_shortname = join("", regex("([a-z]{2}).*-([a-z]).*-(\\d+)", var.region))
+  region_shortname        = join("", regex("([a-z]{2}).*-([a-z]).*-(\\d+)", var.region))
   consul_config_file      = jsondecode(base64decode(data.terraform_remote_state.hcp_consul.outputs.consul_config_file))
   consul_gossip_key       = local.consul_config_file.encrypt
   consul_retry_join       = local.consul_config_file.retry_join

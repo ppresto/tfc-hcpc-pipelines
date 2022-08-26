@@ -8,7 +8,7 @@ variable "tag_names" {
   type    = list(any)
   default = ["auto"]
 }
-variable "variable_set" {default = null}
+variable "variable_set" { default = null }
 
 # HCP variables
 variable "HCP_CLIENT_ID" { default = "" }
