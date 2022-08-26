@@ -17,7 +17,7 @@ resource "aws_instance" "bastion" {
   ami                         = var.use_latest_ami ? data.aws_ssm_parameter.ubuntu_1804_ami_id.value : var.ami_id
   instance_type               = "t3.micro"
   key_name                    = var.ec2_key_pair_name
-  vpc_security_group_ids      = [aws_security_group.bastion.id, aws_security_group.service.id, aws_security_group.consul_server.id]
+  vpc_security_group_ids      = [aws_security_group.bastion.id, aws_security_group.consul_server.id]
   subnet_id                   = module.vpc.public_subnets[0]
   associate_public_ip_address = true
   user_data                   = data.template_file.userdata.rendered
