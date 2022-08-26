@@ -57,7 +57,7 @@ resource "kubernetes_secret" "consul-gossip-key" {
     namespace = var.namespace
   }
   data = {
-    "key" = local.consul_config_file.encrypt
+    "key" = local.consul_gossip_key
   }
   depends_on = [kubernetes_namespace.create]
 }
