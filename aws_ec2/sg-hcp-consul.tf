@@ -33,22 +33,22 @@ resource "aws_security_group_rule" "consul_server_allow_server_8301_udp" {
 
 
 resource "aws_security_group_rule" "consul_server_allow_client_8301" {
-  security_group_id        = aws_security_group.consul_server.id
-  type                     = "ingress"
-  protocol                 = "tcp"
-  from_port                = 8301
-  to_port                  = 8301
-  source_security_group_id = aws_security_group.consul_server.id
-  description              = "Used to handle gossip between client agents"
+  security_group_id = aws_security_group.consul_server.id
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 8301
+  to_port           = 8301
+  cidr_blocks       = ["10.0.0.0/10"]
+  description       = "Used to handle gossip between client agents"
 }
 resource "aws_security_group_rule" "consul_server_allow_client_8301_udp" {
-  security_group_id        = aws_security_group.consul_server.id
-  type                     = "ingress"
-  protocol                 = "udp"
-  from_port                = 8301
-  to_port                  = 8301
-  source_security_group_id = aws_security_group.consul_server.id
-  description              = "Used to handle gossip between client agents"
+  security_group_id = aws_security_group.consul_server.id
+  type              = "ingress"
+  protocol          = "udp"
+  from_port         = 8301
+  to_port           = 8301
+  cidr_blocks       = ["10.0.0.0/10"]
+  description       = "Used to handle gossip between client agents"
 }
 
 #
@@ -82,22 +82,22 @@ resource "aws_security_group_rule" "hcp_udp_server_gossip" {
   description       = "Server to server gossip communication"
 }
 resource "aws_security_group_rule" "consul_server_allow_client_egress_8301" {
-  security_group_id        = aws_security_group.consul_server.id
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = 8301
-  to_port                  = 8301
-  source_security_group_id = aws_security_group.consul_server.id
-  description              = "Used to handle gossip between client agents"
+  security_group_id = aws_security_group.consul_server.id
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 8301
+  to_port           = 8301
+  cidr_blocks       = ["10.0.0.0/10"]
+  description       = "Used to handle gossip between client agents"
 }
 resource "aws_security_group_rule" "consul_server_allow_client_egress_8301_udp" {
-  security_group_id        = aws_security_group.consul_server.id
-  type                     = "egress"
-  protocol                 = "udp"
-  from_port                = 8301
-  to_port                  = 8301
-  source_security_group_id = aws_security_group.consul_server.id
-  description              = "Used to handle gossip between client agents"
+  security_group_id = aws_security_group.consul_server.id
+  type              = "egress"
+  protocol          = "udp"
+  from_port         = 8301
+  to_port           = 8301
+  cidr_blocks       = ["10.0.0.0/10"]
+  description       = "Used to handle gossip between client agents"
 }
 resource "aws_security_group_rule" "hcp_tcp_https" {
   security_group_id = aws_security_group.consul_server.id
@@ -108,12 +108,3 @@ resource "aws_security_group_rule" "hcp_tcp_https" {
   cidr_blocks       = [data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block]
   description       = "The HTTPS API"
 }
-#resource "aws_security_group_rule" "consul_server_allow_outbound" {
-#  security_group_id = aws_security_group.consul_server.id
-#  type              = "egress"
-#  protocol          = "-1"
-#  from_port         = 0
-#  to_port           = 0
-#  cidr_blocks       = ["0.0.0.0/0"]
-#  description       = "Allow any outbound traffic."
-#}
