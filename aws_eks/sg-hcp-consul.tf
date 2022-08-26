@@ -19,7 +19,7 @@ resource "aws_security_group_rule" "consul_server_allow_server_8301" {
   protocol          = "tcp"
   from_port         = 8301
   to_port           = 8301
-  cidr_blocks       = [data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block]
+  cidr_blocks       = [local.hvn_cidr_block]
   description       = "Used to handle gossip from server"
 }
 resource "aws_security_group_rule" "consul_server_allow_server_8301_udp" {
@@ -28,7 +28,7 @@ resource "aws_security_group_rule" "consul_server_allow_server_8301_udp" {
   protocol          = "udp"
   from_port         = 8301
   to_port           = 8301
-  cidr_blocks       = [data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block]
+  cidr_blocks       = [local.hvn_cidr_block]
   description       = "Used to handle gossip from server"
 }
 
@@ -41,7 +41,7 @@ resource "aws_security_group_rule" "hcp_tcp_RPC_from_clients" {
   protocol          = "tcp"
   from_port         = 8300
   to_port           = 8300
-  cidr_blocks       = [data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block]
+  cidr_blocks       = [local.hvn_cidr_block]
   description       = "For RPC communication between clients and servers"
 }
 resource "aws_security_group_rule" "hcp_tcp_server_gossip" {
@@ -50,7 +50,7 @@ resource "aws_security_group_rule" "hcp_tcp_server_gossip" {
   protocol          = "tcp"
   from_port         = 8301
   to_port           = 8301
-  cidr_blocks       = [data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block]
+  cidr_blocks       = [local.hvn_cidr_block]
   description       = "Server to server gossip communication"
 }
 resource "aws_security_group_rule" "hcp_udp_server_gossip" {
@@ -59,7 +59,7 @@ resource "aws_security_group_rule" "hcp_udp_server_gossip" {
   protocol          = "udp"
   from_port         = 8301
   to_port           = 8301
-  cidr_blocks       = [data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block]
+  cidr_blocks       = [local.hvn_cidr_block]
   description       = "Server to server gossip communication"
 }
 resource "aws_security_group_rule" "hcp_tcp_https" {
@@ -68,7 +68,7 @@ resource "aws_security_group_rule" "hcp_tcp_https" {
   protocol          = "tcp"
   from_port         = 443
   to_port           = 443
-  cidr_blocks       = [data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block]
+  cidr_blocks       = [local.hvn_cidr_block]
   description       = "The HTTPS API"
 }
 /*
@@ -87,7 +87,7 @@ resource "aws_security_group_rule" "consul_server_allow_client_egress_8301" {
   protocol          = "tcp"
   from_port         = 8301
   to_port           = 8301
-  cidr_blocks       = ["10.0.0.0/10"]
+  cidr_blocks       = local.private_cidr_blocks
   description       = "Used to handle gossip between client agents"
 }
 resource "aws_security_group_rule" "consul_server_allow_client_egress_8301_udp" {
@@ -96,7 +96,7 @@ resource "aws_security_group_rule" "consul_server_allow_client_egress_8301_udp" 
   protocol          = "udp"
   from_port         = 8301
   to_port           = 8301
-  cidr_blocks       = ["10.0.0.0/10"]
+  cidr_blocks       = local.private_cidr_blocks
   description       = "Used to handle gossip between client agents"
 }
 
@@ -106,7 +106,7 @@ resource "aws_security_group_rule" "consul_server_allow_client_ingress_8301" {
   protocol          = "tcp"
   from_port         = 8301
   to_port           = 8301
-  cidr_blocks       = ["10.0.0.0/10"]
+  cidr_blocks       = local.private_cidr_blocks
   description       = "Used to handle gossip between client agents"
 }
 resource "aws_security_group_rule" "consul_server_allow_client_ingress_8301_udp" {
@@ -115,7 +115,7 @@ resource "aws_security_group_rule" "consul_server_allow_client_ingress_8301_udp"
   protocol          = "udp"
   from_port         = 8301
   to_port           = 8301
-  cidr_blocks       = ["10.0.0.0/10"]
+  cidr_blocks       = local.private_cidr_blocks
   description       = "Used to handle gossip between client agents"
 }
 
@@ -139,7 +139,7 @@ resource "aws_security_group_rule" "eks_envoy" {
   protocol          = "tcp"
   from_port         = 20000
   to_port           = 21255
-  cidr_blocks       = ["10.0.0.0/10"]
+  cidr_blocks       = local.private_cidr_blocks
   description       = "Allow envoy traffic."
 }
 

@@ -29,11 +29,9 @@ variable "private_subnets" {
 }
 locals {
   region_shortname   = join("", regex("([a-z]{2}).*-([a-z]).*-(\\d+)", var.region))
-  #vpc_id             = data.terraform_remote_state.hcp_consul.outputs.vpc_id
-  #private_subnet_ids = data.terraform_remote_state.hcp_consul.outputs.vpc_private_subnets
-  #public_subnet_ids  = data.terraform_remote_state.hcp_consul.outputs.vpc_public_subnets
   transit_gateway_id      = data.terraform_remote_state.hcp_consul.outputs.ec2_transit_gateway_id
   hvn_cidr_block          = data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block
+  private_cidr_blocks     = ["10.0.0.0/10"]
   # HCP Consul client data sources
   consul_config_file      = data.terraform_remote_state.hcp_consul.outputs.consul_config_file
   consul_server_priv_addr = data.terraform_remote_state.hcp_consul.outputs.consul_private_endpoint_url
