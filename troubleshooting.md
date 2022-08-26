@@ -241,14 +241,13 @@ kubectl patch serviceintentions.consul.hashicorp.com web --type merge --patch '{
 ### Envoy
 [Verify Envoy compatability](https://www.consul.io/docs/connect/proxies/envoy) for your platform and consul version.
 
-#### Get Envoy Proxy Information
-```
-kubectl exec -it web-7c4f6d77d8-gqs2p -c envoy-sidecar -- wget -qO- http://localhost:19000/clusters
-kubectl exec -it web-7c4f6d77d8-gqs2p -c envoy-sidecar -- wget -qO- http://localhost:19000/config_dump
-```
+#### Read fake-service envoy-sidcar configuration
+kubectl exec deploy/web -c envoy-sidecar -- wget -qO- localhost:19000/clusters
+kubectl exec deploy/api-deployment-v2 -c envoy-sidecar -- wget -qO- localhost:19000/clusters
+kubectl exec deploy/api-deployment-v2 -c envoy-sidecar -- wget -qO- localhost:19000/config_dump
 
 NetCat - Verify IP:Port connectivity from EKS Pod
 ```
-kubectl exec -it web-7c4f6d77d8-gqs2p -c web -- nc -zv 10.20.11.138 21000
-kubectl exec -it web-7c4f6d77d8-gqs2p -c envoy-sidecar -- nc -zv 10.20.11.138 20000
+kubectl exec -it deploy/web  -c web -- nc -zv 10.20.11.138 21000
+kubectl exec -it deploy/web  -c envoy-sidecar -- nc -zv 10.20.11.138 20000
 ```
