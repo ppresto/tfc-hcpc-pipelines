@@ -123,32 +123,12 @@ resource "aws_security_group_rule" "consul_server_allow_client_ingress_8301_udp"
 #
 ### App Security Rules
 #
-
-resource "aws_security_group_rule" "eks-ingress" {
-  security_group_id = aws_security_group.consul_server.id
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 9090
-  to_port           = 9090
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "Allow app traffic."
-}
 resource "aws_security_group_rule" "eks_envoy" {
   security_group_id = aws_security_group.consul_server.id
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 20000
-  to_port           = 21255
+  to_port           = 20000
   cidr_blocks       = local.private_cidr_blocks
   description       = "Allow envoy traffic."
-}
-
-resource "aws_security_group_rule" "service_allow_outbound" {
-  security_group_id = aws_security_group.consul_server.id
-  type              = "egress"
-  protocol          = "-1"
-  from_port         = 0
-  to_port           = 0
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "Allow any outbound traffic."
 }
