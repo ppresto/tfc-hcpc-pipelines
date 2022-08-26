@@ -37,7 +37,7 @@ module "vpc" {
 
 resource "aws_ec2_transit_gateway_vpc_attachment" "vpc2" {
   subnet_ids         = module.vpc.public_subnets
-  transit_gateway_id = data.terraform_remote_state.hcp_consul.outputs.ec2_transit_gateway_id
+  transit_gateway_id = local.transit_gateway_id
   vpc_id             = module.vpc.vpc_id
   tags = {
     project = "${var.region}-vpc2-tgw"
@@ -47,11 +47,11 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "vpc2" {
 # vpc_main_route_table_id
 resource "aws_route" "privateToHcp" {
   route_table_id         = module.vpc.private_route_table_ids[0]
-  destination_cidr_block = data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block
-  transit_gateway_id     = data.terraform_remote_state.hcp_consul.outputs.ec2_transit_gateway_id
+  destination_cidr_block = local.hvn_cidr_block
+  transit_gateway_id     = local.transit_gateway_id
 }
 resource "aws_route" "privateToAllInt" {
   route_table_id         = module.vpc.private_route_table_ids[0]
   destination_cidr_block = "10.0.0.0/10"
-  transit_gateway_id     = data.terraform_remote_state.hcp_consul.outputs.ec2_transit_gateway_id
+  transit_gateway_id     = local.transit_gateway_id
 }
