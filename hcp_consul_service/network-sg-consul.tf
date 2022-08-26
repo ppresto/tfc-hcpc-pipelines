@@ -106,3 +106,14 @@ resource "aws_security_group_rule" "hcp_tcp_https" {
   cidr_blocks       = [var.hvn_cidr_block]
   description       = "The HTTPS API"
 }
+
+resource "aws_security_group_rule" "service_envoy" {
+  security_group_id = aws_security_group.consul_server.id
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 20000
+  to_port           = 20000
+  cidr_blocks       = var.private_cidr_blocks
+  ipv6_cidr_blocks  = length(var.allowed_bastion_cidr_blocks_ipv6) > 0 ? var.allowed_bastion_cidr_blocks_ipv6 : null
+  description       = "Allow SSH traffic."
+}
