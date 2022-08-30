@@ -2,7 +2,7 @@
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 3.0"
-  name    = "${var.prefix}-${var.region}-vpc3"
+  name    = "${var.prefix}-${var.region}-vpc-team2"
   cidr    = "10.16.0.0/16"
   #azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
   azs                      = data.aws_availability_zones.available.names
@@ -12,7 +12,7 @@ module "vpc" {
   single_nat_gateway       = true
   enable_dns_hostnames     = true
   enable_ipv6              = false
-  default_route_table_name = "${var.prefix}-vpc3-default-rt"
+  default_route_table_name = "${var.prefix}-team2-default-rt"
   tags = {
     Terraform  = "true"
     Owner      = "${var.prefix}"
@@ -25,13 +25,13 @@ module "vpc" {
     Tier = "Public"
   }
   default_route_table_tags = {
-    Name = "${var.prefix}-vpc3-default-rt"
+    Name = "${var.prefix}-team2-default-rt"
   }
   private_route_table_tags = {
-    Name = "${var.prefix}-vpc3-private-rt"
+    Name = "${var.prefix}-team2-private-rt"
   }
   public_route_table_tags = {
-    Name = "${var.prefix}-vpc3-public-rt"
+    Name = "${var.prefix}-team2-public-rt"
   }
 }
 
@@ -40,7 +40,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "vpc3" {
   transit_gateway_id = local.transit_gateway_id
   vpc_id             = module.vpc.vpc_id
   tags = {
-    project = "${var.region}-vpc3-tgw"
+    project = "${var.region}-team2-tgw"
   }
 }
 

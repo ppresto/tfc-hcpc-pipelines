@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 locals {
-  name            = "${var.prefix}-${replace(basename(path.cwd), "_", "-")}2"
+  name            = "${var.prefix}-${replace(basename(path.cwd), "_", "-")}-team2"
   cluster_version = "1.21"
 
   tags = {

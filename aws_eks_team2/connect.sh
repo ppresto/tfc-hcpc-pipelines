@@ -16,4 +16,4 @@ fi
 aws sts get-caller-identity
 
 # add EKS cluster to $HOME/.kube/config
-aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name presto-aws-eks2
+aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name presto-aws-eks-team2
