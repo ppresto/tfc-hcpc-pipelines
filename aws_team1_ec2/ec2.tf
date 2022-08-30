@@ -48,3 +48,14 @@ resource "aws_security_group_rule" "node_allow_22" {
   cidr_blocks       = local.private_cidr_blocks
   description       = "Allow SSH traffic."
 }
+
+# Open outbound to download fake-service
+resource "aws_security_group_rule" "ext_https" {
+  security_group_id = aws_security_group.ec2-svc-node.id
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 443
+  to_port           = 443
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "HTTPS"
+}
