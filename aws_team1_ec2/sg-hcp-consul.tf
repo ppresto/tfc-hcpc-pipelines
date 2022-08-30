@@ -120,7 +120,7 @@ resource "aws_security_group_rule" "ec2-svc-node_envoy" {
 }
 
 # Open outbound to download fake-service
-resource "aws_security_group_rule" "hcp_tcp_https" {
+resource "aws_security_group_rule" ext_https" {
   security_group_id = aws_security_group.consul_server.id
   type              = "egress"
   protocol          = "tcp"
