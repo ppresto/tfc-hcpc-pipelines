@@ -25,7 +25,7 @@ variable "ec2_key_pair_name" {
 variable "vpc_cidr_block" {
   description = "VPC CIDR Block Range"
   type        = string
-  default     = "10.15.0.0/16"
+  default     = "10.16.0.0/16"
 }
 variable "namespace" {
   description = "K8s Namespace"

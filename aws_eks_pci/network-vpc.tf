@@ -3,11 +3,11 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 3.0"
   name    = "${var.prefix}-${var.region}-vpc3"
-  cidr    = "10.15.0.0/16"
+  cidr    = "10.16.0.0/16"
   #azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
   azs                      = data.aws_availability_zones.available.names
-  private_subnets          = ["10.15.1.0/24", "10.15.2.0/24", "10.15.3.0/24"]
-  public_subnets           = ["10.15.11.0/24", "10.15.12.0/24", "10.15.13.0/24"]
+  private_subnets          = ["10.16.1.0/24", "10.16.2.0/24", "10.16.3.0/24"]
+  public_subnets           = ["10.16.11.0/24", "10.16.12.0/24", "10.16.13.0/24"]
   enable_nat_gateway       = true
   single_nat_gateway       = true
   enable_dns_hostnames     = true
