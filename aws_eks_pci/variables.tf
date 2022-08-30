@@ -44,9 +44,6 @@ locals {
   hvn_cidr_block          = data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block
   private_cidr_blocks     = ["10.0.0.0/10"]
 
-# EKS
-  eks_cluster_endpoint    = data.terraform_remote_state.aws-eks-pci.outputs.cluster_endpoint
-
   # HCP Consul client data sources
   consul_config_file      = data.terraform_remote_state.hcp_consul.outputs.consul_config_file
   consul_server_priv_addr = data.terraform_remote_state.hcp_consul.outputs.consul_private_endpoint_url
