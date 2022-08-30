@@ -27,17 +27,6 @@ variable "vpc_cidr_block" {
   type        = string
   default     = "10.16.0.0/16"
 }
-variable "namespace" {
-  description = "K8s Namespace"
-  type        = string
-  default     = "default"
-}
-variable "consul_dns_cluster_ip" {
-  description = "Preset Consul DNS ClusterIP to configure CoreDNS"
-  type        = string
-  default     = "172.21.128.87"
-}
-
 locals {
   region_shortname        = join("", regex("([a-z]{2}).*-([a-z]).*-(\\d+)", var.region))
   transit_gateway_id      = data.terraform_remote_state.hcp_consul.outputs.ec2_transit_gateway_id
@@ -51,7 +40,7 @@ locals {
   consul_root_token       = data.terraform_remote_state.hcp_consul.outputs.consul_root_token_secret_id
   consul_svcapi_token     = data.terraform_remote_state.hcp_consul.outputs.consul_service_api_token
   consul_client_ca        = data.terraform_remote_state.hcp_consul.outputs.consul_ca_file 
-  consul_config_file_json = jsondecode(base64decode(data.terraform_remote_state.hcp_consul.outputs.consul_config_file))
-  consul_gossip_key       = local.consul_config_file_json.encrypt
-  consul_retry_join       = local.consul_config_file_json.retry_join
+  #consul_config_file_json = jsondecode(base64decode(data.terraform_remote_state.hcp_consul.outputs.consul_config_file))
+  #consul_gossip_key       = local.consul_config_file_json.encrypt
+  #consul_retry_join       = local.consul_config_file_json.retry_join
 }

@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 locals {
-  name            = "${var.prefix}-${replace(basename(path.cwd), "_", "-")}-pci"
+  name            = "${var.prefix}-${replace(basename(path.cwd), "_", "-")}2"
   cluster_version = "1.21"
 
   tags = {
@@ -26,8 +26,8 @@ module "eks" {
   cluster_version                       = local.cluster_version
   cluster_endpoint_private_access       = true
   cluster_endpoint_public_access        = true
-  cluster_additional_security_group_ids = [aws_security_group.consul_server.id]
   cluster_service_ipv4_cidr             = "172.21.0.0/16"
+  cluster_additional_security_group_ids = [aws_security_group.consul_server.id]
   vpc_id                                = module.vpc.vpc_id
   subnet_ids                            = module.vpc.private_subnets
 
@@ -98,4 +98,11 @@ resource "aws_kms_key" "eks" {
   enable_key_rotation     = true
 
   tags = local.tags
+}
+
+data "aws_eks_cluster" "cluster" {
+  name = module.eks.cluster_id
+}
+data "aws_eks_cluster_auth" "cluster" {
+  name = module.eks.cluster_id
 }

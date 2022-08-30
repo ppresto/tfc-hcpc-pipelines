@@ -1,9 +1,9 @@
-module "aws-eks-pci" {
+module "aws-eks-2" {
   source              = "../modules/workspace-mgr"
   agent_pool_id       = ""
   organization        = var.organization
-  workspacename       = "aws_${local.region_shortname}_${var.env}_eks-pci"
-  workingdir          = "aws_eks_pci"
+  workspacename       = "aws_${local.region_shortname}_${var.env}_eks_2"
+  workingdir          = "aws_eks_2"
   tfversion           = "1.1.4"
   queue_all_runs      = false
   auto_apply          = true
@@ -11,7 +11,7 @@ module "aws-eks-pci" {
   oauth_token_id      = var.oauth_token_id
   repo_branch         = "main"
   global_remote_state = false
-  tag_names           = ["team-pci", "eks", "${var.aws_default_region}", "${var.env}"]
+  tag_names           = ["team2", "eks", "${var.aws_default_region}", "${var.env}"]
   variable_set        = tfe_variable_set.cloud_creds.id
 
   env_variables = {

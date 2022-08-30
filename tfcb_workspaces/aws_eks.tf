@@ -11,7 +11,7 @@ module "aws-eks" {
   oauth_token_id      = var.oauth_token_id
   repo_branch         = "main"
   global_remote_state = false
-  tag_names           = ["team-app2", "eks", "${var.aws_default_region}", "${var.env}"]
+  tag_names           = ["team1", "eks", "${var.aws_default_region}", "${var.env}"]
   variable_set        = tfe_variable_set.cloud_creds.id
 
   env_variables = {
