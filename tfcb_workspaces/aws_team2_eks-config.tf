@@ -1,4 +1,4 @@
-module "aws_eks_consul_agent" {
+module "aws_team2_eks-config" {
   source              = "../modules/workspace-mgr"
   agent_pool_id       = ""
   organization        = var.organization
