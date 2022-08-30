@@ -1,9 +1,9 @@
-module "aws-eks-2" {
+module "aws_eks_consul_agent" {
   source              = "../modules/workspace-mgr"
   agent_pool_id       = ""
   organization        = var.organization
-  workspacename       = "aws_${local.region_shortname}_${var.env}_team2-eks"
-  workingdir          = "aws_eks_team2"
+  workspacename       = "aws_${local.region_shortname}_${var.env}_team1-eks-config"
+  workingdir          = "aws_team1_eks-config"
   tfversion           = "1.1.4"
   queue_all_runs      = false
   auto_apply          = true
@@ -11,7 +11,7 @@ module "aws-eks-2" {
   oauth_token_id      = var.oauth_token_id
   repo_branch         = "main"
   global_remote_state = false
-  tag_names           = ["team2", "eks", "${var.aws_default_region}", "${var.env}"]
+  tag_names           = ["team1", "consul-agent", "${var.aws_default_region}", "${var.env}"]
   variable_set        = tfe_variable_set.cloud_creds.id
 
   env_variables = {
@@ -20,12 +20,11 @@ module "aws-eks-2" {
     "HCP_CLIENT_ID" = var.HCP_CLIENT_ID
   }
   tf_variables = {
-    "ec2_key_pair_name" = var.ssh_key_name
-    "region"            = var.aws_default_region
-    "organization"      = var.organization
-    "env"               = var.env
+    "region"          = var.aws_default_region
+    "organization"    = var.organization
     "consul_template" = "fake-service"
     "namespace"       = "consul"
+    "env"             = var.env
   }
   env_variables_sec = {
     "HCP_CLIENT_SECRET" = var.HCP_CLIENT_SECRET

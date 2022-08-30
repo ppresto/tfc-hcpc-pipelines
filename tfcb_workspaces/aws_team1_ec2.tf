@@ -1,9 +1,9 @@
-module "aws-eks-1" {
+module "aws-ec2" {
   source              = "../modules/workspace-mgr"
   agent_pool_id       = ""
   organization        = var.organization
-  workspacename       = "aws_${local.region_shortname}_${var.env}_team1-eks"
-  workingdir          = "aws_eks_team1"
+  workspacename       = "aws_${local.region_shortname}_${var.env}_team1-ec2"
+  workingdir          = "aws_team1_ec2"
   tfversion           = "1.1.4"
   queue_all_runs      = false
   auto_apply          = true
@@ -11,7 +11,7 @@ module "aws-eks-1" {
   oauth_token_id      = var.oauth_token_id
   repo_branch         = "main"
   global_remote_state = false
-  tag_names           = ["team1", "eks", "${var.aws_default_region}", "${var.env}"]
+  tag_names           = ["team1", "ec2", "${var.aws_default_region}", "${var.env}"]
   variable_set        = tfe_variable_set.cloud_creds.id
 
   env_variables = {
