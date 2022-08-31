@@ -124,7 +124,7 @@ resource "aws_security_group_rule" "consul_server_allow_client_ingress_8301_udp"
 ### App Security Rules
 #
 resource "aws_security_group_rule" "eks_envoy" {
-  security_group_id = aws_security_group.consul_server.id
+  security_group_id = module.eks.cluster_primary_security_group_id
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 20000
