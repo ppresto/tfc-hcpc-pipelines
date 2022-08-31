@@ -21,6 +21,7 @@ variable "consul_dns_cluster_ip" {
   type        = string
   default     = "172.21.128.87"
 }
+variable "helm_release_name" { default = "consul"}
 
 locals {
   region_shortname        = join("", regex("([a-z]{2}).*-([a-z]).*-(\\d+)", var.region))

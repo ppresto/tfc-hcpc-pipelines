@@ -3,7 +3,6 @@ variable "name" {
   type        = string
   default     = "presto"
 }
-
 variable "env" { default = "dev" }
 variable "region" {
   description = "AWS region."
@@ -21,7 +20,7 @@ variable "consul_dns_cluster_ip" {
   type        = string
   default     = "172.20.128.87"
 }
-
+variable "helm_release_name" { default = "consul"}
 locals {
   region_shortname        = join("", regex("([a-z]{2}).*-([a-z]).*-(\\d+)", var.region))
   transit_gateway_id      = data.terraform_remote_state.hcp_consul.outputs.ec2_transit_gateway_id

@@ -25,6 +25,7 @@ module "aws_team2_eks-config" {
     "consul_template" = "fake-service"
     "namespace"       = "consul"
     "env"             = var.env
+    "helm_release_name" = "team2"
   }
   env_variables_sec = {
     "HCP_CLIENT_SECRET" = var.HCP_CLIENT_SECRET

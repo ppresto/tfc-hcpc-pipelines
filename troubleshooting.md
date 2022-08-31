@@ -151,6 +151,7 @@ helm repo add hashicorp https://helm.releases.hashicorp.com
 helm install consul hashicorp/consul --create-namespace --namespace consul --version 0.33.0 --set global.image="hashicorp/consul-enterprise:1.11.0-ent" --values ./helm/test.yaml
 helm status consul
 ```
+The Helm release name must be unique for each Kubernetes cluster. The Helm chart uses the Helm release name as a prefix for the ACL resources that it creates
 ### Kubernetes EKS DNS
 Get DNS services (consul and coredns), start busybox, and use nslookup
 ```
