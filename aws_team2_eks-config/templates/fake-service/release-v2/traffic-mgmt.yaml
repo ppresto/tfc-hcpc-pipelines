@@ -4,9 +4,9 @@ metadata:
   name: api
 spec:
   splits:
-    - weight: 100
-      serviceSubset: v1
     - weight: 0
+      serviceSubset: v1
+    - weight: 100
       serviceSubset: v2
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
