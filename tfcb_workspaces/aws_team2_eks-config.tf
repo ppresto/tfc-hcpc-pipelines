@@ -20,11 +20,11 @@ module "aws_team2_eks-config" {
     "HCP_CLIENT_ID" = var.HCP_CLIENT_ID
   }
   tf_variables = {
-    "region"          = var.aws_default_region
-    "organization"    = var.organization
-    "consul_template" = "fake-service"
-    "namespace"       = "consul"
-    "env"             = var.env
+    "region"            = var.aws_default_region
+    "organization"      = var.organization
+    "consul_template"   = "fake-service"
+    "namespace"         = "consul"
+    "env"               = var.env
     "helm_release_name" = "team2"
   }
   env_variables_sec = {

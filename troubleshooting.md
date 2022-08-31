@@ -151,7 +151,8 @@ helm repo add hashicorp https://helm.releases.hashicorp.com
 helm install consul hashicorp/consul --create-namespace --namespace consul --version 0.33.0 --set global.image="hashicorp/consul-enterprise:1.11.0-ent" --values ./helm/test.yaml
 helm status consul
 ```
-The Helm release name must be unique for each Kubernetes cluster. The Helm chart uses the Helm release name as a prefix for the ACL resources that it creates
+The Helm release name must be unique for each Kubernetes cluster. The Helm chart uses the Helm release name as a prefix for the ACL resources that it creates so duplicate names will overwrite ACL's.
+
 ### Kubernetes EKS DNS
 Get DNS services (consul and coredns), start busybox, and use nslookup
 ```
@@ -251,4 +252,14 @@ NetCat - Verify IP:Port connectivity from EKS Pod
 ```
 kubectl exec -it deploy/web  -c web -- nc -zv 10.20.11.138 21000
 kubectl exec -it deploy/web  -c envoy-sidecar -- nc -zv 10.20.11.138 20000
+```
+
+List fake-service pods across all k8s ns
+```
+kubectl get pods -A -l service=fake-service
+```
+Test fake-service web -> api
+```
+kubectl exec -it $(kubectl get pod -l app=web -o name) -c web -- curl http://localhost:9090
+kubectl exec -it $(kubectl get pod -l app=api -o name) -c api -- curl http://localhost:9091
 ```
