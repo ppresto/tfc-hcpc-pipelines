@@ -132,16 +132,6 @@ resource "aws_security_group_rule" "eks_envoy" {
   cidr_blocks       = local.private_cidr_blocks
   description       = "Allow envoy traffic."
 }
-
-resource "aws_security_group_rule" "eks_envoy" {
-  security_group_id = aws_security_group.consul_server.id
-  type              = "egress"
-  protocol          = "-1"
-  from_port         = 0
-  to_port           = 0
-  cidr_blocks       = local.private_cidr_blocks
-  description       = "Allow all traffic."
-}
 resource "aws_security_group_rule" "eks_ingressgw" {
   security_group_id = aws_security_group.consul_server.id
   type              = "ingress"
