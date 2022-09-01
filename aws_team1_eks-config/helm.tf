@@ -45,7 +45,7 @@ resource "consul_acl_auth_method" "team1" {
   config_json = jsonencode({
     Host              = local.eks_cluster_endpoint
     CACert            = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
-    ServiceAccountJWT = data.aws_eks_cluster_auth.cluster.token
+    ServiceAccountJWT = data.aws_eks_cluster.cluster.identity[0].oidc[0].issuer
   })
 }
 
