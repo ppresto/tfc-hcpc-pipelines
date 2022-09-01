@@ -29,7 +29,7 @@ provider "consul" {
   address    = local.consul_retry_join[0]
   datacenter = local.consul_datacenter
   token      = local.consul_root_token
-  ca_file    = base64decode(local.consul_client_ca)
+  #ca_file    = base64decode(local.consul_client_ca)
 }
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.cluster.endpoint
