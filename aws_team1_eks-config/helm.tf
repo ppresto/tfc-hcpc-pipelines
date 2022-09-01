@@ -34,7 +34,7 @@ resource "helm_release" "consul" {
     value = "hashicorp/consul-enterprise:1.11.0-ent"
     #value = "hashicorp/consul:1.10.1"
   }
-  depends_on = [kubernetes_namespace.create, consul_acl_auth_method.team1]
+  depends_on = [kubernetes_namespace.create]
 }
 
 #resource "consul_acl_auth_method" "team1" {
