@@ -258,8 +258,18 @@ List fake-service pods across all k8s ns
 ```
 kubectl get pods -A -l service=fake-service
 ```
-Test fake-service web -> api
+
+Test fake-service web -> api.  test web locall on 9090, and then localhost:9091 proxy to API.
 ```
 kubectl exec -it $(kubectl get pod -l app=web -o name) -c web -- curl http://localhost:9090
-kubectl exec -it $(kubectl get pod -l app=api -o name) -c api -- curl http://localhost:9091
+kubectl exec -it $(kubectl get pod -l app=web -o name) -c web -- curl http://localhost:9091
 ```
+
+Ingress GW
+```
+kubectl -n consul exec deploy/consul-ingress-gateway -c ingress-gateway -- wget -qO- http://localhost:19000/config_dump
+kubectl -n consul exec deploy/consul-ingress-gateway -c ingress-gateway -- wget -qO- http://localhost:8080
+kubectl -n consul exec -it deploy/consul-ingress-gateway -c ingress-gateway -- wget --no-check-certificate -qO- http://web.virtual.consul
+```
+
+[Uninstall Consul / Helm](https://www.consul.io/docs/k8s/operations/uninstall)

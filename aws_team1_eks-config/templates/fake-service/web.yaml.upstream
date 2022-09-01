@@ -34,7 +34,7 @@ spec:
       annotations:
         consul.hashicorp.com/connect-inject: 'true'
         consul.hashicorp.com/transparent-proxy: 'false'
-        consul.hashicorp.com/connect-service-upstreams: 'api.default:9091'
+        consul.hashicorp.com/connect-service-upstreams: 'api:9091'
     spec:
       serviceAccountName: web
       containers:
@@ -46,7 +46,7 @@ spec:
             - name: 'LISTEN_ADDR'
               value: '0.0.0.0:9090'
             - name: 'UPSTREAM_URIS'
-              value: 'http://api.service.consul:9091'
+              value: 'http://localhost:9091/api'
             - name: 'NAME'
               value: 'web'
             - name: 'MESSAGE'
