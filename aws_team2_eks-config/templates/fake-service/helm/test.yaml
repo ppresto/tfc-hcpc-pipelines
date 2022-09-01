@@ -3,7 +3,7 @@ global:
   name: consul
   enabled: false
   enableConsulNamespaces: true
-  datacenter: hcpc-cluster-presto
+  datacenter: usw2
   acls:
     manageSystemACLs: true
     bootstrapToken:
@@ -20,17 +20,17 @@ global:
       secretKey: tls.crt
 externalServers:
   enabled: true
-  hosts: ["hcpc-cluster-presto.private.consul.328306de-41b8-43a7-9c38-ca8d89d06b07.aws.hashicorp.cloud"]
+  hosts: ["usw2.private.consul.328306de-41b8-43a7-9c38-ca8d89d06b07.aws.hashicorp.cloud"]
   httpsPort: 443
   useSystemRoots: true
-  k8sAuthMethodHost: https://244D9D7A34080F62B5716F46E197882F.yl4.us-west-2.eks.amazonaws.com
+  k8sAuthMethodHost: https://F6649645C371B7A48E9A34980F45AC35.gr7.us-west-2.eks.amazonaws.com
 client:
   enabled: true
-  join: ["hcpc-cluster-presto.private.consul.328306de-41b8-43a7-9c38-ca8d89d06b07.aws.hashicorp.cloud"]
+  join: ["usw2.private.consul.328306de-41b8-43a7-9c38-ca8d89d06b07.aws.hashicorp.cloud"]
 dns:
   enabled: true
   enableRedirection: true
-  clusterIP: 172.20.128.87 # Needed to configure kube-dns forwarding
+  clusterIP: 172.21.128.87 # Needed to configure kube-dns forwarding
 connectInject:
   enabled: true
   transparentProxy:

@@ -34,7 +34,19 @@ resource "helm_release" "consul" {
     value = "hashicorp/consul-enterprise:1.11.0-ent"
     #value = "hashicorp/consul:1.10.1"
   }
-  depends_on = [kubernetes_namespace.create]
+  depends_on = [kubernetes_namespace.create, consul_acl_auth_method.team1]
+}
+
+resource "consul_acl_auth_method" "team1" {
+  name        = "team1-eks"
+  type        = "kubernetes"
+  description = "team1"
+
+  config_json = jsonencode({
+    Host              = local.eks_cluster_endpoint
+    CACert            = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
+    ServiceAccountJWT = data.aws_eks_cluster_auth.cluster.token
+  })
 }
 
 #
