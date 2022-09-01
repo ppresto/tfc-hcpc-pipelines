@@ -37,17 +37,17 @@ resource "helm_release" "consul" {
   depends_on = [kubernetes_namespace.create, consul_acl_auth_method.team1]
 }
 
-resource "consul_acl_auth_method" "team1" {
-  name        = "team1-eks"
-  type        = "kubernetes"
-  description = "team1"
-
-  config_json = jsonencode({
-    Host              = local.eks_cluster_endpoint
-    CACert            = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
-    ServiceAccountJWT = nonsensitive(base64decode(data.aws_eks_cluster_auth.cluster.token))
-  })
-}
+#resource "consul_acl_auth_method" "team1" {
+#  name        = "team1-eks"
+##  type        = "kubernetes"
+#  description = "team1"
+#
+#  config_json = jsonencode({
+#    Host              = local.eks_cluster_endpoint
+#    CACert            = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
+#    ServiceAccountJWT = nonsensitive(base64decode(data.aws_eks_cluster_auth.cluster.token))
+#  })
+#}
 
 #
 ### Configure 3 Consul Secrets for the Helm Chart (aka: Agents)
