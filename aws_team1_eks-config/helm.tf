@@ -21,7 +21,7 @@ resource "kubernetes_namespace" "create" {
   }
 }
 resource "helm_release" "consul" {
-  name             = var.helm_release_name
+  name             = "team1"
   namespace        = var.namespace
   create_namespace = false
   repository       = "https://helm.releases.hashicorp.com"
