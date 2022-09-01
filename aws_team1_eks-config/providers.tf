@@ -26,7 +26,7 @@ terraform {
 }
 
 provider "consul" {
-  address    = "${local.consul_retry_join[0]}:443"
+  address    = local.consul_public_url
   datacenter = local.consul_datacenter
   token      = local.consul_root_token
   #ca_file    = base64decode(local.consul_client_ca)

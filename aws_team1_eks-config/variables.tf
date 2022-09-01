@@ -30,6 +30,7 @@ locals {
   # EKS
   eks_cluster_endpoint = data.terraform_remote_state.aws-eks.outputs.cluster_endpoint
   # HCP Consul client data sources
+  consul_public_url       = data.terraform_remote_state.hcp_consul.outputs.consul_public_endpoint_url
   consul_config_file      = data.terraform_remote_state.hcp_consul.outputs.consul_config_file
   consul_server_priv_addr = data.terraform_remote_state.hcp_consul.outputs.consul_private_endpoint_url
   consul_datacenter       = data.terraform_remote_state.hcp_consul.outputs.datacenter
