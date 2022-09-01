@@ -23,7 +23,7 @@ externalServers:
   hosts: ${RETRY_JOIN}
   httpsPort: 443
   useSystemRoots: true
-  #k8sAuthMethodHost: ${KUBE_API_URL}
+  k8sAuthMethodHost: ${KUBE_API_URL}
 client:
   enabled: true
   join: ${RETRY_JOIN}
