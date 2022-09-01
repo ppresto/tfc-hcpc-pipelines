@@ -26,7 +26,7 @@ terraform {
 }
 
 provider "consul" {
-  address    = local.consul_retry_join
+  address    = local.consul_retry_join[0]
   datacenter = local.consul_datacenter
   token      = local.consul_root_token
   ca_file    = local.consul_client_ca
