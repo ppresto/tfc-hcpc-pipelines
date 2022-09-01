@@ -18,9 +18,19 @@ terraform {
       source  = "gavinbunney/kubectl"
       version = ">= 1.13.1"
     }
+    consul = {
+      source = "hashicorp/consul"
+      version = "~> 2.15.1"
+    }
   }
 }
 
+provider "consul" {
+  address    = local.consul_retry_join
+  datacenter = local.consul_datacenter
+  token      = local.consul_root_token
+  ca_file    = local.consul_client_ca
+}
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.cluster.endpoint
   token                  = data.aws_eks_cluster_auth.cluster.token
