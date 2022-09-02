@@ -23,7 +23,7 @@ externalServers:
   hosts: ["usw2.private.consul.328306de-41b8-43a7-9c38-ca8d89d06b07.aws.hashicorp.cloud"]
   httpsPort: 443
   useSystemRoots: true
-  k8sAuthMethodHost: https://EC3A501DD3213FB62A097BE20BD0B68F.gr7.us-west-2.eks.amazonaws.com
+  k8sAuthMethodHost: https://6C74E843D28BDC64C25863E52184EB8D.gr7.us-west-2.eks.amazonaws.com
 client:
   enabled: true
   join: ["usw2.private.consul.328306de-41b8-43a7-9c38-ca8d89d06b07.aws.hashicorp.cloud"]
@@ -54,3 +54,4 @@ ingressGateways:
     - name: ingress-gateway
       service:
         type: LoadBalancer
+

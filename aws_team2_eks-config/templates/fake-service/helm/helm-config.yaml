@@ -1,6 +1,6 @@
 # https://github.com/hashicorp/consul-k8s/blob/main/charts/consul/values.yaml
 global:
-  name: consul
+  name: consul2
   enabled: false
   enableConsulNamespaces: true
   datacenter: ${DATACENTER}
