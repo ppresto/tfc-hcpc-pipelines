@@ -9,5 +9,5 @@ spec:
       protocol: http
       services:
         - name: web
-          namespace: web
+          namespace: default
           hosts: ["*"]

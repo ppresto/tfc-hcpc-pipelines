@@ -12,10 +12,3 @@ metadata:
   labels:
     name: cache
 ---
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: web
-  labels:
-    name: web
----
