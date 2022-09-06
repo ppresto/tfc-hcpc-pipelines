@@ -56,10 +56,10 @@ resource "consul_acl_policy" "dns-request" {
       service_prefix "" {
         policy = "read"
       }
-      # only needed if using prepared queries
-      query_prefix "" {
-        policy = "read"
-      }
+      # prepared query rules are not allowed in namespaced policies
+      #query_prefix "" {
+      #  policy = "read"
+      #}
     }
     RULE
 }
