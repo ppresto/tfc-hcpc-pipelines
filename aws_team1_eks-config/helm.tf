@@ -5,6 +5,7 @@
 data "template_file" "agent_config" {
   template = file("${path.module}/templates/fake-service/helm/helm-config.yaml")
   vars = {
+    NAME_PREFIX           = var.helm_release_name
     DATACENTER            = local.consul_datacenter
     RETRY_JOIN            = jsonencode(local.consul_retry_join)
     KUBE_API_URL          = local.eks_cluster_endpoint
