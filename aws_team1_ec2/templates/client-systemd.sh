@@ -114,7 +114,7 @@ cat >/opt/consul/fake-service/api-service.hcl <<- EOF
 {
   "service": {
     "name": "api",
-    "namespace": "default",
+    "namespace": "api",
     "id": "api",
     "port": 9091,
     "token": "${SERVICE_ACL_TOKEN}",
@@ -201,7 +201,7 @@ nohup ./bin/fake-service > logs/fake-service.out 2>&1 &
 sleep 1
 consul services register ./api-service.hcl
 sleep 1
-consul connect envoy -sidecar-for api -admin-bind localhost:19000 > logs/envoy.log 2>&1 &
+consul connect envoy -sidecar-for api -namespace=api -admin-bind localhost:19000 > logs/envoy.log 2>&1 &
 EOF
 
 cat >/opt/consul/fake-service/stop.sh <<- EOF
@@ -210,7 +210,7 @@ cat >/opt/consul/fake-service/stop.sh <<- EOF
 #consul config delete -kind service-resolver -name api
 #consul config delete -kind service-intentions -name api
 #consul config delete -kind service-defaults -name api
-consul services deregister ./api-service.hcl
+consul services deregister -namespace=api ./api-service.hcl
 pkill envoy
 pkill fake-service
 EOF

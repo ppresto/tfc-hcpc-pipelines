@@ -13,4 +13,4 @@ nohup ./bin/fake-service > logs/fake-service.out 2>&1 &
 consul services register ./api-service.hcl
 
 # Start Envoy with Consul
-consul connect envoy -sidecar-for api -admin-bind localhost:19000 > logs/envoy.log 2>&1 &
+consul connect envoy -sidecar-for api -namespace=api -admin-bind localhost:19000 > logs/envoy.log 2>&1 &

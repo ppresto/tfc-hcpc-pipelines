@@ -50,7 +50,7 @@ spec:
             - name: 'LISTEN_ADDR'
               value: '0.0.0.0:9090'
             - name: 'UPSTREAM_URIS'
-              value: 'http://api.virtual.consul/api'
+              value: 'http://api.virtual.api.ns.default.ap.usw2.dc.consul/api'
             - name: 'NAME'
               value: 'web'
             - name: 'MESSAGE'

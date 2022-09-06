@@ -169,19 +169,26 @@ kubectl exec busybox -- nslookup kubernetes $corednsIP
 ```
 Test consul config
 ```
-kubectl exec busybox -- nslookup web.default
-kubectl exec busybox -- nslookup web.service.consul $consuldnsIP
-kubectl exec busybox -- nslookup web.service.consul
 kubectl exec busybox -- nslookup web
+kubectl exec busybox -- nslookup web.default  #default k8s namespace
+kubectl exec busybox -- nslookup web.service.consul $consuldnsIP
+kubectl exec busybox -- nslookup web.ingress.consul #Get associated ingress GW
 kubectl exec busybox -- nslookup api.service.consul
+kubectl exec busybox -- nslookup api.virtual.consul #Tproxy uses .virtual not .service lookup
 ```
 
 Additional DNS Queries
 ```
-web.service.consul
-web.ingress.consul
-api.virtual.consul
-api.virtual.api-ns.ns.default.ap.hcpc-cluster-presto.dc.consul
+# Service Lookup for defined upstreams
+kubectl exec busybox -- nslookup api.service.api.ns.default.ap.usw2.dc.consul
+Name:      api.service.api.ns.default.ap.usw2.dc.consul
+Address 1: 10.15.1.175 10-15-1-175.api.api.svc.cluster.local
+Address 2: 10.20.1.31 ip-10-20-1-31.us-west-2.compute.internal
+
+# Virtual lookup for Transparent Proxy upstreams
+kubectl exec busybox -- nslookup api.virtual.api.ns.default.ap.usw2.dc.consul
+Name:      api.virtual.api.ns.default.ap.usw2.dc.consul
+Address 1: 240.0.0.3
 ```
 References:
 https://aws.amazon.com/premiumsupport/knowledge-center/eks-dns-failure/
@@ -259,10 +266,27 @@ List fake-service pods across all k8s ns
 kubectl get pods -A -l service=fake-service
 ```
 
-Test fake-service web -> api.  test web locall on 9090, and then localhost:9091 proxy to API.
+Using Manually defined upstreams (web -> api). the service dns lookup can be used to discover these services (api.service.consul, or api.default in single k8s cluster)
 ```
 kubectl exec -it $(kubectl get pod -l app=web -o name) -c web -- curl http://localhost:9090
 kubectl exec -it $(kubectl get pod -l app=web -o name) -c web -- curl http://localhost:9091
+```
+
+Using Transparent Proxy upstreams (web -> api).
+* web runs in the usw2 DC, default AP, in the web namespace.
+* api runs in the usw2 DC, default AP, in the api namespace.
+
+Verify api intentions are correct, and that the web proxy has discovered api upstreams.
+```
+kubectl -n web exec web -c envoy-sidecar -- wget -qO- 127.0.0.1:19000/clusters
+
+api.api.usw2.internal.b61b8e34-30b1-5058-9f49-5ca6f80c645a.consul::10.15.1.175:20000::health_flags::healthy
+api.api.usw2.internal.b61b8e34-30b1-5058-9f49-5ca6f80c645a.consul::10.20.1.31:20000::health_flags::healthy
+```
+
+Next test the web app container can use the virtual lookup to connect to the api upstream.
+```
+kubectl -n web exec deploy/web -c web -- wget -qO- http://api.virtual.api.ns.default.ap.usw2.dc.consul
 ```
 
 Ingress GW

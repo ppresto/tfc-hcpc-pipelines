@@ -1,6 +1,7 @@
 {
   "service": {
     "name": "api",
+    "namespace": "api",
     "port": 9091,
     "token": "${SERVICE_ACL_TOKEN}",
     "tags": ["vm","v1"],
