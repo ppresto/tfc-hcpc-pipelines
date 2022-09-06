@@ -1,22 +1,12 @@
-
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: api
-  labels:
-    name: api
----
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: api
-  namespace: api
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: api
-  namespace: api
 spec:
   selector:
     app: api
@@ -27,8 +17,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-deployment-v1
-  namespace: api
+  name: api-deployment-v2
   labels:
     app: api
     version: v1
@@ -40,11 +29,15 @@ spec:
       app: api
   template:
     metadata:
-      namespace: api
       labels:
         app: api
         service: fake-service
       annotations:
+        consul.hashicorp.com/connect-inject: 'true'
+        consul.hashicorp.com/transparent-proxy: 'true'
+        consul.hashicorp.com/envoy-extra-args: '--log-level debug --disable-hot-restart'
+        consul.hashicorp.com/service-tags: 'eks,v2'
+        consul.hashicorp.com/service-meta-version: 'v2'
     spec:
       serviceAccountName: api
       containers:
@@ -55,10 +48,10 @@ spec:
           env:
             - name: 'LISTEN_ADDR'
               value: '0.0.0.0:9091'
-            - name: 'UPSTREAM_URIS'
-              value: 'http://cache.cache-ns:9090, http://payments.payments-ns:9090'
+            #- name: 'UPSTREAM_URIS'
+            #  value: 'grpc://currency.currency-ns:9090,http://payments.payments-ns:9090'
             - name: 'NAME'
-              value: 'api-v1'
+              value: 'api-v2'
             - name: 'MESSAGE'
               value: 'API response'
             - name: 'SERVER_TYPE'
@@ -74,4 +67,4 @@ spec:
             - name: 'HTTP_CLIENT_APPEND_REQUEST'
               value: 'true'
             - name: 'TRACING_ZIPKIN'
-              value: 'http://simplest-collector:9411'
+              value: 'http://simplest-collector.default:9411'

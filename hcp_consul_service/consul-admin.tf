@@ -13,12 +13,16 @@ resource "consul_namespace" "pci-payments" {
 }
 resource "consul_namespace" "default-app-web" {
   name        = "web"
-  description = "Web Ingress"
+  description = "Web service"
   partition   = "default"
-
   meta = {
     foo = "bar"
   }
+}
+resource "consul_namespace" "default-app-api" {
+  name        = "api"
+  description = "api service"
+  partition   = "default"
 }
 
 # Service Policies and Tokens (api)

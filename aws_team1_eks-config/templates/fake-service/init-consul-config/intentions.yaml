@@ -9,31 +9,18 @@ spec:
     namespace: web
   sources:
   - name: ingress-gateway
-    action: allow
----
-apiVersion: consul.hashicorp.com/v1alpha1
-kind: ServiceIntentions
-metadata:
-  name: payments
-spec:
-  destination:
-    name: payments
-    namespace: payments-ns
-  sources:
-  - name: api
     namespace: default
     action: allow
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
 metadata:
-  name: currency
+  name: api
 spec:
   destination:
-    name: currency
-    namespace: currency-ns
+    name: api
+    namespace: api
   sources:
-  - name: api
-    namespace: default
+  - name: web
+    namespace: web
     action: allow
----
