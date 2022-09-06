@@ -1,19 +1,19 @@
 # Admin Partitions and Namespaces
-resource "consul_admin_partition" "qa" {
-  name        = "qa"
-  description = "Partition for QA Environment"
+resource "consul_admin_partition" "pci" {
+  name        = "pci"
+  description = "PCI compliant environment"
 }
-resource "consul_namespace" "qa-app-api" {
-  name        = "api"
-  description = "API App Team"
-  partition   = consul_admin_partition.qa.name
+resource "consul_namespace" "pci-payments" {
+  name        = "payments"
+  description = "Team 2 payments"
+  partition   = consul_admin_partition.pci.name
   meta = {
     foo = "bar"
   }
 }
-resource "consul_namespace" "default-app-api" {
-  name        = "api"
-  description = "API App Team"
+resource "consul_namespace" "default-app-web" {
+  name        = "web"
+  description = "Web Ingress"
   partition   = "default"
 
   meta = {
@@ -45,19 +45,21 @@ resource "consul_acl_policy" "api-service" {
   RULE
 }
 
-# Create Default DNS Lookup policy and attach to anonymous.
+# Create Default DNS Lookup policy and attach to anonymous token.
 resource "consul_acl_policy" "dns-request" {
   name  = "dns-request-policy"
   rules = <<-RULE
-    node_prefix "" {
-      policy = "read"
-    }
-    service_prefix "" {
-      policy = "read"
-    }
-    # only needed if using prepared queries
-    query_prefix "" {
-      policy = "read"
+    namespace_prefix "" {
+      node_prefix "" {
+        policy = "read"
+      }
+      service_prefix "" {
+        policy = "read"
+      }
+      # only needed if using prepared queries
+      query_prefix "" {
+        policy = "read"
+      }
     }
     RULE
 }
