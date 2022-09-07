@@ -4,6 +4,9 @@ global:
   enabled: false
   enableConsulNamespaces: true
   datacenter: ${DATACENTER}
+  adminPartitions:
+    enabled: true
+    name: pci
   acls:
     manageSystemACLs: true
     bootstrapToken:
@@ -46,10 +49,9 @@ syncCatalog:
   toK8S: true
 controller:
   enabled: true
-ingressGateways:
+meshGateway:
   enabled: true
-  defaults:
-    replicas: 1
+  replicas: 1
   gateways:
     - name: ingress-gateway
       service:

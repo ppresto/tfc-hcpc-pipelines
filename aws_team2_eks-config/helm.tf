@@ -3,7 +3,7 @@
 #
 
 data "template_file" "agent_config" {
-  template = file("${path.module}/templates/fake-service/helm/helm-config.yaml")
+  template = file("${path.module}/templates/helm/helm-config.yaml")
   vars = {
     NAME_PREFIX           = var.helm_release_name
     DATACENTER            = local.consul_datacenter
