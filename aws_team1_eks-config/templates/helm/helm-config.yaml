@@ -46,6 +46,9 @@ syncCatalog:
   toK8S: true
 controller:
   enabled: true
+meshGateway:
+  enabled: true
+  replicas: 1
 ingressGateways:
   enabled: true
   defaults:
