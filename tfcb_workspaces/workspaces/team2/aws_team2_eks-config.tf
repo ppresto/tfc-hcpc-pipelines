@@ -1,9 +1,9 @@
-module "ws_aws_tgw" {
+module "aws_team2_eks-config" {
   source              = "../modules/workspace-mgr"
   agent_pool_id       = ""
   organization        = var.organization
-  workspacename       = "aws_${local.region_shortname}_${var.env}_network-tgw"
-  workingdir          = "aws_tgw"
+  workspacename       = "aws_${local.region_shortname}_${var.env}_team2-eks-config"
+  workingdir          = "aws_team2_eks-config"
   tfversion           = "1.1.4"
   queue_all_runs      = false
   auto_apply          = true
@@ -11,7 +11,7 @@ module "ws_aws_tgw" {
   oauth_token_id      = var.oauth_token_id
   repo_branch         = "main"
   global_remote_state = false
-  tag_names           = ["team-net", "sg", "tgw", "bastion", "${var.aws_default_region}", "${var.env}"]
+  tag_names           = ["team2", "consul-agent", "${var.aws_default_region}", "${var.env}"]
   variable_set        = tfe_variable_set.cloud_creds.id
 
   env_variables = {
@@ -22,8 +22,10 @@ module "ws_aws_tgw" {
   tf_variables = {
     "region"            = var.aws_default_region
     "organization"      = var.organization
-    "ec2_key_pair_name" = var.ssh_key_name
+    "consul_template"   = "fake-service"
+    "namespace"         = "consul"
     "env"               = var.env
+    "helm_release_name" = "team2"
   }
   env_variables_sec = {
     "HCP_CLIENT_SECRET" = var.HCP_CLIENT_SECRET
