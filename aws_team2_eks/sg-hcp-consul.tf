@@ -141,3 +141,12 @@ resource "aws_security_group_rule" "eks_envoy" {
   cidr_blocks       = local.private_cidr_blocks
   description       = "Allow envoy traffic."
 }
+resource "aws_security_group_rule" "eks_meshGW" {
+  security_group_id = module.eks.cluster_primary_security_group_id
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 8443
+  to_port           = 8443
+  cidr_blocks       = local.private_cidr_blocks
+  description       = "Allow envoy traffic."
+}
