@@ -71,6 +71,15 @@ resource "aws_security_group_rule" "hcp_tcp_https" {
   cidr_blocks       = [local.hvn_cidr_block]
   description       = "The HTTPS API"
 }
+resource "aws_security_group_rule" "hcp_tcp_https_meshGW" {
+  security_group_id = aws_security_group.consul_server.id
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 8443
+  to_port           = 8443
+  cidr_blocks       = [local.hvn_cidr_block]
+  description       = "The HTTPS API"
+}
 /*
 
 #
