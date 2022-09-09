@@ -297,3 +297,8 @@ kubectl -n consul exec -it deploy/consul-ingress-gateway -c ingress-gateway -- w
 ```
 
 [Uninstall Consul / Helm](https://www.consul.io/docs/k8s/operations/uninstall)
+
+Admin Partitions.
+
+Setup: https://github.com/hashicorp/consul-k8s/blob/main/docs/admin-partitions-with-acls.md
+Blog: https://www.hashicorp.com/blog/achieving-multi-tenancy-with-consul-administrative-partitions

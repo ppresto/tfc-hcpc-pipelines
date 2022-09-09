@@ -6,7 +6,15 @@ global:
   datacenter: ${DATACENTER}
   adminPartitions:
     enabled: true
-    name: pci
+    name: "pci"
+    service:
+      type: LoadBalancer
+    # service:
+    #   type: NodePort
+    #   nodePort:
+    #     https: 30001
+    #     rpc: 31002
+    #     serf: 31003
   acls:
     manageSystemACLs: true
     bootstrapToken:
