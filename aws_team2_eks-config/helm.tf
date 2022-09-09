@@ -27,7 +27,7 @@ resource "helm_release" "consul" {
   create_namespace = false
   repository       = "https://helm.releases.hashicorp.com"
   chart            = "consul"
-  version          = "0.33.0"
+  version          = "0.44.0"  #https://www.consul.io/docs/k8s/compatibility
 
   values = [data.template_file.agent_config.rendered]
   set {
