@@ -1,0 +1,14 @@
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ExportedServices
+metadata:
+  name: pci
+spec:
+  services:
+    - name: mesh-gateway
+      consumers:
+      - partition: default
+    - name: pci
+      namespace: default
+      consumers:
+      - partition: default

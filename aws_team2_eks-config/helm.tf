@@ -32,7 +32,7 @@ resource "helm_release" "consul" {
   values = [data.template_file.agent_config.rendered]
   set {
     name  = "global.image"
-    value = "hashicorp/consul-enterprise:1.11.0-ent"
+    value = "hashicorp/consul-enterprise:1.11.8-ent"
     #value = "hashicorp/consul:1.10.1"
   }
   depends_on = [kubernetes_namespace.create]
