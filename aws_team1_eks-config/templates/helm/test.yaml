@@ -1,9 +1,12 @@
 # https://github.com/hashicorp/consul-k8s/blob/main/charts/consul/values.yaml
 global:
-  name: consul
+  name: team1
   enabled: false
   enableConsulNamespaces: true
   datacenter: usw2
+  #adminPartitions:
+  #  enabled: true
+  #  name: "default"
   acls:
     manageSystemACLs: true
     bootstrapToken:
@@ -23,7 +26,7 @@ externalServers:
   hosts: ["usw2.private.consul.328306de-41b8-43a7-9c38-ca8d89d06b07.aws.hashicorp.cloud"]
   httpsPort: 443
   useSystemRoots: true
-  k8sAuthMethodHost: https://6C74E843D28BDC64C25863E52184EB8D.gr7.us-west-2.eks.amazonaws.com
+  k8sAuthMethodHost: https://BB484B9E59718B2B4FDCF28A81020510.sk1.us-west-2.eks.amazonaws.com
 client:
   enabled: true
   join: ["usw2.private.consul.328306de-41b8-43a7-9c38-ca8d89d06b07.aws.hashicorp.cloud"]
@@ -46,6 +49,9 @@ syncCatalog:
   toK8S: true
 controller:
   enabled: true
+meshGateway:
+  enabled: true
+  replicas: 1
 ingressGateways:
   enabled: true
   defaults:
@@ -54,4 +60,3 @@ ingressGateways:
     - name: ingress-gateway
       service:
         type: LoadBalancer
-

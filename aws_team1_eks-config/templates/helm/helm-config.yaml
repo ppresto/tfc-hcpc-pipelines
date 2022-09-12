@@ -4,9 +4,9 @@ global:
   enabled: false
   enableConsulNamespaces: true
   datacenter: ${DATACENTER}
-  adminPartitions:
-    enabled: true
-    name: "default"
+  #adminPartitions:
+  #  enabled: true
+  #  name: "default"
   acls:
     manageSystemACLs: true
     bootstrapToken:
