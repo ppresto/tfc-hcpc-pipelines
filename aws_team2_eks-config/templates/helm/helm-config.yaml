@@ -60,7 +60,3 @@ controller:
 meshGateway:
   enabled: true
   replicas: 1
-  gateways:
-    - name: ingress-gateway
-      service:
-        type: LoadBalancer
