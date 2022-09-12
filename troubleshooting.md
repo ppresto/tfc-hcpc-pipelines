@@ -148,7 +148,7 @@ curl \
 Manually install consul using Helm.  The test.yaml below can be created from existing Terraform Output.  Make sure you are using a [compatable consul-k8s helm chart version](https://www.consul.io/docs/k8s/compatibility).  Make sure you create the k8s secrets in the correct namespace that the helm chart is expecting.
 ```
 helm repo add hashicorp https://helm.releases.hashicorp.com
-helm install consul hashicorp/consul --namespace consul --version 0.44.0 --set global.image="hashicorp/consul-enterprise:1.11.8-ent" --values ./helm/test.yaml
+helm install team1 hashicorp/consul --namespace consul --version 0.41.1 --set global.image="hashicorp/consul-enterprise:1.11.8-ent" --values ./helm/test.yaml
 helm status consul
 # --create-namespace
 ```

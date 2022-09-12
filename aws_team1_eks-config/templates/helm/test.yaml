@@ -4,9 +4,9 @@ global:
   enabled: false
   enableConsulNamespaces: true
   datacenter: usw2
-  #adminPartitions:
-  #  enabled: true
-  #  name: "default"
+  adminPartitions:
+    enabled: true
+    name: "default"
   acls:
     manageSystemACLs: true
     bootstrapToken:
