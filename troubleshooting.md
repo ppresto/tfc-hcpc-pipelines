@@ -301,4 +301,7 @@ kubectl -n consul exec -it deploy/consul-ingress-gateway -c ingress-gateway -- w
 Admin Partitions.
 
 Setup: https://github.com/hashicorp/consul-k8s/blob/main/docs/admin-partitions-with-acls.md
+
+Setup K8s Video: https://www.youtube.com/watch?v=RrK89J_pzbk
+
 Blog: https://www.hashicorp.com/blog/achieving-multi-tenancy-with-consul-administrative-partitions
