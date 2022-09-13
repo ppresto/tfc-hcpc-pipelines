@@ -136,6 +136,33 @@ ls ./logs             # review service and envoy logs
 There are some additional example configurations that use the CLI to configure L7 traffic management.
 ## EKS Kubernetes
 
+### CLI
+Login to team1 and set alias 'team1' to current-context
+```
+aws_team1_eks/connect.sh
+export team1_context=$(kubectl config current-context)
+alias 'team1=kubectl config use-context $team1_context'
+```
+
+Login to team2 and set alias 'team2' to current-context
+```
+aws_team2_eks/connect.sh
+export team2_context=$(kubectl config current-context)
+alias 'team2=kubectl config use-context $team2_context'
+```
+
+Set default Namespace in current context
+```
+kubectl config set-context --current --namespace=consul
+```
+
+Switch Contexts using team aliases
+```
+team1
+team2
+```
+
+
 ### Deregister Node to remove consul-sync k8s services from HCP.
 ```
 curl \
@@ -147,10 +174,14 @@ curl \
 ### Helm - Install manually to debug
 Manually install consul using Helm.  The test.yaml below can be created from existing Terraform Output.  Make sure you are using a [compatable consul-k8s helm chart version](https://www.consul.io/docs/k8s/compatibility).  Make sure you create the k8s secrets in the correct namespace that the helm chart is expecting.
 ```
-# --create-namespace
 helm repo add hashicorp https://helm.releases.hashicorp.com
+
+# --create-namespace
+# 0.41.1 , consul 1.11.8-ent
 helm install team2 hashicorp/consul --namespace consul --version 0.41.1 --set global.image="hashicorp/consul-enterprise:1.11.8-ent" --values ./helm/test.yaml
-helm status consul
+
+# 0.43.0 , consul 1.12.0-ent
+helm install team2 hashicorp/consul --namespace consul --version 0.41.1 --set global.image="hashicorp/consul-enterprise:1.11.8-ent" --values ./helm/test.yaml
 ```
 
 The Helm release name must be unique for each Kubernetes cluster. The Helm chart uses the Helm release name as a prefix for the ACL resources that it creates so duplicate names will overwrite ACL's.
