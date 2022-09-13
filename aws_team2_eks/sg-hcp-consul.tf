@@ -132,3 +132,13 @@ resource "aws_security_group_rule" "eks_envoy" {
   cidr_blocks       = local.private_cidr_blocks
   description       = "Allow envoy traffic."
 }
+
+resource "aws_security_group_rule" "hcp_tcp_https" {
+  security_group_id = module.eks.cluster_primary_security_group_id
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 443
+  to_port           = 443
+  cidr_blocks       = [local.hvn_cidr_block]
+  description       = "The HTTPS API"
+}
