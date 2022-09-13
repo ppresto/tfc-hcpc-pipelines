@@ -181,7 +181,7 @@ helm repo add hashicorp https://helm.releases.hashicorp.com
 helm install team2 hashicorp/consul --namespace consul --version 0.41.1 --set global.image="hashicorp/consul-enterprise:1.11.8-ent" --values ./helm/test.yaml
 
 # 0.43.0 , consul 1.12.4-ent
-helm install team2 hashicorp/consul --namespace consul --version 0.43.0 --set global.image="hashicorp/consul-enterprise:1.12.4-ent" --values ./helm/test.yaml
+helm install team2 hashicorp/consul --namespace consul --version 0.45.0 --set global.image="hashicorp/consul-enterprise:1.12.4-ent" --values ./helm/test.yaml
 ```
 
 The Helm release name must be unique for each Kubernetes cluster. The Helm chart uses the Helm release name as a prefix for the ACL resources that it creates so duplicate names will overwrite ACL's.
