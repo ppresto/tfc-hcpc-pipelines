@@ -6,9 +6,9 @@ metadata:
 spec:
   destination:
     name: payments
-    namespace: payments-ns
+    namespace: payments
   sources:
   - name: api
-    namespace: default
+    namespace: api
     partition: default
     action: allow

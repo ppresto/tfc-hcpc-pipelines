@@ -242,14 +242,14 @@ kubectl proxy
 Use k8s API to delete namespace
 ```
 cat <<EOF | curl -X PUT \
-  localhost:8001/api/v1/namespaces/currency-ns/finalize \
+  localhost:8001/api/v1/namespaces/payments/finalize \
   -H "Content-Type: application/json" \
   --data-binary @-
 {
   "kind": "Namespace",
   "apiVersion": "v1",
   "metadata": {
-    "name": "currency-ns"
+    "name": "payments"
   },
   "spec": {
     "finalizers": null
@@ -260,7 +260,7 @@ EOF
 
 Find finalizers in "spec"
 ```
-kubectl get namespace api -o json > temp.json
+kubectl get namespace payments -o json > temp.json
 ```
 
 ```
@@ -272,12 +272,16 @@ kubectl get namespace api -o json > temp.json
 ### Terminate stuck objects
 Examples to Fix defaults, intentions, and ingressgateways that wont delete
 ```
-kubectl patch servicedefaults.consul.hashicorp.com api -n api-ns --type merge --patch '{"metadata":{"finalizers":[]}}'
-kubectl patch servicedefaults.consul.hashicorp.com web --type merge --patch '{"metadata":{"finalizers":[]}}'
+kubectl patch servicedefaults.consul.hashicorp.com payments -n payments --type merge --patch '{"metadata":{"finalizers":[]}}'
+kubectl patch servicedefaults.consul.hashicorp.com web -n consul --type merge --patch '{"metadata":{"finalizers":[]}}'
 
 kubectl patch ingressgateway.consul.hashicorp.com ingress-gateway --type merge --patch '{"metadata":{"finalizers":[]}}'
 
-kubectl patch serviceintentions.consul.hashicorp.com web --type merge --patch '{"metadata":{"finalizers":[]}}'
+kubectl patch serviceintentions.consul.hashicorp.com payments --type merge --patch '{"metadata":{"finalizers":[]}}'
+
+kubectl patch exportedservices.consul.hashicorp.com pci -n default --type merge --patch '{"metadata":{"finalizers":[]}}'
+
+kubectl patch proxydefaults.consul.hashicorp.com global -n default --type merge --patch '{"metadata":{"finalizers":[]}}'
 ```
 
 ### Envoy
