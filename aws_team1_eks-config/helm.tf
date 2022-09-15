@@ -38,6 +38,10 @@ resource "helm_release" "consul" {
     #value = "hashicorp/consul-enterprise:1.11.8-ent"
     #value = "hashicorp/consul:1.10.1"
   }
+  set {
+    name  = "global.imageEnvoy"
+    value = "envoyproxy/envoy-alpine:1.22.2"
+  }
   depends_on = [kubernetes_namespace.create]
 }
 
