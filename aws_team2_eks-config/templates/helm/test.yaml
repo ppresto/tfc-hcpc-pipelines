@@ -34,7 +34,7 @@ externalServers:
   hosts: ["usw2.private.consul.328306de-41b8-43a7-9c38-ca8d89d06b07.aws.hashicorp.cloud"]
   httpsPort: 443
   useSystemRoots: true
-  k8sAuthMethodHost: https://7BBE649DDB0E6AF7384DD3EDDD788FB4.gr7.us-west-2.eks.amazonaws.com
+  k8sAuthMethodHost: https://5E9E751D9E1BE01516BFAACADB3C0995.sk1.us-west-2.eks.amazonaws.com
 client:
   enabled: true
   join: ["usw2.private.consul.328306de-41b8-43a7-9c38-ca8d89d06b07.aws.hashicorp.cloud"]

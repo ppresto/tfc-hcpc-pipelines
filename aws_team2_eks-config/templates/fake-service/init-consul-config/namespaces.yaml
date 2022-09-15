@@ -5,10 +5,3 @@ metadata:
   labels:
     name: payments
 ---
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: currency
-  labels:
-    name: cache
----
