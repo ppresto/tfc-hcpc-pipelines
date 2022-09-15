@@ -13,8 +13,8 @@ spec:
       destination:
         service: api
         serviceSubset: v3
-        namespace: api
-        partition: default
+        namespace: payments
+        partition: pci
         requestTimeout: 10s
         numRetries: 3
         retryOnConnectFailure: true
@@ -23,7 +23,6 @@ apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceSplitter
 metadata:
   name: api
-  namespace: api
 spec:
   splits:
     - weight: 0
@@ -37,7 +36,6 @@ apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceResolver
 metadata:
   name: api
-  namespace: api
 spec:
   defaultSubset: v2
   subsets:

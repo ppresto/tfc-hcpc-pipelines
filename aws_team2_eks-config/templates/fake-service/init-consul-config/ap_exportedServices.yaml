@@ -9,6 +9,6 @@ spec:
       consumers:
       - partition: default
     - name: pci
-      namespace: default
+      namespace: payments
       consumers:
       - partition: default

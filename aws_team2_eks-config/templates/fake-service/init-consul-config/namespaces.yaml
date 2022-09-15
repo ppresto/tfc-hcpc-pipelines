@@ -1,14 +1,14 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: payments-ns
+  name: payments
   labels:
     name: payments
 ---
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: currency-ns
+  name: currency
   labels:
     name: cache
 ---

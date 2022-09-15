@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-deployment-v3
-  namespace: api
   labels:
     app: api
     version: v1
@@ -15,7 +14,6 @@ spec:
       app: api
   template:
     metadata:
-      namespace: api
       labels:
         app: api
         service: fake-service
@@ -25,8 +23,6 @@ spec:
         consul.hashicorp.com/envoy-extra-args: '--log-level debug --disable-hot-restart'
         consul.hashicorp.com/service-tags: 'eks,v3,alpha'
         consul.hashicorp.com/service-meta-version: 'v3'
-        #consul.hashicorp.com/transparent-proxy: 'false'
-        consul.hashicorp.com/connect-service-upstreams: 'payments.payments:9090'
     spec:
       serviceAccountName: api
       containers:
@@ -38,8 +34,7 @@ spec:
             - name: 'LISTEN_ADDR'
               value: '0.0.0.0:9091'
             - name: 'UPSTREAM_URIS'
-              value: 'http://payments.virtual.payments.ns.pci.ap.usw2.dc.consul'
-              #value: 'http://payments.payments-ns:9090'
+              value: 'http://payments.payments-ns:9090'
             - name: 'NAME'
               value: 'api-v3'
             - name: 'MESSAGE'
