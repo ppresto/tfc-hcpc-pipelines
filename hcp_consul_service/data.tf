@@ -1,3 +1,6 @@
+# Get all available HCP Consul Versions for output
+data "hcp_consul_versions" "default" {}
+
 provider "aws" {
   region = var.region
 }

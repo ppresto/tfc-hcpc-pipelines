@@ -1,5 +1,3 @@
-data "hcp_consul_versions" "default" {}
-
 resource "hcp_hvn" "example_hvn" {
   hvn_id         = var.hvn_id
   cloud_provider = var.cloud_provider

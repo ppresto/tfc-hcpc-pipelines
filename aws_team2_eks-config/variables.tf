@@ -3,7 +3,7 @@ variable "name" {
   type        = string
   default     = "presto"
 }
-
+variable "consul_template" { default = "fake-service"}
 variable "env" { default = "dev" }
 variable "region" {
   description = "AWS region."
