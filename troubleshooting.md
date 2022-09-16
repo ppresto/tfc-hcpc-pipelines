@@ -328,8 +328,14 @@ kubectl -n web exec deploy/web -c web -- wget -qO- http://api.virtual.api.ns.def
 
 Ingress GW
 ```
+kubectl -n consul exec deploy/consul-ingress-gateway -c ingress-gateway -- wget -qO- 127.0.0.1:19000/clusters
+
 kubectl -n consul exec deploy/consul-ingress-gateway -c ingress-gateway -- wget -qO- http://localhost:19000/config_dump
+
+kubectl -n consul exec deploy/consul-ingress-gateway -c ingress-gateway -- wget -qO- 127.0.0.1:19000/config_dump | jq '[.. |."dynamic_route_configs"? | select(. != null)[0]]'
+
 kubectl -n consul exec deploy/consul-ingress-gateway -c ingress-gateway -- wget -qO- http://localhost:8080
+
 kubectl -n consul exec -it deploy/consul-ingress-gateway -c ingress-gateway -- wget --no-check-certificate -qO- http://web.virtual.consul
 ```
 
@@ -342,3 +348,8 @@ Setup: https://github.com/hashicorp/consul-k8s/blob/main/docs/admin-partitions-w
 Setup K8s Video: https://www.youtube.com/watch?v=RrK89J_pzbk
 
 Blog: https://www.hashicorp.com/blog/achieving-multi-tenancy-with-consul-administrative-partitions
+
+### Connect CA
+```
+curl -s ${CONSUL_HTTP_ADDR}/v1/connect/ca/roots | jq -r '.Roots[0].RootCert' | openssl x509 -text -noout
+```

@@ -1,7 +1,6 @@
 #
 ### Install Consul Client Agents into EKS using helm
 #
-
 data "template_file" "agent_config" {
   template = file("${path.module}/templates/helm/helm-config.yaml")
   vars = {
@@ -12,7 +11,6 @@ data "template_file" "agent_config" {
     CONSUL_DNS_CLUSTER_IP = var.consul_dns_cluster_ip
   }
 }
-
 resource "kubernetes_namespace" "create" {
   metadata {
     labels = {
@@ -27,16 +25,11 @@ resource "helm_release" "consul" {
   create_namespace = false
   repository       = "https://helm.releases.hashicorp.com"
   chart            = "consul"
-  #version          = "0.33.0"  #https://www.consul.io/docs/k8s/compatibility
-  #version          = "0.41.1"  #https://www.consul.io/docs/k8s/compatibility
-  version          = "0.45.0"
-
+  version          = "0.45.0"  #https://www.consul.io/docs/k8s/compatibility
   values = [data.template_file.agent_config.rendered]
   set {
     name  = "global.image"
     value = "hashicorp/consul-enterprise:1.12.4-ent"
-    #value = "hashicorp/consul-enterprise:1.11.8-ent"
-    #value = "hashicorp/consul:1.10.1"
   }
   set {
     name  = "global.imageEnvoy"
@@ -44,18 +37,6 @@ resource "helm_release" "consul" {
   }
   depends_on = [kubernetes_namespace.create]
 }
-
-#resource "consul_acl_auth_method" "team1" {
-#  name        = "team1-eks"
-##  type        = "kubernetes"
-#  description = "team1"
-#
-#  config_json = jsonencode({
-#    Host              = local.eks_cluster_endpoint
-#    CACert            = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
-#    ServiceAccountJWT = nonsensitive(base64decode(data.aws_eks_cluster_auth.cluster.token))
-#  })
-#}
 
 #
 ### Configure 3 Consul Secrets for the Helm Chart (aka: Agents)
