@@ -142,15 +142,15 @@ resource "aws_security_group_rule" "eks_envoy" {
 #  cidr_blocks       = [local.hvn_cidr_block]
 #  description       = "The HTTPS API"
 #}
-resource "aws_security_group_rule" "hcp_all_egress2" {
-  security_group_id = module.eks.cluster_primary_security_group_id
-  type              = "egress"
-  protocol          = "-1"
-  from_port         = 0
-  to_port           = 0
-  cidr_blocks       = local.private_cidr_blocks
-  description       = "The HTTPS API"
-}
+#resource "aws_security_group_rule" "hcp_all_egress2" {
+#  security_group_id = module.eks.cluster_primary_security_group_id
+#  type              = "egress"
+#  protocol          = "-1"
+#  from_port         = 0
+#  to_port           = 0
+#  cidr_blocks       = local.private_cidr_blocks
+#  description       = "The HTTPS API"
+#}
 resource "aws_security_group_rule" "eks_all_ingress_test" {
   security_group_id = module.eks.cluster_primary_security_group_id
   type              = "ingress"
