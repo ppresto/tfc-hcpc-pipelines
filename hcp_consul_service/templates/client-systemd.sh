@@ -8,7 +8,7 @@ CONSUL_CA=$(echo ${CONSUL_CA_FILE}| base64 -d)
 ### Install Consul
 curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
 apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-apt update && apt install -y consul-enterprise=1.11.8-1+ent unzip jq
+apt update && apt install -y consul-enterprise=1.12.0-1+ent unzip jq
 
 ### Install Envoy
 curl https://func-e.io/install.sh | bash -s -- -b /usr/local/bin/
@@ -230,9 +230,9 @@ iptables --table nat --append OUTPUT --destination localhost --protocol udp --ma
 iptables --table nat --append OUTPUT --destination localhost --protocol tcp --match tcp --dport 53 --jump REDIRECT --to-ports 8600
 systemctl restart systemd-resolved
 
-# Start fake-service
 cd /opt/consul/fake-service
 chmod 755 *.sh
+sleep 30
 #./start.sh
 
 echo "export CONSUL_HTTP_TOKEN=${CONSUL_ACL_TOKEN}" >> /root/.profile

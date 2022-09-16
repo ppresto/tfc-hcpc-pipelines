@@ -162,7 +162,7 @@ resource "aws_security_group_rule" "eks_envoy" {
 #}
 #resource "aws_security_group_rule" "eks_all_ingress_test" {
 #  security_group_id = module.eks.cluster_primary_security_group_id
-##  type              = "ingress"
+#  type              = "ingress"
 #  protocol          = "-1"
 #  from_port         = 0
 #  to_port           = 0
