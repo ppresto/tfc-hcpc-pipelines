@@ -160,7 +160,7 @@ resource "aws_security_group_rule" "eks_gw" {
 resource "aws_security_group_rule" "eks_all_ingress_test2" {
   security_group_id = module.eks.cluster_primary_security_group_id
   type              = "ingress"
-  protocol          = "-1"
+  protocol          = "tcp"
   from_port         = 0
   to_port           = 0
   cidr_blocks       = [local.hvn_cidr_block]
