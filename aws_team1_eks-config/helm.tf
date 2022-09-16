@@ -40,7 +40,7 @@ resource "helm_release" "consul" {
   }
   set {
     name  = "global.imageEnvoy"
-    value = "envoyproxy/envoy-alpine:v1.22.2"
+    value = "envoyproxy/envoy-alpine:v1.21.3"
   }
   depends_on = [kubernetes_namespace.create]
 }
