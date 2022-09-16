@@ -150,4 +150,4 @@ resource "aws_security_group_rule" "eks_ingressgw" {
 #  to_port           = 8443
 #  cidr_blocks       = local.private_cidr_blocks
 #  description       = "ingress k8s HC."
-}
+#}
