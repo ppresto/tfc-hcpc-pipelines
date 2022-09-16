@@ -18,7 +18,7 @@ resource "aws_security_group_rule" "hcp_tcp_https_ingress" {
   type              = "egress"
   protocol          = "tcp"
   from_port         = 443
-  to_port           = 443
+  to_port           = 8443
   cidr_blocks       = [local.hvn_cidr_block]
   description       = "The HTTPS API"
 }
