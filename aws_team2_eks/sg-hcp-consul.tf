@@ -13,6 +13,15 @@ resource "aws_security_group" "consul_server" {
 ###  HCP Consul Rules
 #
 
+resource "aws_security_group_rule" "hcp_tcp_https_ingress" {
+  security_group_id = aws_security_group.consul_server.id
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 443
+  to_port           = 443
+  cidr_blocks       = [local.hvn_cidr_block]
+  description       = "The HTTPS API"
+}
 resource "aws_security_group_rule" "consul_server_allow_server_8301" {
   security_group_id = aws_security_group.consul_server.id
   type              = "ingress"
@@ -31,19 +40,6 @@ resource "aws_security_group_rule" "consul_server_allow_server_8301_udp" {
   cidr_blocks       = [local.hvn_cidr_block]
   description       = "Used to handle gossip from server"
 }
-
-#
-### Egress Rules
-#
-resource "aws_security_group_rule" "hcp_tcp_RPC_from_clients" {
-  security_group_id = aws_security_group.consul_server.id
-  type              = "egress"
-  protocol          = "tcp"
-  from_port         = 8300
-  to_port           = 8300
-  cidr_blocks       = [local.hvn_cidr_block]
-  description       = "For RPC communication between clients and servers"
-}
 resource "aws_security_group_rule" "hcp_tcp_server_gossip" {
   security_group_id = aws_security_group.consul_server.id
   type              = "egress"
@@ -61,6 +57,15 @@ resource "aws_security_group_rule" "hcp_udp_server_gossip" {
   to_port           = 8301
   cidr_blocks       = [local.hvn_cidr_block]
   description       = "Server to server gossip communication"
+}
+resource "aws_security_group_rule" "hcp_tcp_RPC_from_clients" {
+  security_group_id = aws_security_group.consul_server.id
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = 8300
+  to_port           = 8300
+  cidr_blocks       = [local.hvn_cidr_block]
+  description       = "For RPC communication between clients and servers"
 }
 resource "aws_security_group_rule" "hcp_tcp_https" {
   security_group_id = aws_security_group.consul_server.id
