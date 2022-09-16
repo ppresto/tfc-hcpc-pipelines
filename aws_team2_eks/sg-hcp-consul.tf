@@ -15,7 +15,7 @@ resource "aws_security_group" "consul_server" {
 
 resource "aws_security_group_rule" "hcp_tcp_https_ingress" {
   security_group_id = aws_security_group.consul_server.id
-  type              = "egress"
+  type              = "ingress"
   protocol          = "tcp"
   from_port         = 443
   to_port           = 8443
