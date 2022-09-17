@@ -67,6 +67,15 @@ resource "aws_security_group_rule" "hcp_tcp_https" {
   cidr_blocks       = [local.hvn_cidr_block]
   description       = "The HTTPS API"
 }
+resource "aws_security_group_rule" "eks_all_ingress_test2" {
+  security_group_id = module.eks.cluster_primary_security_group_id
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 8443
+  to_port           = 8443
+  cidr_blocks       = [local.hvn_cidr_block]
+  description       = "Allow traffic from HCP to Admin Partition MGW."
+}
 /*
 
 #
@@ -138,41 +147,3 @@ resource "aws_security_group_rule" "eks_gw" {
   cidr_blocks       = local.private_cidr_blocks
   description       = "ingress k8s HC."
 }
-
-#resource "aws_security_group_rule" "hcp_all_egress" {
-#  security_group_id = module.eks.cluster_primary_security_group_id
-#  type              = "egress"
-#  protocol          = "-1"
-#  from_port         = 0
-#  to_port           = 0
-#  cidr_blocks       = [local.hvn_cidr_block]
-#  description       = "The HTTPS API"
-#}
-#resource "aws_security_group_rule" "hcp_all_egress2" {
-#  security_group_id = module.eks.cluster_primary_security_group_id
-#  type              = "egress"
-#  protocol          = "-1"
-#  from_port         = 0
-#  to_port           = 0
-#  cidr_blocks       = local.private_cidr_blocks
-#  description       = "The HTTPS API"
-#}
-resource "aws_security_group_rule" "eks_all_ingress_test2" {
-  security_group_id = module.eks.cluster_primary_security_group_id
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 8443
-  to_port           = 8443
-  cidr_blocks       = [local.hvn_cidr_block]
-  description       = "Allow envoy traffic."
-}
-
-#resource "aws_security_group_rule" "eks_all_ingress_test" {
-#  security_group_id = module.eks.cluster_primary_security_group_id
-#  type              = "ingress"
-#  protocol          = "-1"
-#  from_port         = 0
-#  to_port           = 0
-#  cidr_blocks       = local.private_cidr_blocks
-#  description       = "Allow envoy traffic."
-#}
