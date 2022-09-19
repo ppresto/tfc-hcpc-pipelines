@@ -1,3 +1,33 @@
+<!-- TOC -->
+
+- [Troubleshooting](#troubleshooting)
+  - [Transit Gateway](#transit-gateway)
+  - [SSH - Bastion Host](#ssh---bastion-host)
+  - [AWS EC2 / VM](#aws-ec2--vm)
+    - [AWS EC2 - Review Cloud-init execution](#aws-ec2---review-cloud-init-execution)
+    - [AWS EC2 - systemctl consul.service](#aws-ec2---systemctl-consulservice)
+    - [AWS EC2 - logs](#aws-ec2---logs)
+    - [AWS EC2 - Test client connectivity to HCP Consul](#aws-ec2---test-client-connectivity-to-hcp-consul)
+    - [AWS EC2 - Monitor the Server](#aws-ec2---monitor-the-server)
+    - [AWS EC2 - Deploy service (api)](#aws-ec2---deploy-service-api)
+  - [Consul - DNS](#consul---dns)
+    - [Consul - DNS lookups](#consul---dns-lookups)
+    - [Consul - DNS Forwarding](#consul---dns-forwarding)
+    - [Consul - Deregister Node from HCP.](#consul---deregister-node-from-hcp)
+    - [Consul - Connect CA](#consul---connect-ca)
+    - [Consul - Admin Partitions.](#consul---admin-partitions)
+  - [EKS / Kubernetes](#eks--kubernetes)
+    - [EKS - Login / Set Context](#eks---login--set-context)
+    - [EKS - Helm Install manually to debug](#eks---helm-install-manually-to-debug)
+    - [EKS - DNS Troubleshooting](#eks---dns-troubleshooting)
+    - [EKS - Change proxy global defaults](#eks---change-proxy-global-defaults)
+    - [EKS - Terminate stuck namespace](#eks---terminate-stuck-namespace)
+    - [EKS - Terminate stuck objects](#eks---terminate-stuck-objects)
+  - [Envoy](#envoy)
+    - [Envoy - Read fake-service envoy-sidcar configuration](#envoy---read-fake-service-envoy-sidcar-configuration)
+    - [Consul - Ingress GW](#consul---ingress-gw)
+
+<!-- /TOC -->
 # Troubleshooting
 
 ## Transit Gateway
@@ -8,8 +38,8 @@
 https://learn.hashicorp.com/tutorials/cloud/amazon-transit-gateway?in=consul/)
 * [Visual Subnet Calculator](https://www.davidc.net/sites/default/subnets/subnets.html?network=10.0.0.0&mask=20&division=23.f42331) to help find the correct CIDR block ranges.
 
-## SSH
-The TF is leveraging your AWS Key Pair for the Bastion/EC2 and EKS nodes.  Use `Agent Forwarding` to ssh to your nodes.  Locally in your terminal find your key and setup ssh.
+## SSH - Bastion Host
+SSH to bastion host for access to internal networks.  The TF is leveraging your AWS Key Pair for the Bastion/EC2 and EKS nodes.  Use `Agent Forwarding` to ssh to your nodes.  Locally in your terminal find your key and setup ssh.
 ```
 ssh-add -L  # Find SSH Keys added
 ssh-add ${HOME}/.ssh/my-dev-key.pem  # If you dont have any keys then add your key being used in TF.
@@ -17,7 +47,8 @@ ssh -A ubuntu@<BASTION_IP>>  # pass your key in memory to the ubuntu Bastion Hos
 ssh -A ec2_user@<K8S_NODE_IP> # From bastion use your key to access a node in the private network.
 ```
 
-## AWS EC2 Consul client
+## AWS EC2 / VM
+### AWS EC2 - Review Cloud-init execution
 When a user data script is processed, it is copied to and run from /var/lib/cloud/instances/instance-id/. The script is not deleted after it is run and can be found in this directory with the name user-data.txt.  
 ```
 sudo cat /var/lib/cloud/instance/user-data.txt
@@ -27,7 +58,7 @@ The cloud-init log captures console output of the user-data script run.
 sudo cat /var/log/cloud-init-output.log
 ```
 
-### systemctl consul.service
+### AWS EC2 - systemctl consul.service
 This repo creates the systemd start script located at `/etc/systemd/system/consul.service`.  This scripts requires:
 *  /opt/consul to store data.
 *  /etc/consul.d/certs - ca.pem from HCP
@@ -40,12 +71,12 @@ sudo systemctl start consul.service
 sudo systemctl status consul.service
 ```
 
-### logs
+### AWS EC2 - logs
 To investigate systemd errors starting consul use `journalctl`.  
 ```
 journalctl -u consul.service
 ```
-### Test client connectivity to HCP Consul
+### AWS EC2 - Test client connectivity to HCP Consul
 First check consul logs above to verify the local client successfully connected.  You should see the IP of the node and `agent: Synced`
 ```
 [INFO]  agent: Synced node info
@@ -76,15 +107,25 @@ nc -zvu 10.15.2.79 8301
 
 Check Security group rules to ensure TCP/UDP bidirectional traffic is openned to all networks using HCP.  
 Warning:  EKS managed nodes are mapped to specific security groups that need to allow this traffic.  Refer to `aws_eks/sg-hcp-consul.tf`
-### Monitor the Server
+### AWS EC2 - Monitor the Server
 Using the consul client with the root token get a live stream of logs from the server.
 ```
 consul monitor -log-level debug
 ```
+### AWS EC2 - Deploy service (api)
+The start.sh should start the fake-service, register it to consul as 'api', and start the envoy sidecar.  If this happens before the consul client registers the EC2 node to consul then you may need to restart the service, or look at the logs.
+```
+cd /opt/consul/fake-service
+sudo ./stop.sh
+sudo ./start.sh
+cat api-service.hcl   # review service registration config
+ls ./logs             # review service and envoy logs
+```
+There are some additional example configurations that use the CLI to configure L7 traffic management.
 
-## Consul
+## Consul - DNS
 
-### DNS lookups
+### Consul - DNS lookups
 Use the local consul clients DNS interface that runs on port 8600 for testing.  This client will service local DNS requests to the HCP Consul service over port 8301 so there is no need to add additional security rules for port 8600.
 ```
 dig @127.0.0.1 -p 8600 consul.service.consul
@@ -120,23 +161,32 @@ References:
 https://learn.hashicorp.com/tutorials/consul/get-started-service-discover
 https://www.consul.io/docs/discovery/dns#dns-with-acls
 
-### DNS Forwarding
+### Consul - DNS Forwarding
 Once DNS lookups are working through the local consul client,  setup DNS forwarding to port 53 to work for all requests by default.
 https://learn.hashicorp.com/tutorials/consul/dns-forwarding
 
-### EC2 fake-service
-The start.sh should start the fake-service, register it to consul as 'api', and start the envoy sidecar.  If this happens before the consul client registers the EC2 node to consul then you may need to restart the service, or look at the logs.
+### Consul - Deregister Node from HCP.
 ```
-cd /opt/consul/fake-service
-sudo ./stop.sh
-sudo ./start.sh
-cat api-service.hcl   # review service registration config
-ls ./logs             # review service and envoy logs
+curl \
+    --header "X-Consul-Token: ${CONSUL_HTTP_TOKEN}" \
+    --request PUT \
+    --data '{"Datacenter": "usw2","Node": "ip-10-15-3-83.us-west-2.compute.internal"}' \
+    https://usw2.private.consul.328306de-41b8-43a7-9c38-ca8d89d06b07.aws.hashicorp.cloud/v1/catalog/deregister
 ```
-There are some additional example configurations that use the CLI to configure L7 traffic management.
-## EKS Kubernetes
+### Consul - Connect CA
+```
+curl -s ${CONSUL_HTTP_ADDR}/v1/connect/ca/roots | jq -r '.Roots[0].RootCert' | openssl x509 -text -noout
+```
+### Consul - Admin Partitions.
 
-### CLI
+Setup: https://github.com/hashicorp/consul-k8s/blob/main/docs/admin-partitions-with-acls.md
+
+Setup K8s Video: https://www.youtube.com/watch?v=RrK89J_pzbk
+
+Blog: https://www.hashicorp.com/blog/achieving-multi-tenancy-with-consul-administrative-partitions
+## EKS / Kubernetes
+
+### EKS - Login / Set Context
 Login to team1 and set alias 'team1' to current-context
 ```
 aws_team1_eks/connect.sh
@@ -161,17 +211,7 @@ Switch Contexts using team aliases
 team1
 team2
 ```
-
-
-### Deregister Node to remove consul-sync k8s services from HCP.
-```
-curl \
-    --header "X-Consul-Token: ${CONSUL_HTTP_TOKEN}" \
-    --request PUT \
-    --data '{"Datacenter": "usw2","Node": "ip-10-15-3-83.us-west-2.compute.internal"}' \
-    https://usw2.private.consul.328306de-41b8-43a7-9c38-ca8d89d06b07.aws.hashicorp.cloud/v1/catalog/deregister
-```
-### Helm - Install manually to debug
+### EKS - Helm Install manually to debug
 Manually install consul using Helm.  The test.yaml below can be created from existing Terraform Output.  Make sure you are using a [compatable consul-k8s helm chart version](https://www.consul.io/docs/k8s/compatibility).  Make sure you create the k8s secrets in the correct namespace that the helm chart is expecting.
 ```
 helm repo add hashicorp https://helm.releases.hashicorp.com
@@ -186,7 +226,9 @@ helm install team2 hashicorp/consul --namespace consul --version 0.45.0 --set gl
 
 The Helm release name must be unique for each Kubernetes cluster. The Helm chart uses the Helm release name as a prefix for the ACL resources that it creates so duplicate names will overwrite ACL's.
 
-### Kubernetes EKS DNS
+[Uninstall Consul / Helm](https://www.consul.io/docs/k8s/operations/uninstall)
+
+### EKS - DNS Troubleshooting
 Get DNS services (consul and coredns), start busybox, and use nslookup
 ```
 consuldnsIP=$(kubectl -n consul get svc consul-dns -o json | jq -r '.spec.clusterIP')
@@ -226,13 +268,13 @@ Address 1: 240.0.0.3
 References:
 https://aws.amazon.com/premiumsupport/knowledge-center/eks-dns-failure/
 
-### Change proxy global defaults
+### EKS - Change proxy global defaults
 For proxy global default changes to take affect restart envoy sidecars with rolling deployment.
 ```
 for i in  $(kubectl get deployments -l service=fake-service -o name); do kubectl rollout restart $i; done
 ```
 
-### Terminate stuck namespace
+### EKS - Terminate stuck namespace
 
 Start proxy on localhost:8001
 ```
@@ -269,7 +311,7 @@ kubectl get namespace payments -o json > temp.json
     }
 ```
 
-### Terminate stuck objects
+### EKS - Terminate stuck objects
 Examples to Fix defaults, intentions, and ingressgateways that wont delete
 ```
 kubectl patch servicedefaults.consul.hashicorp.com payments -n payments --type merge --patch '{"metadata":{"finalizers":[]}}'
@@ -284,10 +326,10 @@ kubectl patch exportedservices.consul.hashicorp.com pci -n default --type merge 
 kubectl patch proxydefaults.consul.hashicorp.com global -n default --type merge --patch '{"metadata":{"finalizers":[]}}'
 ```
 
-### Envoy
+## Envoy
 [Verify Envoy compatability](https://www.consul.io/docs/connect/proxies/envoy) for your platform and consul version.
 
-#### Read fake-service envoy-sidcar configuration
+### Envoy - Read fake-service envoy-sidcar configuration
 kubectl exec deploy/web -c envoy-sidecar -- wget -qO- localhost:19000/clusters
 kubectl exec deploy/api-deployment-v2 -c envoy-sidecar -- wget -qO- localhost:19000/clusters
 kubectl exec deploy/api-deployment-v2 -c envoy-sidecar -- wget -qO- localhost:19000/config_dump
@@ -326,7 +368,7 @@ Next test the web app container can use the virtual lookup to connect to the api
 kubectl -n web exec deploy/web -c web -- wget -qO- http://api.virtual.api.ns.default.ap.usw2.dc.consul
 ```
 
-Ingress GW
+### Consul - Ingress GW
 ```
 kubectl -n consul exec deploy/consul-ingress-gateway -c ingress-gateway -- wget -qO- 127.0.0.1:19000/clusters
 
@@ -337,19 +379,4 @@ kubectl -n consul exec deploy/consul-ingress-gateway -c ingress-gateway -- wget 
 kubectl -n consul exec deploy/consul-ingress-gateway -c ingress-gateway -- wget -qO- http://localhost:8080
 
 kubectl -n consul exec -it deploy/consul-ingress-gateway -c ingress-gateway -- wget --no-check-certificate -qO- http://web.virtual.consul
-```
-
-[Uninstall Consul / Helm](https://www.consul.io/docs/k8s/operations/uninstall)
-
-Admin Partitions.
-
-Setup: https://github.com/hashicorp/consul-k8s/blob/main/docs/admin-partitions-with-acls.md
-
-Setup K8s Video: https://www.youtube.com/watch?v=RrK89J_pzbk
-
-Blog: https://www.hashicorp.com/blog/achieving-multi-tenancy-with-consul-administrative-partitions
-
-### Connect CA
-```
-curl -s ${CONSUL_HTTP_ADDR}/v1/connect/ca/roots | jq -r '.Roots[0].RootCert' | openssl x509 -text -noout
 ```
