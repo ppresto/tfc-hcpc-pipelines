@@ -3,6 +3,7 @@
 - [Troubleshooting](#troubleshooting)
   - [Transit Gateway](#transit-gateway)
   - [SSH - Bastion Host](#ssh---bastion-host)
+    - [Manually create SSH Key, and AWS keypair](#manually-create-ssh-key-and-aws-keypair)
   - [AWS EC2 / VM](#aws-ec2--vm)
     - [AWS EC2 - Review Cloud-init execution](#aws-ec2---review-cloud-init-execution)
     - [AWS EC2 - systemctl consul.service](#aws-ec2---systemctl-consulservice)
@@ -45,6 +46,17 @@ ssh-add -L  # Find SSH Keys added
 ssh-add ${HOME}/.ssh/my-dev-key.pem  # If you dont have any keys then add your key being used in TF.
 ssh -A ubuntu@<BASTION_IP>>  # pass your key in memory to the ubuntu Bastion Host you ssh to.
 ssh -A ec2_user@<K8S_NODE_IP> # From bastion use your key to access a node in the private network.
+```
+
+### Manually create SSH Key, and AWS keypair
+```
+ssh-keygen -t rsa -b 4096 -f /tmp/tfc-hcpc-pipelines_rsa -N ''
+publickeyfile="/tmp/tfc-hcpc-pipelines/tfc-hcpc-pipelines_rsa.pub"
+aws_keypair_name=my-aws-keypair-$(date +%Y%m%d)
+echo aws ec2 import-key-pair \
+    --region "$AWS_DEFAULT_REGION" \
+    --key-name "$aws_keypair_name" \
+    --public-key-material "fileb://$publickeyfile"
 ```
 
 ## AWS EC2 / VM
