@@ -28,7 +28,7 @@ module "ws_hcp_consul" {
     "vpc_id"            = null
     "env"               = "shared"
     "ec2_key_pair_name" = var.ssh_key_name
-    "min_consul_version" = "1.12.4"
+    "min_consul_version" = "1.12.5"
   }
   env_variables_sec = {
     "HCP_CLIENT_SECRET" = var.HCP_CLIENT_SECRET
