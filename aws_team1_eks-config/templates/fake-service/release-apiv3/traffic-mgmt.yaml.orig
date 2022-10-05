@@ -20,6 +20,20 @@ spec:
         retryOnConnectFailure: true
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceSplitter
+metadata:
+  name: api
+  namespace: api
+spec:
+  splits:
+    - weight: 100
+      serviceSubset: v1
+    - weight: 0
+      serviceSubset: v2
+    - weight: 0
+      serviceSubset: v3
+---
+apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceResolver
 metadata:
   name: api

@@ -4,8 +4,11 @@ data "kubectl_path_documents" "web" {
 data "kubectl_path_documents" "apiv2" {
   pattern = "${path.module}/templates/${var.consul_template}/release-apiv2/*.yaml"
 }
+
+# Apply api-v3.yaml and skip the traffic-mgmt.yaml.  Apply header based routing manually in guide.
+
 data "kubectl_path_documents" "apiv3" {
-  pattern = "${path.module}/templates/${var.consul_template}/release-apiv3/*.yaml"
+  pattern = "${path.module}/templates/${var.consul_template}/release-apiv3/api-v3.yaml"
 }
 data "kubectl_path_documents" "consul-init" {
   pattern = "${path.module}/templates/${var.consul_template}/init-consul-config/*.yaml"
@@ -27,6 +30,7 @@ resource "kubectl_manifest" "apiv2" {
   yaml_body  = each.value
   depends_on = [kubectl_manifest.web]
 }
+
 resource "kubectl_manifest" "apiv3" {
   for_each   = toset(data.kubectl_path_documents.apiv3.documents)
   yaml_body  = each.value

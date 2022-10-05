@@ -37,9 +37,8 @@ spec:
           env:
             - name: 'LISTEN_ADDR'
               value: '0.0.0.0:9091'
-            - name: 'UPSTREAM_URIS'
-              value: 'http://payments.virtual.payments.ns.pci.ap.consul'
-              #value: 'http://payments.payments-ns:9090'
+            #- name: 'UPSTREAM_URIS'
+            #  value: 'http://payments.virtual.payments.ns.pci.ap.consul'
             - name: 'NAME'
               value: 'api-v3'
             - name: 'MESSAGE'
