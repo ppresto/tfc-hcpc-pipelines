@@ -1,0 +1,33 @@
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceResolver
+metadata:
+  name: api
+  namespace: api
+spec:
+  defaultSubset: v4
+  subsets:
+    v1:
+      filter: 'Service.Meta.version == v1'
+    v2:
+      filter: 'Service.Meta.version == v2'
+    v3:
+      filter: 'Service.Meta.version == v3'
+    v4:
+      filter: 'Service.Meta.version == v4'
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceSplitter
+metadata:
+  name: api
+  namespace: api
+spec:
+  splits:
+    - weight: 0
+      serviceSubset: v1
+    - weight: 0
+      serviceSubset: v2
+    - weight: 0
+      serviceSubset: v3
+    - weight: 100
+      serviceSubset: v4
