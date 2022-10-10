@@ -12,7 +12,12 @@ resource "aws_security_group" "consul_server" {
 #
 ###  HCP Consul Rules
 #
+/*
+Adding cluster or node rules directly within
+the EKS module created new security groups that were not used by the node.
 
+Using cluster_primary_security_group_id targets SG directly to the node ENI.
+*/
 resource "aws_security_group_rule" "consul_server_allow_server_8301" {
   #security_group_id = aws_security_group.consul_server.id
   security_group_id = module.eks.cluster_primary_security_group_id
@@ -68,24 +73,14 @@ resource "aws_security_group_rule" "hcp_tcp_https" {
   cidr_blocks       = [local.hvn_cidr_block]
   description       = "The HTTPS API"
 }
-resource "aws_security_group_rule" "eks_all_ingress_test2" {
-  security_group_id = module.eks.cluster_primary_security_group_id
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 8443
-  to_port           = 8443
-  cidr_blocks       = [local.hvn_cidr_block]
-  description       = "Allow traffic from HCP to Admin Partition MGW."
-}
+
 /*
 
 #
 ### EKS Security Rules
 #
-Note:
-These rules need to be applied to the EKS managed node interface for other consul clients
-in 10.0.0.0/10 network space to monitor the node health.  Adding cluster or node rules directly within
-the EKS module created new security groups that were not used by the node.
+These rules need to be applied to all EKS managed node interfaces for participating consul clients
+within the Admin Partition network.  They need to all monitor each others node health.
 */
 resource "aws_security_group_rule" "consul_server_allow_client_egress_8301" {
   security_group_id = module.eks.cluster_primary_security_group_id
@@ -124,20 +119,16 @@ resource "aws_security_group_rule" "consul_server_allow_client_ingress_8301_udp"
   cidr_blocks       = [var.vpc_cidr_block]
   description       = "Used to handle gossip between client agents"
 }
-
-
-#
-### App Security Rules
-#
 resource "aws_security_group_rule" "eks_envoy" {
   security_group_id = module.eks.cluster_primary_security_group_id
   type              = "ingress"
   protocol          = "tcp"
   from_port         = 20000
   to_port           = 20000
-  cidr_blocks       = local.private_cidr_blocks
+  cidr_blocks       = [var.vpc_cidr_block]
   description       = "Allow envoy traffic."
 }
+/*
 
 resource "aws_security_group_rule" "eks_gw" {
   security_group_id = module.eks.cluster_primary_security_group_id
@@ -145,9 +136,17 @@ resource "aws_security_group_rule" "eks_gw" {
   protocol          = "tcp"
   from_port         = 21000
   to_port           = 21255
-  cidr_blocks       = local.private_cidr_blocks
+  cidr_blocks       = [var.vpc_cidr_block]
   description       = "ingress k8s HC."
 }
+*/
+
+#
+### Mesh Gateway
+#
+/*
+Allowing Access to MGW from defined private_cidr_blocks.
+*/
 resource "aws_security_group_rule" "eks_mgw" {
   security_group_id = module.eks.cluster_primary_security_group_id
   type              = "ingress"
