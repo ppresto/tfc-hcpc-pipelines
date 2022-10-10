@@ -31,7 +31,7 @@ locals {
   region_shortname    = join("", regex("([a-z]{2}).*-([a-z]).*-(\\d+)", var.region))
   transit_gateway_id  = data.terraform_remote_state.hcp_consul.outputs.ec2_transit_gateway_id
   hvn_cidr_block      = data.terraform_remote_state.hcp_consul.outputs.hvn_cidr_block
-  private_cidr_blocks = ["10.16.0.0/16"]
+  private_cidr_blocks = ["10.15.0.0/16"]
 
   # HCP Consul client data sources
   consul_config_file      = data.terraform_remote_state.hcp_consul.outputs.consul_config_file
