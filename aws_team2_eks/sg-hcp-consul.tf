@@ -148,3 +148,12 @@ resource "aws_security_group_rule" "eks_gw" {
   cidr_blocks       = local.private_cidr_blocks
   description       = "ingress k8s HC."
 }
+resource "aws_security_group_rule" "eks_mgw" {
+  security_group_id = module.eks.cluster_primary_security_group_id
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 8443
+  to_port           = 8443
+  cidr_blocks       = local.private_cidr_blocks
+  description       = "ingress MGW"
+}
