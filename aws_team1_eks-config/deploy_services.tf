@@ -5,10 +5,10 @@ data "kubectl_path_documents" "apiv2" {
   pattern = "${path.module}/templates/${var.consul_template}/release-apiv2/*.yaml"
 }
 
-# Apply api-v3.yaml with the traffic-mgmt.yaml to setup everything for final blog post
+# Apply api-v3.yaml and skip the traffic-mgmt.yaml.  Apply header based routing manually in guide.
 
 data "kubectl_path_documents" "apiv3" {
-  pattern = "${path.module}/templates/${var.consul_template}/release-apiv3/*.yaml"
+  pattern = "${path.module}/templates/${var.consul_template}/release-apiv3/api-v3.yaml"
 }
 data "kubectl_path_documents" "consul-init" {
   pattern = "${path.module}/templates/${var.consul_template}/init-consul-config/*.yaml"

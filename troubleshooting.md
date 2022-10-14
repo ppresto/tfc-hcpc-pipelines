@@ -329,6 +329,8 @@ Examples to Fix defaults, intentions, and ingressgateways that wont delete
 kubectl patch servicedefaults.consul.hashicorp.com payments -n payments --type merge --patch '{"metadata":{"finalizers":[]}}'
 kubectl patch servicedefaults.consul.hashicorp.com web -n consul --type merge --patch '{"metadata":{"finalizers":[]}}'
 
+kubectl patch serviceresolvers.consul.hashicorp.com api -n api --type merge --patch '{"metadata":{"finalizers":[]}}'
+
 kubectl patch ingressgateway.consul.hashicorp.com ingress-gateway --type merge --patch '{"metadata":{"finalizers":[]}}'
 
 kubectl patch serviceintentions.consul.hashicorp.com payments --type merge --patch '{"metadata":{"finalizers":[]}}'
